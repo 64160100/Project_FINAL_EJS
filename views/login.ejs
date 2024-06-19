@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <!-- Custom Login & Register CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+  <body>
+
+    <div class="container">
+        <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+          <div class="col-md-3 mb-2 mb-md-0">
+            <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
+                Hello!!
+            </a>
+          </div>
+        </header>
+      </div>
+
+      <main class="form-signin w-100 m-auto">
+        <form method="post" action="/loginUser">
+          <h1 class="h3 mb-3 fw-normal">Please Login in</h1>
+      
+          <div class="form-floating my-2">
+            <input type="text" class="form-control" name="username" placeholder="Username" required>
+            <label for="floatingInput">Username</label>
+          </div>
+          <div class="form-floating my-2">
+            <input type="password" class="form-control" name="password" placeholder="Password" required>
+            <label for="floatingPassword">Password</label>
+          </div>      
+
+          <% if(messages.length> 0 && messages.length < 2 ) { %>
+            <div class="alert alert-danger" role="alert">
+              <% for(var i=0; i < messages.length; i++) { %>
+                <%= messages[i] %>
+                  <% } %>
+            </div>
+            <% } else if (messages.length > 2) { %>
+              <div class="alert alert-success" role="alert">
+                <% for(var i=0; i < 1; i++) { %>
+                  <%= "Login successfuly" %>
+                    <% } %>
+              </div>
+              <% } %>
+
+          <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
+        </form>
+      </main>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+  </body>
+</html>
