@@ -297,10 +297,11 @@ nav .profile-details i {
 .centered-content {
     background-color: var(--color_Light1);
     position: absolute; /* หรือใช้ 'fixed' ตามความต้องการ */
-    top: 150px; /* ปรับเป็นความสูงของ header/navbar */
+    top: 175px; /* ปรับเป็นความสูงของ header/navbar */
     left: 10px;
     right: 10px; /* เพิ่ม right: 0 เพื่อให้กรอบขยายไปทางขวาสุด */
     bottom: 0; /* เพิ่ม bottom: 0 เพื่อให้กรอบขยายไปทางล่างสุด */
+    overflow: auto;
     width: auto; /* ปรับเป็น auto เพื่อให้ความกว้างขึ้นอยู่กับ left และ right */
     height: auto; /* ปรับเป็น auto เพื่อให้ความสูงขึ้นอยู่กับ top และ bottom */
     border: 2px solid #c2c0c0; /* กรอบด้านนอก */

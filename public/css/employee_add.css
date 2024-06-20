@@ -1,0 +1,117 @@
+/* Enhanced input styles for a more modern look */
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="date"] {
+    display: block;
+    width: calc(100% - 20px);
+    margin: 10px 0;
+    padding: 12px 15px; /* Slightly larger padding for a better touch area */
+    border: 1px solid #ccc;
+    border-radius: 1px; /* More pronounced rounded corners */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+    font-size: 16px; /* Larger font size for better readability */
+    transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition for focus */
+}
+
+/* Focus state for inputs to highlight the active field */
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="date"]:focus {
+    border-color: #007bff; /* Highlight color */
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.25); /* Glow effect on focus */
+}
+
+/* Enhanced label styles for better alignment and visibility */
+.form-group label {
+    margin-top: 20px;
+    display: block;
+    color: #333;
+    font-weight: bold; /* Make labels bold */
+    font-size: 14px; /* Slightly larger font size */
+}
+
+/* Modern button styles with gradient and shadow */
+button[type="submit"] {
+    background-image: linear-gradient(to right, #4CAF50, #5cb85c); /* Green gradient */
+}
+
+button[type="reset"] {
+    background-image: linear-gradient(to right, #ff4b5a, #ff6b81); /* Red gradient */
+}
+
+button {
+    margin: 10px 5px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Button shadow for depth */
+    transition: background-image 0.3s, box-shadow 0.3s; /* Smooth transition for hover */
+}
+
+#employee_id,
+#phone_number,
+#email,
+#other_contact {
+    max-width: 500px; /* Adjust this value as needed to make the fields shorter */
+    width: 100%; /* Ensures the fields take up the full width of their container, up to the max-width */
+}
+
+#title {
+    display: block;
+    width: 100%; /* Full width */
+    padding: 14px 12px; /* Padding for better touch */
+    margin: 10px 0; /* Margin for spacing */
+    border: 1px solid #ccc; /* Border color */
+    border-radius: 4px; /* Rounded corners */
+    background-color: white; /* Background color */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Inner shadow for depth */
+    font-size: 16px; /* Text size */
+    color: #333; /* Text color */
+    -webkit-appearance: none; /* Removes default chrome and safari style */
+    -moz-appearance: none; /* Removes default Firefox style */
+    appearance: none; /* Removes default style for other browsers */
+    background-image: url('dropdown-arrow.svg'); /* Custom dropdown arrow */
+    background-repeat: no-repeat;
+    background-position: right 10px center; /* Position for the dropdown arrow */
+    background-size: 12px; /* Size of the dropdown arrow */
+}
+
+#title:focus {
+    border-color: #4CAF50; /* Focus border color */
+    outline: none; /* Removes the default focus outline */
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); /* Adds a glow effect on focus */
+}
+
+
+#other_contact {
+    height: auto; /* Adjust height based on content */
+    overflow-y: hidden; /* Prevent vertical scrollbar */
+    resize: vertical; /* Allow users to resize it vertically if they wish */
+    max-height: 150px; /* Maximum height before scrolling */
+}
+
+.form-group input {
+    width: 100%; /* Ensures input fields take up the full width of their container */
+    transition: width 0.3s ease-in-out; /* Smooth transition for width changes */
+}
+
+.form-group input:focus {
+    width: 101%; /* Increase width upon focus */
+    position: relative; /* Ensure the input field can expand out of its container */
+    z-index: 2; /* Ensure the expanded input field is above other content */
+}
+
+/* Adjust the .form-container to prevent overflow issues */
+.form-container {
+    overflow: hidden; /* Hide the overflow caused by expanded input fields */
+}
+
+/* Optional: Adjust the .form-row to handle the layout of expanded fields */
+.form-row {
+    display: flex;
+    flex-wrap: wrap; /* Allow form groups to wrap if there's not enough space */
+    gap: 10px; /* Add some space between form groups */
+}

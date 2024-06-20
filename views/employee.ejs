@@ -12,7 +12,7 @@
     <!-- Styles  -->
     <link rel="shortcut icon" href="img/kxp_fav.png" type="image/x-icon">
     <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" href="css/employee">
+    <link rel="stylesheet" href="css/employee.css">
 </head>
 
 <body>
@@ -51,7 +51,7 @@
                 </div>
                 <div class="submenu">
                     <a href="#" class="link submenu-title">ข้อมูลพนักงาน</a>
-                    <a href="/employee" class="link">พนักงาน</a>
+                    <a href="#" class="link">พนักงาน</a>
                     <a href="#" class="link">ผู้ใช้งาน</a>
                     <a href="#" class="link">สิทธิ์ผู้ใช้งาน</a>
                 </div>
@@ -127,10 +127,10 @@
 
     <!-- ============= Home Section =============== -->
     <section class="home">
-    <div class="nav">
-        <div class="toggle-sidebar">
-            <i class='bx bx-menu'></i>
-        </div>
+        <div class="nav">
+            <div class="toggle-sidebar">
+                <i class='bx bx-menu'></i>
+            </div>
             <nav>
                 <div class="nav-content"> <!-- Added this wrapper for better control -->
                     <div class="profile-details">
@@ -141,13 +141,44 @@
             </nav>
         </div>
 
-        <!-- ============= Dashboard =============== -->
+        <!-- ============= Top Dashboard =============== -->
 
-        <div class="topic"> แดชบอร์ด </div>
+        <div class="topic">
+            พนักงาน
+            <div class="search-add-container">
+                <input type="text" id="searchBox" placeholder="ค้นหาพนักงาน..." />
+                <button onclick="window.location.href='/add_employee'">เพิ่มพนักงาน</button>
+            </div>
+        </div>
+        <!-- ============= Center Dashboard =============== -->
+
         <div class="centered-content">
-            <div class="text"> Hello word </div>
-
-          </div>
+            <% employees.forEach(function(employee) { %>
+                <div class="employee-container">
+                    <div class="employee-header">
+                        <ul class="employee-details">
+                            <li class="id-employee">รหัสพนักงาน</li>
+                            <li class="name-employee">ชื่อ-สกุล</li>
+                            <li class="action-employee">จัดการ</li>
+                        </ul>
+                    </div>
+                    <hr class="underline">
+                    <div class="employee-content">
+                        <ul class="employee-details">
+                            <li class="employee-id">
+                                <%= employee.id %>
+                            </li>
+                            <li class="employee-name">
+                                <%= employee.name %>
+                            </li>
+                            <li class="employee-action">
+                                <a href="/employee/edit/<%= employee.id %>">ดูข้อมูล</a>
+                                <a href="/employee/delete/<%= employee.id %>">ลบ</a>
+                        </ul>
+                    </div>
+                </div>
+                <% }); %>
+        </div>
 
     </section>
 

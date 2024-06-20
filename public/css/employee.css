@@ -1,0 +1,89 @@
+/* Top Dashboard */
+
+.topic {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    color: rgb(0, 0, 0);
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.search-add-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+#searchBox {
+    padding: 10px;
+    margin-right: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    flex-grow: 1;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+
+/* Center Dashboard */
+
+.centered-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.employee-container {
+    width: 100%; /* Adjust width to fit table-like layout */
+    margin-bottom: 20px;
+    padding: 10px; /* Add padding for better spacing */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.employee-details li {
+    font-size: 20px; /* Increase font size */
+}
+
+.employee-header, .employee-content {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.employee-details {
+    display: flex;
+    justify-content: space-between;
+    list-style-type: none;
+    padding: 0;
+    margin: 0 0 10px 0; /* Reduce bottom margin to decrease space between header and content */
+    width: 100%;
+}
+
+.id-employee, .name-employee, .employee-id, .employee-name {
+    flex: 1; /* Allows each item to grow equally, adjusting spacing */
+    text-align: left; /* Align text to the left for a table-like appearance */
+    margin-right: 10px; /* Adjust right margin for spacing between columns */
+    margin-left: 10px; /* Add left margin for spacing */
+}
+
+.underline {
+    border-bottom: 1px solid #000;
+    width: 100%;
+    margin-top: 20px; /* Space above the line */
+    margin-bottom: 10px; /* Space below the line */
+}
