@@ -3,29 +3,24 @@
 .form-group input[type="email"],
 .form-group input[type="date"] {
     display: block;
-    width: calc(100% - 20px); /* Match width calculation of other inputs */
+    width: calc(100% - 20px);
     margin: 10px 0;
-    padding: 12px 15px; /* Consistent padding with other inputs */
-    border: 1px solid #ccc; /* Consistent border color */
-    border-radius: 1px; /* Consistent rounded corners */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Consistent shadow */
-    font-size: 16px; /* Consistent font size */
-    background-color: #fdfdfd; /* Light grey background for readonly */
-    color: #495057; /* Dark grey text for contrast */
+    padding: 12px 15px; /* Slightly larger padding for a better touch area */
+    border: 1px solid #ccc;
+    border-radius: 1px; /* More pronounced rounded corners */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+    font-size: 16px; /* Larger font size for better readability */
     transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition for focus */
-    -webkit-appearance: none; /* Removes default chrome and safari style */
-    -moz-appearance: none; /* Removes default Firefox style */
-    appearance: none; /* Removes default style for other browsers */
 }
 
 /* Focus state for inputs to highlight the active field */
+/* Remove focus outline for all input types */
 .form-group input[type="text"]:focus,
 .form-group input[type="email"]:focus,
 .form-group input[type="date"]:focus {
-    outline: none; /* Removes the default focus outline */
-    box-shadow: 0 0 5px rgba(7, 7, 7, 0.5); /* Adjusted focus shadow for consistency */
+    outline: none; /* This line is already present and removes the outline */
+    box-shadow: none; /* Add this line to remove the box-shadow effect on focus */
 }
-
 /* Enhanced label styles for better alignment and visibility */
 .form-group label {
     margin-top: 20px;
@@ -36,15 +31,12 @@
 }
 
 /* Modern button styles with gradient and shadow */
-button[type="submit"] {
-    background-image: linear-gradient(to right, #4CAF50, #5cb85c); /* Green gradient */
-}
-
-button[type="reset"] {
+.edit-button {
+    float: right;
     background-image: linear-gradient(to right, #ff4b5a, #ff6b81); /* Red gradient */
 }
 
-button {
+.edit-button {
     margin: 10px 5px;
     padding: 12px 20px;
     border: none;
@@ -52,7 +44,6 @@ button {
     cursor: pointer;
     font-size: 16px;
     color: white;
-    transition: background-image 0.3s, box-shadow 0.3s; /* Smooth transition for hover */
 }
 
 #employee_id,
@@ -65,7 +56,7 @@ button {
 
 #title {
     display: block;
-    width: calc(115% - 20px); /* Match width calculation of other inputs */
+    width: 100%; /* Match width calculation of other inputs */
     margin: 10px 0;
     padding: 12px 15px; /* Consistent padding with other inputs */
     border: 1px solid #ccc; /* Consistent border color */
@@ -85,7 +76,6 @@ button {
     box-shadow: 0 0 5px rgba(7, 7, 7, 0.5); /* Adjusted focus shadow for consistency */
 }
 
-
 #other_contact {
     height: auto; /* Adjust height based on content */
     overflow-y: hidden; /* Prevent vertical scrollbar */
@@ -99,9 +89,9 @@ button {
 }
 
 .form-group input:focus {
-    width: 101%; /* Increase width upon focus */
-    position: relative; /* Ensure the input field can expand out of its container */
-    z-index: 2; /* Ensure the expanded input field is above other content */
+    width: calc(100% - 20px); /* Keep the width consistent with the unfocused state */
+    position: static; /* Revert to default positioning */
+    z-index: auto; /* Revert to default stacking order */
 }
 
 /* Adjust the .form-container to prevent overflow issues */
@@ -116,27 +106,39 @@ button {
     gap: 10px; /* Add some space between form groups */
 }
 
-
 textarea {
-    display: block;
-    width: calc(100% - 20px); /* Match width calculation of other inputs */
-    margin: 10px 0;
-    padding: 12px 15px; /* Consistent padding with other inputs */
-    border: 1px solid #ccc; /* Consistent border color */
-    border-radius: 1px; /* Consistent rounded corners */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Consistent shadow */
-    font-size: 16px; /* Consistent font size */
-    background-color: #fdfdfd; /* Light grey background for readonly */
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px; /* Space between inputs */
+    border: 1px solid #ccc; /* Light grey border */
+    border-radius: 4px; /* Rounded corners */
+    box-sizing: border-box; /* Border box sizing */
+}
+
+input[readonly],
+textarea[readonly] {
+    background-color: #e9ecef; /* Light grey background for readonly */
     color: #495057; /* Dark grey text for contrast */
-    transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition for focus */
-    -webkit-appearance: none; /* Removes default chrome and safari style */
-    -moz-appearance: none; /* Removes default Firefox style */
-    appearance: none; /* Removes default style for other browsers */
 }
 
 textarea:focus {
     outline: none; /* Removes the default focus outline */
-    box-shadow: 0 0 5px rgba(7, 7, 7, 0.5); /* Adjusted focus shadow for consistency */
+    box-shadow: none; /* Removes any box-shadow effect on focus */
+}
+
+button {
+    margin: 10px 5px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    color: white;
+    transition: background-image 0.3s, box-shadow 0.3s; /* Smooth transition for hover */
+}
+
+button[type="submit"] {
+    background-image: linear-gradient(to right, #4CAF50, #5cb85c); /* Green gradient */
 }
 
 /* Breadcrumbs styling */
@@ -169,3 +171,4 @@ textarea:focus {
     align-items: center;
     text-decoration: none; /* Removes underline from the link */
 }
+

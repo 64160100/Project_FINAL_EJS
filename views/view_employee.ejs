@@ -26,37 +26,39 @@
         <!-- ========== List ============  -->
         <ul class="sidebar-list">
             <!-- -------- Non Dropdown List Item ------- -->
-            <li>
-                <div class="title">
-                    <a href="dashboard" class="link">
-                        <i class='bx bx-grid-alt'></i>
-                        <span class="name">แดชบอร์ด</span>
-                    </a>
-                    <!-- <i class='bx bxs-chevron-down'></i> -->
-                </div>
-                <div class="submenu">
-                    <a href="/dashboard" class="link submenu-title">แดชบอร์ด</a>
-                    <!-- submenu links here  -->
-                </div>
-            </li>
+            <ul class="sidebar-list">
+                <!-- -------- Non Dropdown List Item ------- -->
+                <li>
+                    <div class="title">
+                        <a href="dashboard" class="link">
+                            <i class='bx bx-grid-alt'></i>
+                            <span class="name">แดชบอร์ด</span>
+                        </a>
+                        <!-- <i class='bx bxs-chevron-down'></i> -->
+                    </div>
+                    <div class="submenu">
+                        <a href="/dashboard" class="link submenu-title">แดชบอร์ด</a>
+                        <!-- submenu links here  -->
+                    </div>
+                </li>
+    
+                <!-- -------- Dropdown List Item ------- -->
+                <li class="dropdown">
+                    <div class="title">
+                        <a href="/employee" class="link">
+                            <i class='bx bx-collection'></i>
+                            <span class="name">ข้อมูลพนักงาน</span>
+                        </a>
+                        <i class='bx bxs-chevron-down'></i>
+                    </div>
+                    <div class="submenu">
+                        <a href="/employee" class="link submenu-title">ข้อมูลพนักงาน</a>
+                        <a href="/employee" class="link">พนักงาน</a>
+                        <a href="#" class="link">ผู้ใช้งาน</a>
+                        <a href="#" class="link">สิทธิ์ผู้ใช้งาน</a>
+                    </div>
+                </li>
 
-            <!-- -------- Dropdown List Item ------- -->
-            <li class="dropdown">
-                <div class="title">
-                    <a href="/employee" class="link">
-                        <i class='bx bx-collection'></i>
-                        <span class="name">ข้อมูลพนักงาน</span>
-                    </a>
-                    <i class='bx bxs-chevron-down'></i>
-                </div>
-                <div class="submenu">
-                    <a href="/employee" class="link submenu-title">ข้อมูลพนักงาน</a>
-                    <a href="/employee" class="link">พนักงาน</a>
-                    <a href="#" class="link">ผู้ใช้งาน</a>
-                    <a href="#" class="link">สิทธิ์ผู้ใช้งาน</a>
-                </div>
-            </li>
-            
             <!-- -------- Dropdown List Item ------- -->
             <li class="dropdown">
                 <div class="title">
@@ -142,16 +144,17 @@
         </div>
 
         <!-- ============= Top Dashboard =============== -->
+
         <div class="breadcrumbs">
-            <a href="/home"> หน้าหลัก</a> > <a href="/employee">พนักงาน</a> > <a href="/add_employee">ดูข้อมูลพนักงาน</a> > <span>แก้ไขข้อมูลพนักงาน</span>
+            <a href="/dashboard"> หน้าหลัก</a> > <a href="/employee">พนักงาน</a> > <span>ดูข้อมูลพนักงาน</span>
         </div>
         <div class="topic"><a href="javascript:history.back()" style="text-decoration: none;">
-                    <i class='bx bx-left-arrow-alt'></i></a> แก้ไขข้อมูลพนักงาน</div>
+                    <i class='bx bx-left-arrow-alt'></i></a> ดูข้อมูลพนักงาน</div>
 
         <!-- ============= Center Dashboard =============== -->
+
         <div class="centered-content">
             <div class="form-container">
-                <form action="/update_employee" method="post">
                     <div class="form-group">
                         <h2>ข้อมูลส่วนตัว</h2>
                         <hr class="underline">
@@ -164,75 +167,62 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="title">คำนำหน้า</label>
-                                <select id="title" name="title" required aria-label="คำนำหน้า">
-                                    <option value="นาย" <%=employee.title==='นาย' ? 'selected' : '' %>>นาย</option>
-                                    <option value="นาง" <%=employee.title==='นาง' ? 'selected' : '' %>>นาง</option>
-                                    <option value="นางสาว" <%=employee.title==='นางสาว' ? 'selected' : '' %>>นางสาว
-                                    </option>
+                                <select id="title" name="title" required aria-label="คำนำหน้า" disabled>
+                                    <option value="นาย" <%= employee.title === 'นาย' ? 'selected' : '' %>>นาย</option>
+                                    <option value="นาง" <%= employee.title === 'นาง' ? 'selected' : '' %>>นาง</option>
+                                    <option value="นางสาว" <%= employee.title === 'นางสาว' ? 'selected' : '' %>>นางสาว</option>
                                 </select>
                             </div>
-
+        
                             <div class="form-group">
                                 <label for="first_name">ชื่อ</label>
                                 <input type="text" id="first_name" name="first_name" value="<%= employee.first_name %>"
-                                    required aria-label="ชื่อ">
+                                    required aria-label="ชื่อ" readonly>
                             </div>
-
+        
                             <div class="form-group">
                                 <label for="last_name">นามสกุล</label>
                                 <input type="text" id="last_name" name="last_name" value="<%= employee.last_name %>"
-                                    required aria-label="นามสกุล">
+                                    required aria-label="นามสกุล" readonly>
                             </div>
-
+        
                             <div class="form-group">
                                 <label for="nickname">ชื่อเล่น</label>
                                 <input type="text" id="nickname" name="nickname" value="<%= employee.nickname %>"
-                                    required aria-label="ชื่อเล่น">
+                                    required aria-label="ชื่อเล่น" readonly>
                             </div>
                         </div>
-                        <% if (error) { %>
+        
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="id_number">เลขบัตรประชาชน</label>
                                 <input type="text" id="id_number" name="id_number" value="<%= employee.id_number %>"
-                                    required aria-label="เลขบัตรประชาชน">
-                                    <% if (error.id_number) { %>
-                                        <p style="color: red;">
-                                            <%= error.id_number %>มีอยู่แล้ว
-                                        </p>
-                                        <% } %>
+                                    required aria-label="เลขบัตรประชาชน" readonly>
                             </div>
-                                
+        
                             <div class="form-group">
                                 <label for="date_of_birth">วันเกิด</label>
                                 <input type="date" id="date_of_birth" name="date_of_birth"
-                                    value="<%= employee.date_of_birth %>" required aria-label="วันเกิด">
+                                    value="<%= employee.date_of_birth %>" required aria-label="วันเกิด" readonly>
                             </div>
                         </div>
-
+        
                         <h2>ข้อมูลสำหรับติดต่อ</h2>
                         <hr class="underline">
-
+        
                         <label for="phone_number">เบอร์โทรศัพท์</label>
                         <input type="text" id="phone_number" name="phone_number" value="<%= employee.phone_number %>"
-                            required aria-label="เบอร์โทรศัพท์">
-                            <% if (error.phone_number) { %>
-                                <p style="color: red;">
-                                    <%= error.phone_number %>มีอยู่แล้ว
-                                </p>
-                                <% } %>
-
+                            required aria-label="เบอร์โทรศัพท์" readonly>
+        
                         <label for="email">อีเมล</label>
                         <input type="email" id="email" name="email" value="<%= employee.email %>" required
-                            aria-label="อีเมล">
-
+                            aria-label="อีเมล" readonly>
+        
                         <label for="other_contact">ข้อมูลติดต่ออื่น ๆ</label>
-                        <textarea id="other_contact" name="other" aria-label="ข้อมูลติดต่ออื่นๆ" rows="2"
-                            style="width: 100%;"><%= employee.other %></textarea>
+                        <textarea id="other_contact" name="other_contact" required aria-label="ข้อมูลติดต่ออื่นๆ"
+                            rows="2" style="width: 100%;" readonly><%= employee.other %></textarea>
                     </div>
-                    <% } %>
-                    <button type="submit">บันทึกการเปลี่ยนแปลง</button> <!-- Updated button -->
-                </form>
+                    <a href="/edit_employee/<%= employee.employee_id %>" class="edit-button">แก้ไข</a>
             </div>
         </div>
     </section>

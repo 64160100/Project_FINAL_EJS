@@ -25,21 +25,6 @@
     flex-grow: 1;
 }
 
-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #45a049;
-}
-
-
 /* Center Dashboard */
 
 .centered-content {
@@ -49,10 +34,10 @@ button:hover {
 }
 
 .employee-container {
-    width: 100%; /* Adjust width to fit table-like layout */
-    margin-bottom: 20px;
-    padding: 10px; /* Add padding for better spacing */
-    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    width: 100%; /* Adjust based on your preference */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .employee-details li {
@@ -86,4 +71,57 @@ button:hover {
     width: 100%;
     margin-top: 20px; /* Space above the line */
     margin-bottom: 10px; /* Space below the line */
+}
+
+/* Assuming .view-button and .delete-button are your specific classes for view and delete buttons */
+
+.view-button {
+    background-color: #2855eb; /* Deep blue */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    text-align: center;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.view-button:hover {
+    background-color: rgba(56, 145, 248, 0.692); /* Slightly darker blue for hover effect */
+}
+
+.delete-button {
+    background-color: #e93a3a; /* Red */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    text-align: center;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.delete-button:hover {
+    background-color: #fa7f7f; /* Slightly darker red for hover effect */
+}
+
+.add-employee-button {
+    background-color: #4CAF50; /* Custom blue */
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-employee-button:hover {
+    background-color: #74af76d0; /* Darker shade of blue for hover effect */
 }

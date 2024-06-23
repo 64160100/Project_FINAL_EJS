@@ -24,26 +24,35 @@ app.get('/', (req, res) => {
     res.render('index');
 });
 
-app.get('/home', (req, res) => {
-    res.render('home');
+app.get('/dashboard', (req, res) => {
+    res.render('dashboard');
 });
 
 app.get('/login', (req, res) => {
     res.render('login');
 });
 
+
 app.get('/employee', require('./routes/employee'));
 app.get('/add_employee', require('./routes/employee'));
+app.get('/view_employee/:id', require('./routes/employee'));
+app.get('/edit_employee/:id', require('./routes/employee'));
+app.post('/create_employee', require('./routes/employee'));
+app.post('/delete_employee/:id', require('./routes/employee'));
+app.post('/update_employee', require('./routes/employee'));
 
 // app.post('/add_employee', require('./routes/employee'));
 // app.get('/employee_add', (req, res) => {
 //     res.render('employee_add');
 // });
 
-app.post('/edit_employee:id', require('./routes/employee'));
+// app.post('/edit_employee:id', require('./routes/employee'));
 
 // app.get('/login', require('./routes/login'));
 // // app.post('/loginUser', require('./routes/login'));
+
+app.get('/test', require('./routes/test'));
+app.post('/create_test', require('./routes/test'));
 
 app.listen(3000, () => {
     console.log('Server has started with port 3000');

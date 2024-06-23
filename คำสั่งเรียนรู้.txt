@@ -1,0 +1,64 @@
+คำสั่ง git 
+
+git log --> ใช้ดู log
+git remote -v --> ใช้ตรวจสอบ URL ที่ใช้สำหรับ remote 
+git remote set-url origin <new-url> --> ใช้สำหรับเปลี่ยน URL ของ remore
+
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/64160100/Project_FINAL
+git push -u origin main
+
+git push -u origin 10-percent
+git pull origin 10-percent
+
+
+คำสั่ง docker 
+docker build . -t <ตั้งชื่อ> --> เพื่อ build container เก็บเป็น image อะไรที่เคย run ก็จะถูก Cast(โยน) ไว้
+docker run -it --rm -p 3003:3000 --name <ชื่อ container> <ชื่อ image docker> --> สั่ง Run app วิธีที่ 1
+docker run -d -p 3005:3000 <ชื่อ image docker> --> สั่ง Run app วิธี 2
+
+docker logs <ชื่อ container> --> เช็ค log
+
+
+คำสั่ง mysql
+
+INSERT INTO Staff (staff_id, user_id, name, position)
+VALUES (2, "staff002", "Kun", "employees");
+
+INSERT INTO User (User_id, Email, Password, IsAdmin, Staff_staff_id, Staff_Order_order_id)
+VALUES (2, "74160100@go.buu.ac.th", "1234", "N", 2, 2);
+
+INSERT INTO Menu (Menu_id, Menu_name, Price, category)
+VALUES (1, "Americano Coffee", 50.00, "Beverage");
+
+
+INSERT INTO Ingredient (Ingredient_id, ingredient_name, unit, quantity_per_unit, price_per_unit)
+VALUES (1, "Coffee Beans", "gram", "10", "20.00");
+
+
+INSERT INTO MenuIngredient (menu_id, ingredient_id, quantity)
+VALUES (1, 1, "20");
+
+
+INSERT INTO Promotion (promotion_id, promotion_name, discount_type, start_date, end_date)
+VALUES (1, "Happy Hour", "PERC", "2024-05-24", "2024-05-27");
+
+
+INSERT INTO OrderDetail (order_id, menu_id, quantity)
+VALUES (1, 1, "1");
+
+INSERT INTO Order (order_id, staff_id, table_number, order_date, order_status, Promotion_promotion_id, Staff_staff_id, Staff_Order_order_id, OrderDetail_Menu_Menu_id)
+VALUES (1, "1", "1", "2024-05-25", "PENDING", 1, 1, 1, 1);
+
+-- Insert data into SalesReport after implementing logic to calculate total sales
+INSERT INTO SalesReport (sales_report_id, report_date, total_sales)
+VALUES (...);
+
+-- Insert data into PurchaseReport after implementing logic to calculate total purchases
+INSERT INTO PurchaseReport (purchase_report_id, report_date, total_purchase)
+VALUES (...);
+
+

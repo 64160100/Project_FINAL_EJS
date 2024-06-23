@@ -11,8 +11,8 @@
     <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
     <!-- Styles  -->
     <link rel="shortcut icon" href="img/kxp_fav.png" type="image/x-icon">
-    <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" href="css/employee_add.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/employee_add.css">
 </head>
 
 <body>
@@ -28,14 +28,14 @@
             <!-- -------- Non Dropdown List Item ------- -->
             <li>
                 <div class="title">
-                    <a href="#" class="link">
+                    <a href="dashboard" class="link">
                         <i class='bx bx-grid-alt'></i>
                         <span class="name">แดชบอร์ด</span>
                     </a>
                     <!-- <i class='bx bxs-chevron-down'></i> -->
                 </div>
                 <div class="submenu">
-                    <a href="#" class="link submenu-title">แดชบอร์ด</a>
+                    <a href="/dashboard" class="link submenu-title">แดชบอร์ด</a>
                     <!-- submenu links here  -->
                 </div>
             </li>
@@ -43,15 +43,15 @@
             <!-- -------- Dropdown List Item ------- -->
             <li class="dropdown">
                 <div class="title">
-                    <a href="#" class="link">
+                    <a href="/employee" class="link">
                         <i class='bx bx-collection'></i>
                         <span class="name">ข้อมูลพนักงาน</span>
                     </a>
                     <i class='bx bxs-chevron-down'></i>
                 </div>
                 <div class="submenu">
-                    <a href="#" class="link submenu-title">ข้อมูลพนักงาน</a>
-                    <a href="#" class="link">พนักงาน</a>
+                    <a href="/employee" class="link submenu-title">ข้อมูลพนักงาน</a>
+                    <a href="/employee" class="link">พนักงาน</a>
                     <a href="#" class="link">ผู้ใช้งาน</a>
                     <a href="#" class="link">สิทธิ์ผู้ใช้งาน</a>
                 </div>
@@ -143,83 +143,116 @@
 
         <!-- ============= Top Dashboard =============== -->
 
+        <div class="breadcrumbs">
+            <a href="/dashboard"> หน้าหลัก</a> > <a href="/employee">พนักงาน</a> > <span>เพิ่มพนักงาน</span>
+        </div>
+        <div class="topic"><a href="javascript:history.back()" style="text-decoration: none;">
+                    <i class='bx bx-left-arrow-alt'></i></a> เพิ่มพนักงาน</div>
+        
         <div class="topic">เพิ่มพนักงาน</div>
 
         <!-- ============= Center Dashboard =============== -->
 
         <div class="centered-content">
             <div class="form-container">
-                <form action="/employee_add" method="POST">
-                    <div class="form-group">
-                        <h2>ข้อมูลส่วนตัว</h2>
-                        <hr class="underline">
-                        <div class="form-container">
-                            <label for="employee_id">รหัสพนักงาน</label>
-                            <input type="text" id="employee_id" name="employee_id" required aria-label="รหัสพนักงาน">
+                <form action="/create_employee" method="post" id="employeeForm">
+                    <% if (error) { %>
+                        <div class="form-group">
+                            <h2>ข้อมูลส่วนตัว</h2>
+                            <hr class="underline">
+                            <div class="form-container">
+                                <label for="employee_id">รหัสพนักงาน</label>
+                                <input type="text" id="employee_id" name="employee_id" required aria-label="รหัสพนักงาน"
+                                    value="<%= formData ? formData.employee_id : '' %>">
+                                <% if (error.employee_id) { %>
+                                    <p style="color: red;">
+                                        <%= error.employee_id %>มีอยู่แล้ว
+                                    </p>
+                                    <% } %>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="title">คำนำหน้า</label>
+                                    <select id="title" name="title" required aria-label="คำนำหน้า">
+                                        <option value="" <% if (!formData || formData.title==='' ) { %>selected<% } %>
+                                                >เลือกคำนำหน้า</option>
+                                        <option value="นาย" <% if (formData && formData.title==='นาย' ) { %>selected<% }
+                                                %>>นาย</option>
+                                        <option value="นาง" <% if (formData && formData.title==='นาง' ) { %>selected<% }
+                                                %>>นาง</option>
+                                        <option value="นางสาว" <% if (formData && formData.title==='นางสาว' ) { %>
+                                            selected<% } %>>นางสาว</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="first_name">ชื่อ</label>
+                                    <input type="text" id="first_name" name="first_name" required aria-label="ชื่อ"
+                                        value="<%= formData ? formData.first_name : '' %>">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="last_name">นามสกุล</label>
+                                    <input type="text" id="last_name" name="last_name" required aria-label="นามสกุล"
+                                        value="<%= formData ? formData.last_name : '' %>">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="nickname">ชื่อเล่น</label>
+                                    <input type="text" id="nickname" name="nickname" required aria-label="ชื่อเล่น"
+                                        value="<%= formData ? formData.nickname : '' %>">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="id_number">เลขบัตรประชาชน</label>
+                                    <input type="text" id="id_number" name="id_number" required
+                                        aria-label="เลขบัตรประชาชน" value="<%= formData ? formData.id_number : '' %>">
+                                    <% if (error.id_number) { %>
+                                        <p style="color: red;">
+                                            <%= error.id_number %>มีอยู่แล้ว
+                                        </p>
+                                        <% } %>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="date_of_birth">วันเกิด</label>
+                                    <input type="date" id="date_of_birth" name="date_of_birth" required
+                                        aria-label="วันเกิด" value="<%= formData ? formData.date_of_birth : '' %>">
+                                </div>
+                            </div>
+
+                            <h2>ข้อมูลสำหรับติดต่อ</h2>
+                            <hr class="underline">
+
+                            <label for="phone_number">เบอร์โทรศัพท์</label>
+                            <input type="text" id="phone_number" name="phone_number" required aria-label="เบอร์โทรศัพท์"
+                                value="<%= formData ? formData.phone_number : '' %>">
+                            <% if (error.phone_number) { %>
+                                <p style="color: red;">
+                                    <%= error.phone_number %>มีอยู่แล้ว
+                                </p>
+                                <% } %>
+
+                                    <label for="email">อีเมล</label>
+                                    <input type="email" id="email" name="email" required aria-label="อีเมล"
+                                        value="<%= formData ? formData.email : '' %>">
+
+                                    <label for="other_contact">ข้อมูลติดต่ออื่น ๆ</label>
+                                    <textarea id="other" name="other" aria-label="ข้อมูลติดต่ออื่นๆ"style="width: 40%;"><%= formData ? formData.other : '' %></textarea>
                         </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="title">คำนำหน้า</label>
-                                <select id="title" name="title" required aria-label="คำนำหน้า">
-                                    <option value="">เลือกคำนำหน้า</option>
-                                    <option value="นาย">นาย</option>
-                                    <option value="นาง">นาง</option>
-                                    <option value="นางสาว">นางสาว</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="first_name">ชื่อ</label>
-                                <input type="text" id="first_name" name="first_name" required aria-label="ชื่อ">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="last_name">นามสกุล</label>
-                                <input type="text" id="last_name" name="last_name" required aria-label="นามสกุล">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="nickname">ชื่อเล่น</label>
-                                <input type="text" id="nickname" name="nickname" required aria-label="ชื่อเล่น">
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="id_number">เลขบัตรประชาชน</label>
-                                <input type="text" id="id_number" name="id_number" required aria-label="เลขบัตรประชาชน">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="date_of_birth">วันเกิด</label>
-                                <input type="date" id="date_of_birth" name="date_of_birth" required
-                                    aria-label="วันเกิด">
-                            </div>
-                        </div>
-
-                        <h2>ข้อมูลสำหรับติดต่อ</h2>
-                        <hr class="underline">
-
-                        <label for="phone_number">เบอร์โทรศัพท์</label>
-                        <input type="text" id="phone_number" name="phone_number" required aria-label="เบอร์โทรศัพท์">
-
-                        <label for="email">อีเมล</label>
-                        <input type="email" id="email" name="email" required aria-label="อีเมล">
-
-                        <label for="other_contact">ข้อมูลติดต่ออื่น ๆ</label>
-                        <textarea id="other_contact" name="other_contact" required aria-label="ข้อมูลติดต่ออื่นๆ"
-                            rows="2" style="width: 100%;"></textarea>
-                    </div>
-                    <button type="submit">บันทึก</button>
-                    <button type="reset">ยกเลิก</button>
+                        <% } %>
+                            <button type="submit">บันทึก</button>
+                            <button type="reset">ยกเลิก</button>
                 </form>
             </div>
         </div>
     </section>
 
     <!-- Link JS -->
-    <script src="js/index.js"></script>
+    <script src="../js/index.js"></script>
 </body>
 
 </html>

@@ -11,8 +11,8 @@
     <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
     <!-- Styles  -->
     <link rel="shortcut icon" href="img/kxp_fav.png" type="image/x-icon">
-    <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" href="css/employee.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/employee.css">
 </head>
 
 <body>
@@ -28,14 +28,14 @@
             <!-- -------- Non Dropdown List Item ------- -->
             <li>
                 <div class="title">
-                    <a href="#" class="link">
+                    <a href="/dashboard" class="link">
                         <i class='bx bx-grid-alt'></i>
                         <span class="name">แดชบอร์ด</span>
                     </a>
                     <!-- <i class='bx bxs-chevron-down'></i> -->
                 </div>
                 <div class="submenu">
-                    <a href="#" class="link submenu-title">แดชบอร์ด</a>
+                    <a href="/dashboard" class="link submenu-title">แดชบอร์ด</a>
                     <!-- submenu links here  -->
                 </div>
             </li>
@@ -43,15 +43,15 @@
             <!-- -------- Dropdown List Item ------- -->
             <li class="dropdown">
                 <div class="title">
-                    <a href="#" class="link">
+                    <a href="/employee" class="link">
                         <i class='bx bx-collection'></i>
                         <span class="name">ข้อมูลพนักงาน</span>
                     </a>
                     <i class='bx bxs-chevron-down'></i>
                 </div>
                 <div class="submenu">
-                    <a href="#" class="link submenu-title">ข้อมูลพนักงาน</a>
-                    <a href="#" class="link">พนักงาน</a>
+                    <a href="/employee" class="link submenu-title">ข้อมูลพนักงาน</a>
+                    <a href="/employee" class="link">พนักงาน</a>
                     <a href="#" class="link">ผู้ใช้งาน</a>
                     <a href="#" class="link">สิทธิ์ผู้ใช้งาน</a>
                 </div>
@@ -147,22 +147,22 @@
             พนักงาน
             <div class="search-add-container">
                 <input type="text" id="searchBox" placeholder="ค้นหาพนักงาน..." />
-                <button onclick="window.location.href='/add_employee'">เพิ่มพนักงาน</button>
+                <button onclick="window.location.href='/add_employee'" class="add-employee-button">เพิ่มพนักงาน</button>
             </div>
         </div>
         <!-- ============= Center Dashboard =============== -->
 
         <div class="centered-content">
-            <% employees.forEach(function(employee) { %>
-                <div class="employee-container">
-                    <div class="employee-header">
-                        <ul class="employee-details">
-                            <li class="id-employee">รหัสพนักงาน</li>
-                            <li class="name-employee">ชื่อ-สกุล</li>
-                            <li class="action-employee">จัดการ</li>
-                        </ul>
-                    </div>
-                    <hr class="underline">
+            <div class="employee-container">
+                <div class="employee-header">
+                    <ul class="employee-details">
+                        <li class="id-employee">รหัสพนักงาน</li>
+                        <li class="name-employee">ชื่อ-สกุล</li>
+                        <li class="action-employee">จัดการ</li>
+                    </ul>
+                </div>
+                <hr class="underline">
+                <% employees.forEach(function(employee) { %>
                     <div class="employee-content">
                         <ul class="employee-details">
                             <li class="employee-id">
@@ -172,18 +172,20 @@
                                 <%= employee.name %>
                             </li>
                             <li class="employee-action">
-                                <a href="/employee/edit/<%= employee.id %>">ดูข้อมูล</a>
-                                <a href="/employee/delete/<%= employee.id %>">ลบ</a>
+                                <button onclick="location.href='/view_employee/<%= employee.id %>'" class="view-button">ดูข้อมูล</button>
+                                <form action="/delete_employee/<%= employee.id %>" method="post" style="display: inline;">
+                                    <button type="submit" class="delete-button">ลบ</button>
+                                </form>
+                            </li> 
                         </ul>
                     </div>
-                </div>
                 <% }); %>
+            </div>
         </div>
-
     </section>
 
     <!-- Link JS -->
-    <script src="js/index.js"></script>
+    <script src="../js/index.js"></script>
 </body>
 
 </html>
