@@ -1,0 +1,127 @@
+/* Top Dashboard */
+
+.topic {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    color: rgb(0, 0, 0);
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.search-add-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+#searchBox {
+    padding: 10px;
+    margin-right: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    flex-grow: 1;
+}
+
+/* Center Dashboard */
+
+.centered-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.permission-container {
+    width: 100%; /* Adjust based on your preference */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.permission-details li {
+    font-size: 20px; /* Increase font size */
+}
+
+.permission-header, .permission-content {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.permission-details {
+    display: flex;
+    justify-content: space-between;
+    list-style-type: none;
+    padding: 0;
+    margin: 0 0 10px 0; /* Reduce bottom margin to decrease space between header and content */
+    width: 100%;
+}
+
+.id-permission, .name-permission, .permission-id, .permission-name {
+    flex: 1; /* Allows each item to grow equally, adjusting spacing */
+    text-align: left; /* Align text to the left for a table-like appearance */
+    margin-right: 10px; /* Adjust right margin for spacing between columns */
+    margin-left: 10px; /* Add left margin for spacing */
+}
+
+.underline {
+    border-bottom: 1px solid #000;
+    width: 100%;
+    margin-top: 20px; /* Space above the line */
+    margin-bottom: 10px; /* Space below the line */
+}
+
+/* Assuming .view-button and .delete-button are your specific classes for view and delete buttons */
+
+.view-button {
+    background-color: #2855eb; /* Deep blue */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    text-align: center;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.view-button:hover {
+    background-color: rgba(56, 145, 248, 0.692); /* Slightly darker blue for hover effect */
+}
+
+.delete-button {
+    background-color: #e93a3a; /* Red */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    text-align: center;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.delete-button:hover {
+    background-color: #fa7f7f; /* Slightly darker red for hover effect */
+}
+
+.add-permission-button {
+    background-color: #4CAF50; /* Custom blue */
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-permission-button:hover {
+    background-color: #74af76d0; /* Darker shade of blue for hover effect */
+}

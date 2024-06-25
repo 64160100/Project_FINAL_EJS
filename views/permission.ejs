@@ -12,6 +12,8 @@
     <!-- Styles  -->
     <link rel="shortcut icon" href="img/kxp_fav.png" type="image/x-icon">
     <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/permission.css">
+
 </head>
 
 <body>
@@ -142,14 +144,46 @@
 
         <!-- ============= Dashboard =============== -->
 
-        <div class="topic"> แดชบอร์ด </div>
-
+        <div class="topic">
+            สิทธิ์ผู้ใช้งาน
+            <div class="search-add-container">
+                <input type="text" id="searchBox" placeholder="ค้นหาสิทธิ์ผู้ใช้งาน..." />
+                <button onclick="window.location.href='/create_permission'" class="add-permission-button">สร้างสิทธิ์ผู้ใช้งาน</button>
+            </div>
+        </div>
+        
         <!-- ============= Center Dashboard =============== -->
-
+        
         <div class="centered-content">
-            <div class="text"> Hello word </div>
-
-          </div>
+            <div class="permission-container">
+                <div class="permission-header">
+                    <ul class="permission-details">
+                        <li class="id-permission">รหัสสิทธิ์ผู้ใช้งาน</li>
+                        <li class="name-permission">ชื่อสิทธิ์ผู้ใช้งาน</li>
+                        <li class="action-permission">จัดการ</li>
+                    </ul>
+                </div>
+                <hr class="underline">
+                <% permission.forEach(function(permission) { %>
+                    <div class="permission-content">
+                        <ul class="permission-details">
+                            <li class="permission-id">
+                                <%= permission.id %> <!-- Assuming the property is named 'id' -->
+                            </li>
+                            <li class="permission-name">
+                                <%= permission.name %> <!-- Assuming the property is named 'name' -->
+                            </li>
+                            <li class="permission-action">
+                                <button onclick="location.href='/view_user_permission_id/<%= permission.id %>'" class="view-button">ดูข้อมูล</button>
+                                <form action="/delete_user_permission_id/<%= permission.id %>" method="post" style="display: inline;">
+                                    <button type="submit" class="delete-button">ลบ</button>
+                                </form>
+                            </li> 
+                        </ul>
+                    </div>
+                <% }); %>
+            </div>
+        </div>
 
     </section>
 

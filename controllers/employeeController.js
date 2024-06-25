@@ -1,5 +1,4 @@
 const EmployeeModel = require('../models/EmployeeModel.js');
-const connection = require('../models/ConMysql');
 
 module.exports = {
 
