@@ -42,7 +42,12 @@ app.post('/delete_employee/:id', require('./routes/employee'));
 app.post('/update_employee', require('./routes/employee'));
 
 app.get('/permission', require('./routes/permission'));
-app.get('/create_permission', require('./routes/permission'));
+app.get('/add_permission', require('./routes/permission'));
+app.get('/view_permission/:id', require('./routes/permission'));
+app.get('/edit_permission/:id', require('./routes/permission'));
+app.post('/create_permission', require('./routes/permission'));
+app.post('/delete_permission/:id', require('./routes/permission'));
+app.post('/update_permission', require('./routes/permission'));
 
 // app.post('/add_employee', require('./routes/employee'));
 // app.get('/employee_add', (req, res) => {

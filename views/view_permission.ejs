@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS</title>
+
+    <!-- Box Icons  -->
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Styles  -->
+    <link rel="shortcut icon" href="img/kxp_fav.png" type="image/x-icon">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/permission_view.css">
+
+</head>
+
+<body>
+    <div class="sidebar close">
+        <!-- ========== Logo ============  -->
+        <a href="#" class="logo-box">
+            <i class='bx bxs-cat'></i>
+            <div class="logo-name">POS</div>
+        </a>
+
+        <!-- ========== List ============  -->
+        <ul class="sidebar-list">
+            <!-- -------- Non Dropdown List Item ------- -->
+            <li>
+                <div class="title">
+                    <a href="/dashboard" class="link">
+                        <i class='bx bx-grid-alt'></i>
+                        <span class="name">แดชบอร์ด</span>
+                    </a>
+                    <!-- <i class='bx bxs-chevron-down'></i> -->
+                </div>
+                <div class="submenu">
+                    <a href="/dashboard" class="link submenu-title">แดชบอร์ด</a>
+                    <!-- submenu links here  -->
+                </div>
+            </li>
+
+            <!-- -------- Dropdown List Item ------- -->
+            <li class="dropdown">
+                <div class="title">
+                    <a href="/employee" class="link">
+                        <i class='bx bx-collection'></i>
+                        <span class="name">ข้อมูลพนักงาน</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="/employee" class="link submenu-title">ข้อมูลพนักงาน</a>
+                    <a href="/employee" class="link">พนักงาน</a>
+                    <a href="#" class="link">ผู้ใช้งาน</a>
+                    <a href="add_permission" class="link">สิทธิ์ผู้ใช้งาน</a>
+                </div>
+            </li>
+
+            <!-- -------- Dropdown List Item ------- -->
+            <li class="dropdown">
+                <div class="title">
+                    <a href="#" class="link">
+                        <i class='bx bxs-food-menu'></i>
+                        <span class="name">เมนูอาหาร</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="#" class="link submenu-title">เมนูอาหาร</a>
+                    <a href="#" class="link">เมนูอาหาร</a>
+                    <a href="#" class="link">ตั้งค่าหมวดหมู่</a>
+                    <a href="#" class="link">ตั้งค่าหน่วยสินค้า</a>
+                    <a href="#" class="link">ตั้งค่าประเภท</a>
+                </div>
+            </li>
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <li class="dropdown">
+                <div class="title">
+                    <a href="#" class="link">
+                        <i class='bx bx-table'></i>
+                        <span class="name">โต๊ะอาหาร</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="#" class="link submenu-title">โต๊ะอาหาร</a>
+                    <a href="#" class="link">จัดโต๊ะอาหาร</a>
+                    <a href="#" class="link">สั่งเมนู</a>
+                </div>
+            </li>
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <li class="dropdown">
+                <div class="title">
+                    <a href="#" class="link">
+                        <i class='bx bx-cart-download'></i>
+                        <span class="name">รายการจัดซื้อ</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="#" class="link submenu-title">รายการจัดซื้อ</a>
+                    <a href="#" class="link">รายการจัดซื้อ</a>
+                    <a href="#" class="link">คงคลัง</a>
+                    <a href="#" class="link">ตั้งค่าประเภท</a>
+                    <a href="#" class="link">ตั้งค่าปริมาณ</a>
+                </div>
+            </li>
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <li>
+                <div class="title">
+                    <a href="#" class="link">
+                        <i class='bx bxs-dollar-circle'></i>
+                        <span class="name">โปรโมชั่น</span>
+                    </a>
+                    <!-- <i class='bx bxs-chevron-down'></i> -->
+                </div>
+                <div class="submenu">
+                    <a href="#" class="link submenu-title">โปรโมชั่น</a>
+                    <!-- submenu links here  -->
+                </div>
+            </li>
+    </div>
+
+    <!-- ============= Home Section =============== -->
+    <section class="home">
+        <div class="nav">
+            <div class="toggle-sidebar">
+                <i class='bx bx-menu'></i>
+            </div>
+            <nav>
+                <div class="nav-content"> <!-- Added this wrapper for better control -->
+                    <div class="profile-details">
+                        <img src="../img/chef.png" alt="">
+                    </div>
+                    <a href="/login">เข้าสู่ระบบ</a>
+                </div>
+            </nav>
+        </div>
+
+        <!-- ============= Top Dashboard =============== -->
+        <div class="breadcrumbs">
+            <a href="/dashboard"> หน้าหลัก</a> > <a href="/permission">สิทธิ์ผู้ใช้งาน</a> >
+            <span>รายละเอียดสิทธิ์ผู้ใช้งาน</span>
+        </div>
+        <div class="topic"><a href="javascript:history.back()" style="text-decoration: none;">
+                <i class='bx bx-left-arrow-alt'></i></a> รายละเอียดสิทธิ์ผู้ใช้งาน</div>
+
+        <div class="topic">สร้างสิทธิ์ผู้ใช้งาน</div>
+
+        <!-- ============= Center Dashboard =============== -->
+
+        <div class="centered-content">
+            <div class="input-field">
+                <label for="permission_id">รหัสสิทธิ์ผู้ใช้งาน</label>
+                <input type="text" name="permission_id" id="permission_id" value="<%= permission[0].permission_id %>"
+                    readonly aria-label="รหัสสิทธิ์ผู้ใช้งาน">
+            </div>
+            <div class="input-field">
+                <label for="permission_name">ชื่อสิทธิ์ผู้ใช้งาน</label>
+                <input type="text" name="permission_name" id="permission_name"
+                    value="<%= permission[0].permission_name %>" readonly aria-label="ชื่อสิทธิ์ผู้ใช้งาน">
+            </div>
+
+            <div class="input-field">
+                <table class="permissions-table">
+                    <thead>
+                        <tr>
+                            <th>สิทธิ์การใช้งาน</th>
+                            <th>ทั้งหมด</th>
+                            <th>อ่าน</th>
+                            <th>สร้าง</th>
+                            <th>แก้ไข</th>
+                            <th>ลบ</th>
+                            <th>ยืนยัน</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="7">
+                                <hr class="underline">
+                            </td>
+                        </tr>
+                    <tbody>
+                        <tr>
+                            <td>แดชบอร์ด</td>
+                            <td><input type="checkbox" id="dashboard_all" <%=permission[0].dashboard_read==='Y' &&
+                                permission[0].dashboard_create==='Y' && permission[0].dashboard_update==='Y' &&
+                                permission[0].dashboard_delete==='Y' && permission[0].dashboard_confirm==='Y'
+                                ? 'checked' : '' %> disabled>
+                        </td>
+                            <td><input type="checkbox" name="dashboard_read" <%=permission[0].dashboard_read==='Y'
+                                    ? 'checked' : '' %> disabled></td>
+                            <td><input type="checkbox" name="dashboard_create" <%=permission[0].dashboard_create==='Y'
+                                    ? 'checked' : '' %> disabled></td>
+                            <td><input type="checkbox" name="dashboard_update" <%=permission[0].dashboard_update==='Y'
+                                    ? 'checked' : '' %> disabled></td>
+                            <td><input type="checkbox" name="dashboard_delete" <%=permission[0].dashboard_delete==='Y'
+                                    ? 'checked' : '' %> disabled></td>
+                            <td><input type="checkbox" name="dashboard_confirm" <%=permission[0].dashboard_confirm==='Y'
+                                    ? 'checked' : '' %> disabled></td>
+                        <tr>
+                            <td>ข้อมูลพนักงาน</td>
+                            <td><input type="checkbox" id="employee_all" <%=permission[0].employee_read==='Y' &&
+                                permission[0].employee_create==='Y' && permission[0].employee_update==='Y' &&
+                                permission[0].employee_delete==='Y' && permission[0].employee_confirm==='Y'
+                                ? 'checked' : '' %> disabled>
+                            </td>
+                            <td><input type="checkbox" <%=permission[0].employee_read==='Y' ? 'checked' : '' %>
+                                disabled></td>
+                            <td><input type="checkbox" <%=permission[0].employee_create==='Y' ? 'checked' : '' %>
+                                disabled></td>
+                            <td><input type="checkbox" <%=permission[0].employee_update==='Y' ? 'checked' : '' %>
+                                disabled></td>
+                            <td><input type="checkbox" <%=permission[0].employee_delete==='Y' ? 'checked' : '' %>
+                                disabled></td>
+                            <td><input type="checkbox" <%=permission[0].employee_confirm==='Y' ? 'checked' : '' %>
+                                disabled></td>
+                        </tr>
+                        <tr>
+                            <td>เมนูอาหาร</td>
+                            <td><input type="checkbox" id="menu_all" <%=permission[0].menu_read==='Y' &&
+                                permission[0].menu_create==='Y' && permission[0].menu_update==='Y' &&
+                                permission[0].menu_delete==='Y' && permission[0].menu_confirm==='Y'
+                                ? 'checked' : '' %> disabled>
+                            </td>
+                            <td><input type="checkbox" <%=permission[0].menu_read==='Y' ? 'checked' : '' %> disabled>
+                            </td>
+                            <td><input type="checkbox" <%=permission[0].menu_create==='Y' ? 'checked' : '' %> disabled>
+                            </td>
+                            <td><input type="checkbox" <%=permission[0].menu_update==='Y' ? 'checked' : '' %> disabled>
+                            </td>
+                            <td><input type="checkbox" <%=permission[0].menu_delete==='Y' ? 'checked' : '' %> disabled>
+                            </td>
+                            <td><input type="checkbox" <%=permission[0].menu_confirm==='Y' ? 'checked' : '' %> disabled>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>โต๊ะอาหาร</td>
+                            <td><input type="checkbox" id="table_all" <%=permission[0].table_read==='Y' &&
+                                permission[0].table_create==='Y' && permission[0].table_update==='Y' &&
+                                permission[0].table_delete==='Y' && permission[0].table_confirm==='Y'
+                                ? 'checked' : '' %> disabled>
+                            </td>
+                            <td><input type="checkbox" <%=permission[0].table_read==='Y' ? 'checked' : '' %> disabled>
+                            </td>
+                            <td><input type="checkbox" <%=permission[0].table_create==='Y' ? 'checked' : '' %> disabled>
+                            </td>
+                            <td><input type="checkbox" <%=permission[0].table_update==='Y' ? 'checked' : '' %> disabled>
+                            </td>
+                            <td><input type="checkbox" <%=permission[0].table_delete==='Y' ? 'checked' : '' %> disabled>
+                            </td>
+                            <td><input type="checkbox" <%=permission[0].table_confirm==='Y' ? 'checked' : '' %>
+                                disabled>
+                        </tr>
+                        <tr>
+                            <td>รายการจัดซื้อ</td>
+                            <td><input type="checkbox" id="buying_all" <%=permission[0].buying_read==='Y' &&
+                                permission[0].buying_create==='Y' && permission[0].buying_update==='Y' &&
+                                permission[0].buying_delete==='Y' && permission[0].buying_confirm==='Y'
+                                ? 'checked' : '' %> disabled>
+                            </td>
+                            <td><input type="checkbox" <%=permission[0].buying_read==='Y' ? 'checked' : '' %> disabled>
+                            </td>
+                            <td><input type="checkbox" <%=permission[0].buying_create==='Y' ? 'checked' : '' %>
+                                disabled>
+                            </td>
+                            <td><input type="checkbox" <%=permission[0].buying_update==='Y' ? 'checked' : '' %>
+                                disabled>
+                            </td>
+                            <td><input type="checkbox" <%=permission[0].buying_delete==='Y' ? 'checked' : '' %>
+                                disabled>
+                            </td>
+                            <td><input type="checkbox" <%=permission[0].buying_confirm==='Y' ? 'checked' : '' %>
+                                disabled>
+                        </tr>
+                        <tr>
+                            <td>โปรโมชั่น</td>
+                            <td><input type="checkbox" id="promotion_all" <%=permission[0].promotion_read==='Y' &&
+                                permission[0].promotion_create==='Y' && permission[0].promotion_update==='Y' &&
+                                permission[0].promotion_delete==='Y' && permission[0].promotion_confirm==='Y'
+                                ? 'checked' : '' %> disabled>
+                            </td>
+                            <td><input type="checkbox" <%=permission[0].promotion_read==='Y' ? 'checked' : '' %>
+                                disabled>
+                            </td>
+                            <td><input type="checkbox" <%=permission[0].promotion_create==='Y' ? 'checked' : '' %>
+                                disabled>
+                            </td>
+                            <td><input type="checkbox" <%=permission[0].promotion_update==='Y' ? 'checked' : '' %>
+                                disabled>
+                            </td>
+                            <td><input type="checkbox" <%=permission[0].promotion_delete==='Y' ? 'checked' : '' %>
+                                disabled>
+                            </td>
+                            <td><input type="checkbox" <%=permission[0].promotion_confirm==='Y' ? 'checked' : '' %>
+                                disabled>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="input-field">
+                <a href="/edit_permission/<%= permission[0].permission_id %>" class="edit-button">แก้ไข</a>
+            </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Link JS -->
+    <script src="../js/index.js"></script>
+</body>
+
+</html>

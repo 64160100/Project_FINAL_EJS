@@ -1,0 +1,175 @@
+button[type="submit"] {
+    background-image: linear-gradient(to right, #4CAF50, #5cb85c); /* Green gradient */
+}
+
+button[type="reset"] {
+    background-image: linear-gradient(to right, #ff4b5a, #ff6b81); /* Red gradient */
+}
+
+button {
+    margin: 10px 5px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    color: white;
+    transition: background-image 0.3s, box-shadow 0.3s; /* Smooth transition for hover */
+}
+
+
+.breadcrumbs {
+    font-size: 14px; /* Adjust based on your preference */
+    margin-bottom: 10px; /* Space before the next section */
+    color: #6c757d; /* A muted color for the text */
+}
+
+.breadcrumbs a {
+    color: #0275d8; /* Link color */
+    text-decoration: none; /* Removes underline from links */
+}
+
+.breadcrumbs a:hover {
+    text-decoration: underline; /* Adds underline on hover for better UX */
+}
+
+/* Topic section styling */
+.topic {
+    font-size: 40px; /* Adjust the font size as needed */
+    color: #333; /* Text color */
+    display: flex;
+    align-items: center; /* Centers the icon with the text vertically */
+}
+
+.topic a {
+    color: #333; /* Arrow and link color */
+    display: inline-flex; /* Keeps the icon aligned with the text */
+    align-items: center;
+    text-decoration: none; /* Removes underline from the link */
+}
+
+
+.form-content {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: auto;
+}
+
+.input-field {
+    margin-bottom: 20px;
+}
+
+.input-field label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.input-field input[type="text"],
+.input-field input[type="checkbox"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Makes sure padding doesn't affect the overall width */
+}
+
+/* Styling for buttons */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn[type="reset"] {
+    background-color: #f44336;
+    color: white;
+}
+
+/* Table styles */
+.permissions-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.permissions-table th,
+.permissions-table td {
+    text-align: left;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+.permissions-table th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+/* Hover effect for table rows */
+.permissions-table tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* Underline style */
+.underline {
+    border: none;
+    border-bottom: 1px solid #ccc;
+    margin: 10px 0;
+}
+
+/* Ensure alignment for table headers and cells */
+.permissions-table th {
+    text-align: center;
+    padding: 10px; /* Adjust padding for uniform spacing */
+}
+
+.permissions-table td {
+    padding: 10px; /* Ensure uniform padding for table cells */
+    text-align: center; /* Center-align the content of the table cells */
+}
+
+.permissions-table input[type="checkbox"] {
+    transform: scale(1.5); /* Increase the size of the checkbox */
+    margin: 0 auto; /* Center the checkbox in the cell */
+    display: block;
+}
+
+.input-field {
+    text-align: left; /* Aligns the content of the input field to the right */
+}
+
+.input-field input[type="text"] {
+    width: 25%; /* Makes the input field take the full width of its parent */
+    /* Optional: Adjust the width as needed */
+}
+
+.input-field label {
+    display: block; /* Makes the label take the full width, allowing the text alignment to take effect */
+}
+
+/* Modern button styles with gradient and shadow */
+.edit-button {
+    float: right;
+    background-image: linear-gradient(to right, #ff4b5a, #ff6b81); /* Red gradient */
+}
+
+.edit-button {
+    margin: 10px 5px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    color: white;
+}

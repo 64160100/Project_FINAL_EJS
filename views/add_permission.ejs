@@ -12,7 +12,7 @@
     <!-- Styles  -->
     <link rel="shortcut icon" href="img/kxp_fav.png" type="image/x-icon">
     <link rel="stylesheet" href="../css/index.css">
-    <link rel="stylesheet" href="../css/permission.css">
+    <link rel="stylesheet" href="../css/permission_add.css">
 
 </head>
 
@@ -29,7 +29,7 @@
             <!-- -------- Non Dropdown List Item ------- -->
             <li>
                 <div class="title">
-                    <a href="dashboard" class="link">
+                    <a href="/dashboard" class="link">
                         <i class='bx bx-grid-alt'></i>
                         <span class="name">แดชบอร์ด</span>
                     </a>
@@ -54,7 +54,7 @@
                     <a href="/employee" class="link submenu-title">ข้อมูลพนักงาน</a>
                     <a href="/employee" class="link">พนักงาน</a>
                     <a href="#" class="link">ผู้ใช้งาน</a>
-                    <a href="/permission" class="link">สิทธิ์ผู้ใช้งาน</a>
+                    <a href="#" class="link">สิทธิ์ผู้ใช้งาน</a>
                 </div>
             </li>
 
@@ -128,10 +128,10 @@
 
     <!-- ============= Home Section =============== -->
     <section class="home">
-    <div class="nav">
-        <div class="toggle-sidebar">
-            <i class='bx bx-menu'></i>
-        </div>
+        <div class="nav">
+            <div class="toggle-sidebar">
+                <i class='bx bx-menu'></i>
+            </div>
             <nav>
                 <div class="nav-content"> <!-- Added this wrapper for better control -->
                     <div class="profile-details">
@@ -142,49 +142,42 @@
             </nav>
         </div>
 
-        <!-- ============= Dashboard =============== -->
-
-        <div class="topic">
-            สิทธิ์ผู้ใช้งาน
-            <div class="search-add-container">
-                <input type="text" id="searchBox" placeholder="ค้นหาสิทธิ์ผู้ใช้งาน..." />
-                <button onclick="window.location.href='/add_permission'" class="add-permission-button">สร้างสิทธิ์ผู้ใช้งาน</button>
-            </div>
+        <!-- ============= Top Dashboard =============== -->
+        <div class="breadcrumbs">
+            <a href="/dashboard"> หน้าหลัก</a> > <a href="/permission">สิทธิ์ผู้ใช้งาน</a> >
+            <span>สร้างสิทธิ์ผู้ใช้งาน</span>
         </div>
-        
+        <div class="topic"><a href="javascript:history.back()" style="text-decoration: none;">
+                <i class='bx bx-left-arrow-alt'></i></a> สร้างสิทธิ์ผู้ใช้งาน</div>
+
+        <div class="topic">สร้างสิทธิ์ผู้ใช้งาน</div>
+
         <!-- ============= Center Dashboard =============== -->
-        
-        <div class="centered-content">
-            <div class="permission-container">
-                <div class="permission-header">
-                    <ul class="permission-details">
-                        <li class="id-permission">รหัสสิทธิ์ผู้ใช้งาน</li>
-                        <li class="name-permission">ชื่อสิทธิ์ผู้ใช้งาน</li>
-                        <li class="action-permission">จัดการ</li>
-                    </ul>
-                </div>
-                <hr class="underline">
-                <% permission.forEach(function(permission) { %>
-                    <div class="permission-content">
-                        <ul class="permission-details">
-                            <li class="permission-id">
-                                <%= permission.id %> <!-- Assuming the property is named 'id' -->
-                            </li>
-                            <li class="permission-name">
-                                <%= permission.name %> <!-- Assuming the property is named 'name' -->
-                            </li>
-                            <li class="permission-action">
-                                <button onclick="location.href='/view_permission/<%= permission.id %>'" class="view-button">ดูข้อมูล</button>
-                                <form action="/delete_user_permission_id/<%= permission.id %>" method="post" style="display: inline;">
-                                    <button type="submit" class="delete-button">ลบ</button>
-                                </form>
-                            </li> 
-                        </ul>
-                    </div>
-                <% }); %>
-            </div>
-        </div>
 
+        <div class="centered-content">
+            <form action="/create_permission" method="POST" id="myForm">
+                <div class="input-field">
+                    <label for="permission_id">รหัสสิทธิ์ผู้ใช้งาน</label>
+                    <input type="text" name="permission_id" id="permission_id" required>
+                </div>
+                <div class="input-field">
+                    <label for="permission_name">ชื่อสิทธิ์ผู้ใช้งาน</label>
+                    <input type="text" name="permission_name" id="permission_name" required>
+                </div>
+                <div class="input-field">
+                    <label for="create_by">สร้างโดย</label>
+                    <input type="text" name="create_by" id="create_by" required>
+                </div>
+                <div class="input-field" style="display:none;">
+                    <label for="create_time">Creation Datetime</label>
+                    <input type="hidden" name="create_time" id="create_time">
+                </div>
+                <div class="input-field">
+                    <button type="submit" class="btn">สร้างสิทธิ์ผู้ใช้งาน</button>
+                    <button type="reset" class="btn">ยกเลิก</button>
+                </div>
+            </form>
+        </div>
     </section>
 
     <!-- Link JS -->
