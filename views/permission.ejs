@@ -53,7 +53,7 @@
                 <div class="submenu">
                     <a href="/employee" class="link submenu-title">ข้อมูลพนักงาน</a>
                     <a href="/employee" class="link">พนักงาน</a>
-                    <a href="#" class="link">ผู้ใช้งาน</a>
+                    <a href="" class="link">ผู้ใช้งาน</a>
                     <a href="/permission" class="link">สิทธิ์ผู้ใช้งาน</a>
                 </div>
             </li>
@@ -175,8 +175,8 @@
                             </li>
                             <li class="permission-action">
                                 <button onclick="location.href='/view_permission/<%= permission.id %>'" class="view-button">ดูข้อมูล</button>
-                                <form action="/delete_user_permission_id/<%= permission.id %>" method="post" style="display: inline;">
-                                    <button type="submit" class="delete-button">ลบ</button>
+                                <form action="/delete_permission/<%= permission.id %>" method="post" style="display: inline;">
+                                    <button type="submit" class="delete-button" onclick="return confirm('ยืนยันการลบสิทธิ์ผู้ใช้งาน');">ลบ</button>
                                 </form>
                             </li> 
                         </ul>

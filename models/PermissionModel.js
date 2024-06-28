@@ -129,91 +129,69 @@ module.exports = {
         });
     },
 
-    updatePermissions: async (permissionData) => {
-        // Replace undefined or null values with 'N' in permissionData
-        Object.keys(permissionData).forEach(key => {
-            if (permissionData[key] === undefined || permissionData[key] === null) {
-                permissionData[key] = 'N'; // Convert undefined or null to 'N'
+    deletePermission: function (permissionId, callback) {
+        const queries = [
+            `DELETE FROM permission_dashboard WHERE permission_id = ?`,
+            `DELETE FROM permission_employee WHERE permission_id = ?`,
+            `DELETE FROM permission_menu WHERE permission_id = ?`,
+            `DELETE FROM permission_table WHERE permission_id = ?`,
+            `DELETE FROM permission_buying WHERE permission_id = ?`,
+            `DELETE FROM permission_promotion WHERE permission_id = ?`,
+            `DELETE FROM tbl_user_permission WHERE permission_id = ?`
+        ];
+
+        queries.forEach((query, index) => {
+            connection.query(query, [permissionId], (error, result) => {
+                if (error) {
+                    return callback(error, null);
+                }
+                if (index === queries.length - 1) { // Last query
+                    callback(null, "Permission deleted successfully");
+                }
             }
+            );
         });
+    },
+    
+    updatePermission(permissionId, permissions, callback) {
+        // Assuming db is a database connection object
+        const queries = [
+            {
+                query: `UPDATE permission_dashboard SET dashboard_read = ?, dashboard_create = ?, dashboard_update = ?, dashboard_delete = ?, dashboard_confirm = ? WHERE permission_id = ?`,
+                params: [permissions.dashboard_read, permissions.dashboard_create, permissions.dashboard_update, permissions.dashboard_delete, permissions.dashboard_confirm, permissionId]
+            },
+            {
+                query: `UPDATE permission_employee SET employee_read = ?, employee_create = ?, employee_update = ?, employee_delete = ?, employee_confirm = ? WHERE permission_id = ?`,
+                params: [permissions.employee_read, permissions.employee_create, permissions.employee_update, permissions.employee_delete, permissions.employee_confirm, permissionId]
+            },
+            {
+                query: `UPDATE permission_menu SET menu_read = ?, menu_create = ?, menu_update = ?, menu_delete = ?, menu_confirm = ? WHERE permission_id = ?`,
+                params: [permissions.menu_read, permissions.menu_create, permissions.menu_update, permissions.menu_delete, permissions.menu_confirm, permissionId]
+            },
+            {
+                query: `UPDATE permission_table SET table_read = ?, table_create = ?, table_update = ?, table_delete = ?, table_confirm = ? WHERE permission_id = ?`,
+                params: [permissions.table_read, permissions.table_create, permissions.table_update, permissions.table_delete, permissions.table_confirm, permissionId]
+            },
+            {
+                query: `UPDATE permission_buying SET buying_read = ?, buying_create = ?, buying_update = ?, buying_delete = ?, buying_confirm = ? WHERE permission_id = ?`,
+                params: [permissions.buying_read, permissions.buying_create, permissions.buying_update, permissions.buying_delete, permissions.buying_confirm, permissionId]
+            },
+            {
+                query: `UPDATE permission_promotion SET promotion_read = ?, promotion_create = ?, promotion_update = ?, promotion_delete = ?, promotion_confirm = ? WHERE permission_id = ?`,
+                params: [permissions.promotion_read, permissions.promotion_create, permissions.promotion_update, permissions.promotion_delete, permissions.promotion_confirm, permissionId]
+            }
+        ];
 
-        // Construct an SQL query to update permissions based on permissionData
-        const updatePermissionsQuery = `
-ี           ๊UPDATE 
-            up.permission_id, 
-            up.permission_name, 
-            COALESCE(d.dashboard_read, 'N') as dashboard_read, 
-            COALESCE(d.dashboard_create, 'N') as dashboard_create, 
-            COALESCE(d.dashboard_update, 'N') as dashboard_update, 
-            COALESCE(d.dashboard_delete, 'N') as dashboard_delete, 
-            COALESCE(d.dashboard_confirm, 'N') as dashboard_confirm,
-            COALESCE(e.employee_read, 'N') as employee_read, 
-            COALESCE(e.employee_create, 'N') as employee_create, 
-            COALESCE(e.employee_update, 'N') as employee_update, 
-            COALESCE(e.employee_delete, 'N') as employee_delete, 
-            COALESCE(e.employee_confirm, 'N') as employee_confirm,
-            COALESCE(m.menu_read, 'N') as menu_read, 
-            COALESCE(m.menu_create, 'N') as menu_create, 
-            COALESCE(m.menu_update, 'N') as menu_update, 
-            COALESCE(m.menu_delete, 'N') as menu_delete, 
-            COALESCE(m.menu_confirm, 'N') as menu_confirm,
-            COALESCE(b.buying_read, 'N') as buying_read, 
-            COALESCE(b.buying_create, 'N') as buying_create, 
-            COALESCE(b.buying_update, 'N') as buying_update, 
-            COALESCE(b.buying_delete, 'N') as buying_delete, 
-            COALESCE(b.buying_confirm, 'N') as buying_confirm,
-            COALESCE(p.promotion_read, 'N') as promotion_read, 
-            COALESCE(p.promotion_create, 'N') as promotion_create, 
-            COALESCE(p.promotion_update, 'N') as promotion_update, 
-            COALESCE(p.promotion_delete, 'N') as promotion_delete, 
-            COALESCE(p.promotion_confirm, 'N') as promotion_confirm,
-            COALESCE(t.table_read, 'N') as table_read, 
-            COALESCE(t.table_create, 'N') as table_create, 
-            COALESCE(t.table_update, 'N') as table_update, 
-            COALESCE(t.table_delete, 'N') as table_delete, 
-            COALESCE(t.table_confirm, 'N') as table_confirm
-        FROM 
-            tbl_user_permission up
-        LEFT JOIN 
-            permission_dashboard d ON up.permission_id = d.permission_id
-        LEFT JOIN 
-            permission_employee e ON up.permission_id = e.permission_id
-        LEFT JOIN 
-            permission_menu m ON up.permission_id = m.permission_id
-        LEFT JOIN 
-            permission_buying b ON up.permission_id = b.permission_id
-        LEFT JOIN 
-            permission_promotion p ON up.permission_id = p.permission_id
-        LEFT JOIN 
-            permission_table t ON up.permission_id = t.permission_id
-        WHERE 
-            up.permission_id = ?
-        `;
-
-        const values = [
-            permissionData.dashboard_read, permissionData.dashboard_create, permissionData.dashboard_update, permissionData.dashboard_delete, permissionData.dashboard_confirm,
-            permissionData.employee_read, permissionData.employee_create, permissionData.employee_update, permissionData.employee_delete, permissionData.employee_confirm,
-            permissionData.menu_read, permissionData.menu_create, permissionData.menu_update, permissionData.menu_delete, permissionData.menu_confirm,
-            permissionData.table_read, permissionData.table_create, permissionData.table_update, permissionData.table_delete, permissionData.table_confirm,
-            permissionData.buying_read, permissionData.buying_create, permissionData.buying_update, permissionData.buying_delete, permissionData.buying_confirm,
-            permissionData.promotion_read, permissionData.promotion_create, permissionData.promotion_update, permissionData.promotion_delete, permissionData.promotion_confirm,
-            permissionData.permission_id
-        ].map(value => value === undefined ? null : value); // Ensure no undefined values
-
-        try {
-            // Use the correct variable name for the SQL query
-            const [result] = await connection.execute(updatePermissionsQuery, values);
-            return result.affectedRows > 0;
-        } catch (error) {
-            console.error('Error updating permissions in the database:', error);
-            throw error;
-        }
+        queries.forEach((item, index) => {
+            connection.query(item.query, item.params, (error, result) => {
+                if (error) {
+                    return callback(error, null);
+                }
+                if (index === queries.length - 1) { // Last query
+                    callback(null, "Permissions updated successfully");
+                }
+            });
+        });
     },
 
-
-    deletePermission: function (permissionId, callback) {
-        connection.query('DELETE FROM tbl_user_permission WHERE user_permission_id = ?', [permissionId], (error, results) => {
-            callback(error, results);
-        });
-    }
 };

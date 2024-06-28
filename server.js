@@ -32,7 +32,6 @@ app.get('/login', (req, res) => {
     res.render('login');
 });
 
-
 app.get('/employee', require('./routes/employee'));
 app.get('/add_employee', require('./routes/employee'));
 app.get('/view_employee/:id', require('./routes/employee'));

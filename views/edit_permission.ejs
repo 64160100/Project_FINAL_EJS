@@ -29,7 +29,7 @@
             <!-- -------- Non Dropdown List Item ------- -->
             <li>
                 <div class="title">
-                    <a href="/dashboard" class="link">
+                    <a href="dashboard" class="link">
                         <i class='bx bx-grid-alt'></i>
                         <span class="name">แดชบอร์ด</span>
                     </a>
@@ -53,8 +53,8 @@
                 <div class="submenu">
                     <a href="/employee" class="link submenu-title">ข้อมูลพนักงาน</a>
                     <a href="/employee" class="link">พนักงาน</a>
-                    <a href="#" class="link">ผู้ใช้งาน</a>
-                    <a href="add_permission" class="link">สิทธิ์ผู้ใช้งาน</a>
+                    <a href="" class="link">ผู้ใช้งาน</a>
+                    <a href="/permission" class="link">สิทธิ์ผู้ใช้งาน</a>
                 </div>
             </li>
 
@@ -189,99 +189,113 @@
                         <tbody>
                             <tr>
                                 <td>แดชบอร์ด</td>
-                                <td><input type="checkbox" id="dashboard_all">
+                                <td><input type="checkbox" id="dashboard_all" <%=permission[0].dashboard_read==='Y' &&
+                                        permission[0].dashboard_create==='Y' && permission[0].dashboard_update==='Y' &&
+                                        permission[0].dashboard_delete==='Y' && permission[0].dashboard_confirm==='Y'
+                                        ? 'checked' : '' %>
                                 </td>
                                 <td><input type="checkbox" name="dashboard_read" <%=permission[0].dashboard_read==='Y'
-                                        ? 'checked' : '' %> </td>
+                                        ? 'checked' : '' %> ></td>
                                 <td><input type="checkbox" name="dashboard_create"
-                                        <%=permission[0].dashboard_create==='Y' ? 'checked' : '' %> </td>
+                                        <%=permission[0].dashboard_create==='Y' ? 'checked' : '' %> ></td>
                                 <td><input type="checkbox" name="dashboard_update"
-                                        <%=permission[0].dashboard_update==='Y' ? 'checked' : '' %> </td>
+                                        <%=permission[0].dashboard_update==='Y' ? 'checked' : '' %> ></td>
                                 <td><input type="checkbox" name="dashboard_delete"
-                                        <%=permission[0].dashboard_delete==='Y' ? 'checked' : '' %> </td>
+                                        <%=permission[0].dashboard_delete==='Y' ? 'checked' : '' %> ></td>
                                 <td><input type="checkbox" name="dashboard_confirm"
-                                        <%=permission[0].dashboard_confirm==='Y' ? 'checked' : '' %> </td>
+                                        <%=permission[0].dashboard_confirm==='Y' ? 'checked' : '' %> ></td>
+                            <tr>
                             <tr>
                                 <td>ข้อมูลพนักงาน</td>
-                                <td><input type="checkbox" id="employee_all">
+                                <td><input type="checkbox" id="employee_all" <%=permission[0].employee_read==='Y' &&
+                                        permission[0].employee_create==='Y' && permission[0].employee_update==='Y' &&
+                                        permission[0].employee_delete==='Y' && permission[0].employee_confirm==='Y'
+                                        ? 'checked' : '' %>
                                 </td>
-                                <td><input type="checkbox" <%=permission[0].employee_read==='Y' ? 'checked' : '' %>
-                                </td>
-                                <td><input type="checkbox" <%=permission[0].employee_create==='Y' ? 'checked' : '' %>
-                                </td>
-                                <td><input type="checkbox" <%=permission[0].employee_update==='Y' ? 'checked' : '' %>
-                                </td>
-                                <td><input type="checkbox" <%=permission[0].employee_delete==='Y' ? 'checked' : '' %>
-                                </td>
-                                <td><input type="checkbox" <%=permission[0].employee_confirm==='Y' ? 'checked' : '' %>
-                                </td>
+                                <td><input type="checkbox" name="employee_read" <%=permission[0].employee_read==='Y'
+                                        ? 'checked' : '' %> ></td>
+                                <td><input type="checkbox" name="employee_create" <%=permission[0].employee_create==='Y'
+                                        ? 'checked' : '' %> ></td>
+                                <td><input type="checkbox" name="employee_update" <%=permission[0].employee_update==='Y'
+                                        ? 'checked' : '' %> ></td>
+                                <td><input type="checkbox" name="employee_delete" <%=permission[0].employee_delete==='Y'
+                                        ? 'checked' : '' %> ></td>
+                                <td><input type="checkbox" name="employee_confirm"
+                                        <%=permission[0].employee_confirm==='Y' ? 'checked' : '' %> ></td>
                             </tr>
                             <tr>
                                 <td>เมนูอาหาร</td>
-                                <td><input type="checkbox" id="menu_all">
+                                <td><input type="checkbox" id="menu_all" <%=permission[0].menu_read==='Y' &&
+                                        permission[0].menu_create==='Y' && permission[0].menu_update==='Y' &&
+                                        permission[0].menu_delete==='Y' && permission[0].menu_confirm==='Y' ? 'checked'
+                                        : '' %>
                                 </td>
-                                <td><input type="checkbox" <%=permission[0].menu_read==='Y' ? 'checked' : '' %>
-                                </td>
-                                <td><input type="checkbox" <%=permission[0].menu_create==='Y' ? 'checked' : '' %>
-                                </td>
-                                <td><input type="checkbox" <%=permission[0].menu_update==='Y' ? 'checked' : '' %>
-                                </td>
-                                <td><input type="checkbox" <%=permission[0].menu_delete==='Y' ? 'checked' : '' %>
-                                </td>
-                                <td><input type="checkbox" <%=permission[0].menu_confirm==='Y' ? 'checked' : '' %>
-                                </td>
+                                <td><input type="checkbox" name="menu_read" <%=permission[0].menu_read==='Y' ? 'checked'
+                                        : '' %> ></td>
+                                <td><input type="checkbox" name="menu_create" <%=permission[0].menu_create==='Y'
+                                        ? 'checked' : '' %> ></td>
+                                <td><input type="checkbox" name="menu_update" <%=permission[0].menu_update==='Y'
+                                        ? 'checked' : '' %> ></td>
+                                <td><input type="checkbox" name="menu_delete" <%=permission[0].menu_delete==='Y'
+                                        ? 'checked' : '' %> ></td>
+                                <td><input type="checkbox" name="menu_confirm" <%=permission[0].menu_confirm==='Y'
+                                        ? 'checked' : '' %> ></td>
                             </tr>
                             <tr>
                                 <td>โต๊ะอาหาร</td>
-                                <td><input type="checkbox" id="table_all">
+                                <td><input type="checkbox" id="table_all" <%=permission[0].table_read==='Y' &&
+                                        permission[0].table_create==='Y' && permission[0].table_update==='Y' &&
+                                        permission[0].table_delete==='Y' && permission[0].table_confirm==='Y'
+                                        ? 'checked' : '' %>
                                 </td>
-                                <td><input type="checkbox" <%=permission[0].table_read==='Y' ? 'checked' : '' %>
-                                </td>
-                                <td><input type="checkbox" <%=permission[0].table_create==='Y' ? 'checked' : '' %>
-                                </td>
-                                <td><input type="checkbox" <%=permission[0].table_update==='Y' ? 'checked' : '' %>
-                                </td>
-                                <td><input type="checkbox" <%=permission[0].table_delete==='Y' ? 'checked' : '' %>
-                                </td>
-                                <td><input type="checkbox" <%=permission[0].table_confirm==='Y' ? 'checked' : '' %>
+                                <td><input type="checkbox" name="table_read" <%=permission[0].table_read==='Y'
+                                        ? 'checked' : '' %> ></td>
+                                <td><input type="checkbox" name="table_create" <%=permission[0].table_create==='Y'
+                                        ? 'checked' : '' %> ></td>
+                                <td><input type="checkbox" name="table_update" <%=permission[0].table_update==='Y'
+                                        ? 'checked' : '' %> ></td>
+                                <td><input type="checkbox" name="table_delete" <%=permission[0].table_delete==='Y'
+                                        ? 'checked' : '' %> ></td>
+                                <td><input type="checkbox" name="table_confirm" <%=permission[0].table_confirm==='Y'
+                                        ? 'checked' : '' %> ></td>
 
                             </tr>
                             <tr>
                                 <td>รายการจัดซื้อ</td>
-                                <td><input type="checkbox" id="buying_all">
+                                <td><input type="checkbox" id="buying_all" <%=permission[0].buying_read==='Y' &&
+                                        permission[0].buying_create==='Y' && permission[0].buying_update==='Y' &&
+                                        permission[0].buying_delete==='Y' && permission[0].buying_confirm==='Y'
+                                        ? 'checked' : '' %>
                                 </td>
-                                <td><input type="checkbox" <%=permission[0].buying_read==='Y' ? 'checked' : '' %>
-                                </td>
-                                <td><input type="checkbox" <%=permission[0].buying_create==='Y' ? 'checked' : '' %>
-
-                                </td>
-                                <td><input type="checkbox" <%=permission[0].buying_update==='Y' ? 'checked' : '' %>
-
-                                </td>
-                                <td><input type="checkbox" <%=permission[0].buying_delete==='Y' ? 'checked' : '' %>
-
-                                </td>
-                                <td><input type="checkbox" <%=permission[0].buying_confirm==='Y' ? 'checked' : '' %>
+                                <td><input type="checkbox" name="buying_read" <%=permission[0].buying_read==='Y'
+                                        ? 'checked' : '' %> ></td>
+                                <td><input type="checkbox" name="buying_create" <%=permission[0].buying_create==='Y'
+                                        ? 'checked' : '' %> ></td>
+                                <td><input type="checkbox" name="buying_update" <%=permission[0].buying_update==='Y'
+                                        ? 'checked' : '' %> ></td>
+                                <td><input type="checkbox" name="buying_delete" <%=permission[0].buying_delete==='Y'
+                                        ? 'checked' : '' %> ></td>
+                                <td><input type="checkbox" name="buying_confirm" <%=permission[0].buying_confirm==='Y'
+                                        ? 'checked' : '' %> ></td>
 
                             </tr>
                             <tr>
                                 <td>โปรโมชั่น</td>
-                                <td><input type="checkbox" id="promotion_all">
+                                <td><input type="checkbox" id="promotion_all" <%=permission[0].promotion_read==='Y' &&
+                                        permission[0].promotion_create==='Y' && permission[0].promotion_update==='Y' &&
+                                        permission[0].promotion_delete==='Y' && permission[0].promotion_confirm==='Y'
+                                        ? 'checked' : '' %>
                                 </td>
-                                <td><input type="checkbox" <%=permission[0].promotion_read==='Y' ? 'checked' : '' %>
-
-                                </td>
-                                <td><input type="checkbox" <%=permission[0].promotion_create==='Y' ? 'checked' : '' %>
-
-                                </td>
-                                <td><input type="checkbox" <%=permission[0].promotion_update==='Y' ? 'checked' : '' %>
-
-                                </td>
-                                <td><input type="checkbox" <%=permission[0].promotion_delete==='Y' ? 'checked' : '' %>
-
-                                </td>
-                                <td><input type="checkbox" <%=permission[0].promotion_confirm==='Y' ? 'checked' : '' %>
-
+                                <td><input type="checkbox" name="promotion_read" <%=permission[0].promotion_read==='Y'
+                                        ? 'checked' : '' %> ></td>
+                                <td><input type="checkbox" name="promotion_create"
+                                        <%=permission[0].promotion_create==='Y' ? 'checked' : '' %> ></td>
+                                <td><input type="checkbox" name="promotion_update"
+                                        <%=permission[0].promotion_update==='Y' ? 'checked' : '' %> ></td>
+                                <td><input type="checkbox" name="promotion_delete"
+                                        <%=permission[0].promotion_delete==='Y' ? 'checked' : '' %> ></td>
+                                <td><input type="checkbox" name="promotion_confirm"
+                                        <%=permission[0].promotion_confirm==='Y' ? 'checked' : '' %> ></td>
                             </tr>
                         </tbody>
                     </table>
@@ -294,6 +308,47 @@
     </section>
 
     <script src="../js/index.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Select all 'all' checkboxes
+            const allCheckboxes = document.querySelectorAll('input[type="checkbox"][id$="_all"]');
+    
+            allCheckboxes.forEach(allCheckbox => {
+                // Enable interaction with 'all' checkboxes
+                allCheckbox.removeAttribute('disabled');
+    
+                // Define a prefix based on the id of the 'all' checkbox
+                const prefix = allCheckbox.id.replace('_all', '');
+    
+                // Select related checkboxes
+                const relatedCheckboxes = document.querySelectorAll(`input[name^="${prefix}_"]:not([id$="_all"])`);
+    
+                // Toggle related checkboxes based on 'all' checkbox
+                allCheckbox.addEventListener('change', function () {
+                    relatedCheckboxes.forEach(checkbox => {
+                        checkbox.checked = this.checked;
+                    });
+                });
+    
+                // Function to update 'all' checkbox based on related checkboxes
+                const updateAllCheckbox = () => {
+                    const allChecked = Array.from(relatedCheckboxes).every(checkbox => checkbox.checked);
+                    const anyChecked = Array.from(relatedCheckboxes).some(checkbox => checkbox.checked);
+    
+                    allCheckbox.checked = allChecked;
+                    allCheckbox.indeterminate = anyChecked && !allChecked;
+                };
+    
+                // Add change event listeners to related checkboxes
+                relatedCheckboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', updateAllCheckbox);
+                });
+    
+                // Initial check to set the correct state of 'all' checkbox
+                updateAllCheckbox();
+            });
+        });
+    </script>
 </body>
 
 </html>
