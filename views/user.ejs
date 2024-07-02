@@ -12,8 +12,7 @@
     <!-- Styles  -->
     <link rel="shortcut icon" href="img/kxp_fav.png" type="image/x-icon">
     <link rel="stylesheet" href="../css/index.css">
-    <link rel="stylesheet" href="../css/permission_add.css">
-
+    <link rel="stylesheet" href="../css/user.css">
 </head>
 
 <body>
@@ -181,40 +180,49 @@
 
         <!-- ============= Top Dashboard =============== -->
 
-        <div class="breadcrumbs">
-            <a href="/dashboard"> หน้าหลัก</a> > <a href="/permission">สิทธิ์ผู้ใช้งาน</a> >
-            <span>สร้างสิทธิ์ผู้ใช้งาน</span>
+        <div class="topic">
+            ผู้ใช้งาน
+            <div class="search-add-container">
+                <input type="text" id="searchBox" placeholder="ค้นหาพนักงาน..." />
+            </div>
         </div>
-        <div class="topic"><a href="javascript:history.back()" style="text-decoration: none;">
-                <i class='bx bx-left-arrow-alt'></i></a> สร้างสิทธิ์ผู้ใช้งาน</div>
-
-        <div class="topic">สร้างสิทธิ์ผู้ใช้งาน</div>
-
+        
         <!-- ============= Center Dashboard =============== -->
 
         <div class="centered-content">
-            <form action="/create_permission" method="POST" id="myForm">
-                <div class="input-field">
-                    <label for="permission_id">รหัสสิทธิ์ผู้ใช้งาน</label>
-                    <input type="text" name="permission_id" id="permission_id" required>
+            <div class="user-container">
+                <div class="user-header">
+                    <ul class="user-details">
+                        <li class="id-user">รหัสพนักงาน</li>
+                        <li class="name-user">ชื่อ-สกุล</li>
+                        <li class="permission-user">ชื่อสิทธิ์ผู้ใช้งาน</li>
+                        <li class="status-user">สถานะ</li>
+                        <li class="manage-user">จัดการ</li>
+                    </ul>
                 </div>
-                <div class="input-field">
-                    <label for="permission_name">ชื่อสิทธิ์ผู้ใช้งาน</label>
-                    <input type="text" name="permission_name" id="permission_name" required>
-                </div>
-                <div class="input-field">
-                    <label for="create_by">สร้างโดย</label>
-                    <input type="text" name="create_by" id="create_by" required>
-                </div>
-                <div class="input-field" style="display:none;">
-                    <label for="create_time">Creation Datetime</label>
-                    <input type="hidden" name="create_time" id="create_time">
-                </div>
-                <div class="input-field">
-                    <button type="submit" class="btn">สร้างสิทธิ์ผู้ใช้งาน</button>
-                    <button type="reset" class="btn">ยกเลิก</button>
-                </div>
-            </form>
+                <hr class="underline">
+                <% User.forEach(function(User) { %>
+                    <div class="User-content">
+                        <ul class="user-detail">
+                            <li class="User-id">
+                                <%= User.id %>
+                            </li>
+                            <li class="user-name">
+                                <%= User.name %>
+                            </li>
+                            <li class="user-permission">
+                                <%= User.userPermission %>
+                            </li>
+                            <li class="user-status">
+                                <%= User.status === 'ON' ? 'พร้อมใช้งาน' : 'ไม่พร้อมใช้งาน' %>
+                            </li>
+                            <li class="user-action">
+                                <button onclick="location.href='/edit_user/<%= User.id %>'" class="view-button">แก้ไขข้อมูล</button>
+                            </li> 
+                        </ul>
+                    </div>
+                <% }); %>
+            </div>
         </div>
     </section>
 

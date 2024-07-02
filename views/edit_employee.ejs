@@ -24,105 +24,137 @@
         </a>
 
         <!-- ========== List ============  -->
+
         <ul class="sidebar-list">
-            <!-- -------- Non Dropdown List Item ------- -->
-            <li>
-                <div class="title">
-                    <a href="dashboard" class="link">
-                        <i class='bx bx-grid-alt'></i>
-                        <span class="name">แดชบอร์ด</span>
-                    </a>
-                    <!-- <i class='bx bxs-chevron-down'></i> -->
-                </div>
-                <div class="submenu">
-                    <a href="/dashboard" class="link submenu-title">แดชบอร์ด</a>
-                    <!-- submenu links here  -->
-                </div>
-            </li>
-
-            <!-- -------- Dropdown List Item ------- -->
-            <li class="dropdown">
-                <div class="title">
-                    <a href="/employee" class="link">
-                        <i class='bx bx-collection'></i>
-                        <span class="name">ข้อมูลพนักงาน</span>
-                    </a>
-                    <i class='bx bxs-chevron-down'></i>
-                </div>
-                <div class="submenu">
-                    <a href="/employee" class="link submenu-title">ข้อมูลพนักงาน</a>
-                    <a href="/employee" class="link">พนักงาน</a>
-                    <a href="" class="link">ผู้ใช้งาน</a>
-                    <a href="/permission" class="link">สิทธิ์ผู้ใช้งาน</a>
-                </div>
-            </li>
-            
-            <!-- -------- Dropdown List Item ------- -->
-            <li class="dropdown">
-                <div class="title">
-                    <a href="#" class="link">
-                        <i class='bx bxs-food-menu'></i>
-                        <span class="name">เมนูอาหาร</span>
-                    </a>
-                    <i class='bx bxs-chevron-down'></i>
-                </div>
-                <div class="submenu">
-                    <a href="#" class="link submenu-title">เมนูอาหาร</a>
-                    <a href="#" class="link">เมนูอาหาร</a>
-                    <a href="#" class="link">ตั้งค่าหมวดหมู่</a>
-                    <a href="#" class="link">ตั้งค่าหน่วยสินค้า</a>
-                    <a href="#" class="link">ตั้งค่าประเภท</a>
-                </div>
-            </li>
-
-            <!-- -------- Non Dropdown List Item ------- -->
-            <li class="dropdown">
-                <div class="title">
-                    <a href="#" class="link">
-                        <i class='bx bx-table'></i>
-                        <span class="name">โต๊ะอาหาร</span>
-                    </a>
-                    <i class='bx bxs-chevron-down'></i>
-                </div>
-                <div class="submenu">
-                    <a href="#" class="link submenu-title">โต๊ะอาหาร</a>
-                    <a href="#" class="link">จัดโต๊ะอาหาร</a>
-                    <a href="#" class="link">สั่งเมนู</a>
-                </div>
-            </li>
-
-            <!-- -------- Non Dropdown List Item ------- -->
-            <li class="dropdown">
-                <div class="title">
-                    <a href="#" class="link">
-                        <i class='bx bx-cart-download'></i>
-                        <span class="name">รายการจัดซื้อ</span>
-                    </a>
-                    <i class='bx bxs-chevron-down'></i>
-                </div>
-                <div class="submenu">
-                    <a href="#" class="link submenu-title">รายการจัดซื้อ</a>
-                    <a href="#" class="link">รายการจัดซื้อ</a>
-                    <a href="#" class="link">คงคลัง</a>
-                    <a href="#" class="link">ตั้งค่าประเภท</a>
-                    <a href="#" class="link">ตั้งค่าปริมาณ</a>
-                </div>
-            </li>
 
             <!-- -------- Non Dropdown List Item ------- -->
             <li>
                 <div class="title">
-                    <a href="#" class="link">
-                        <i class='bx bxs-dollar-circle'></i>
-                        <span class="name">โปรโมชั่น</span>
+                    <a href="/" class="link">
+                        <i class='bx bx-home'></i>
+                        <span class="name">หน้าหลัก</span>
                     </a>
                     <!-- <i class='bx bxs-chevron-down'></i> -->
                 </div>
                 <div class="submenu">
-                    <a href="#" class="link submenu-title">โปรโมชั่น</a>
+                    <a href="/" class="link submenu-title">หน้าหลัก</a>
                     <!-- submenu links here  -->
                 </div>
             </li>
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <% if (permissions && permissions.dashboard.dashboard_read==='Y' ) { %>
+                <li>
+                    <div class="title">
+                        <a href="/dashboard" class="link">
+                            <i class='bx bx-grid-alt'></i>
+                            <span class="name">แดชบอร์ด</span>
+                        </a>
+                        <!-- <i class='bx bxs-chevron-down'></i> -->
+                    </div>
+                    <div class="submenu">
+                        <a href="/dashboard" class="link submenu-title">แดชบอร์ด</a>
+                        <!-- submenu links here  -->
+                    </div>
+                </li>
+                <% } %>
+
+
+            <!-- -------- Dropdown List Item ------- -->
+            <% if (permissions && permissions.employee.employee_read==='Y' ) { %>
+                <li class="dropdown">
+                    <div class="title">
+                        <a href="/employee" class="link">
+                            <i class='bx bx-collection'></i>
+                            <span class="name">ข้อมูลพนักงาน</span>
+                        </a>
+                        <i class='bx bxs-chevron-down'></i>
+                    </div>
+                    <div class="submenu">
+                        <a href="/employee" class="link submenu-title">ข้อมูลพนักงาน</a>
+                        <a href="/employee" class="link">พนักงาน</a>
+                        <a href="/user" class="link">ผู้ใช้งาน</a>
+                        <a href="/permission" class="link">สิทธิ์ผู้ใช้งาน</a>
+                    </div>
+                </li>
+                <% } %>
+
+            <!-- -------- Dropdown List Item ------- -->
+            <% if (permissions && permissions.menu.menu_read==='Y' ) { %>
+                <li class="dropdown">
+                    <div class="title">
+                        <a href="#" class="link">
+                            <i class='bx bxs-food-menu'></i>
+                            <span class="name">เมนูอาหาร</span>
+                        </a>
+                        <i class='bx bxs-chevron-down'></i>
+                    </div>
+                    <div class="submenu">
+                        <a href="#" class="link submenu-title">เมนูอาหาร</a>
+                        <a href="#" class="link">เมนูอาหาร</a>
+                        <a href="#" class="link">ตั้งค่าหมวดหมู่</a>
+                        <a href="#" class="link">ตั้งค่าหน่วยสินค้า</a>
+                        <a href="#" class="link">ตั้งค่าประเภท</a>
+                    </div>
+                </li>
+                <% } %>
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <% if (permissions && permissions.table.table_read==='Y' ) { %>
+                <li class="dropdown">
+                    <div class="title">
+                        <a href="#" class="link">
+                            <i class='bx bx-table'></i>
+                            <span class="name">โต๊ะอาหาร</span>
+                        </a>
+                        <i class='bx bxs-chevron-down'></i>
+                    </div>
+                    <div class="submenu">
+                        <a href="#" class="link submenu-title">โต๊ะอาหาร</a>
+                        <a href="#" class="link">จัดโต๊ะอาหาร</a>
+                        <a href="#" class="link">สั่งเมนู</a>
+                    </div>
+                </li>
+                <% } %>
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <% if (permissions && permissions.buying.buying_read==='Y' ) { %>
+                <li class="dropdown">
+                    <div class="title">
+                        <a href="#" class="link">
+                            <i class='bx bx-cart-download'></i>
+                            <span class="name">รายการจัดซื้อ</span>
+                        </a>
+                        <i class='bx bxs-chevron-down'></i>
+                    </div>
+                    <div class="submenu">
+                        <a href="#" class="link submenu-title">รายการจัดซื้อ</a>
+                        <a href="#" class="link">รายการจัดซื้อ</a>
+                        <a href="#" class="link">คงคลัง</a>
+                        <a href="#" class="link">ตั้งค่าประเภท</a>
+                        <a href="#" class="link">ตั้งค่าปริมาณ</a>
+                    </div>
+                </li>
+                <% } %>
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <% if (permissions && permissions.promotion.promotion_read==='Y' ) {
+                %>
+                <li>
+                    <div class="title">
+                        <a href="#" class="link">
+                            <i class='bx bxs-dollar-circle'></i>
+                            <span class="name">โปรโมชั่น</span>
+                        </a>
+                        <!-- <i class='bx bxs-chevron-down'></i> -->
+                    </div>
+                    <div class="submenu">
+                        <a href="#" class="link submenu-title">โปรโมชั่น</a>
+                        <!-- submenu links here  -->
+                    </div>
+                </li>
+                <% } %>
+        </ul>
     </div>
 
     <!-- ============= Home Section =============== -->
@@ -132,16 +164,22 @@
                 <i class='bx bx-menu'></i>
             </div>
             <nav>
-                <div class="nav-content"> <!-- Added this wrapper for better control -->
+                <div class="nav-content">
                     <div class="profile-details">
-                        <img src="../img/chef.png" alt="">
-                    </div>
-                    <a href="/login">เข้าสู่ระบบ</a>
+                        <% if (user) { %>
+                            <img src="../img/chef.png" alt="" class="profile-image">
+                            <span class="user-id">ID: <%= user.tbl_employees %></span>
+                        </div>
+                        <a href="/logout" class="auth-link">Logout</a>
+                        <% } else { %>
+                            <a href="/login" class="auth-link">เข้าสู่ระบบ</a>
+                        <% } %>
                 </div>
             </nav>
         </div>
 
         <!-- ============= Top Dashboard =============== -->
+         
         <div class="breadcrumbs">
             <a href="/home"> หน้าหลัก</a> > <a href="/employee">พนักงาน</a> > <a href="/add_employee">ดูข้อมูลพนักงาน</a> > <span>แก้ไขข้อมูลพนักงาน</span>
         </div>

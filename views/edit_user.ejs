@@ -12,8 +12,7 @@
     <!-- Styles  -->
     <link rel="shortcut icon" href="img/kxp_fav.png" type="image/x-icon">
     <link rel="stylesheet" href="../css/index.css">
-    <link rel="stylesheet" href="../css/permission_add.css">
-
+    <link rel="stylesheet" href="../css/user_edit.css">
 </head>
 
 <body>
@@ -182,40 +181,79 @@
         <!-- ============= Top Dashboard =============== -->
 
         <div class="breadcrumbs">
-            <a href="/dashboard"> หน้าหลัก</a> > <a href="/permission">สิทธิ์ผู้ใช้งาน</a> >
-            <span>สร้างสิทธิ์ผู้ใช้งาน</span>
+            <a href="/user">ผู้ใช้งาน</a> > <span>จัดการสิทธิ์ผู้ใช้งาน</span>
         </div>
         <div class="topic"><a href="javascript:history.back()" style="text-decoration: none;">
-                <i class='bx bx-left-arrow-alt'></i></a> สร้างสิทธิ์ผู้ใช้งาน</div>
-
-        <div class="topic">สร้างสิทธิ์ผู้ใช้งาน</div>
+                    <i class='bx bx-left-arrow-alt'></i></a> จัดการสิทธิ์ผู้ใช้งาน</div>
 
         <!-- ============= Center Dashboard =============== -->
 
         <div class="centered-content">
-            <form action="/create_permission" method="POST" id="myForm">
-                <div class="input-field">
-                    <label for="permission_id">รหัสสิทธิ์ผู้ใช้งาน</label>
-                    <input type="text" name="permission_id" id="permission_id" required>
-                </div>
-                <div class="input-field">
-                    <label for="permission_name">ชื่อสิทธิ์ผู้ใช้งาน</label>
-                    <input type="text" name="permission_name" id="permission_name" required>
-                </div>
-                <div class="input-field">
-                    <label for="create_by">สร้างโดย</label>
-                    <input type="text" name="create_by" id="create_by" required>
-                </div>
-                <div class="input-field" style="display:none;">
-                    <label for="create_time">Creation Datetime</label>
-                    <input type="hidden" name="create_time" id="create_time">
-                </div>
-                <div class="input-field">
-                    <button type="submit" class="btn">สร้างสิทธิ์ผู้ใช้งาน</button>
-                    <button type="reset" class="btn">ยกเลิก</button>
+            <form action="/create_user/<%= User.id %>" method="POST">
+                <div class="form-container">
+                    <div class="form-group">
+                        <h2>ข้อมูลผู้ใช้งาน</h2>
+                        <hr class="underline">
+                        <div class="form-container">
+                            <label for="employee_id">รหัสพนักงาน</label>
+                            <input type="employee_id" id="employee_id" name="employee_id" value="<%= User.id %>"
+                                required aria-label="รหัสพนักงาน" disabled>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="full_name">ชื่อพนักงาน</label>
+                                <input type="text" id="full_name" name="full_name" value="<%= User.name %>" required
+                                    aria-label="รหัสพนักงาน" disabled>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="username">ผู้ใช้งาน</label>
+                                <input type="text" id="username" name="username" value="<%= User.username %>" required
+                                    aria-label="username">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Password">รหัสผ่าน</label>
+                                <input type="text" id="Password" name="Password"
+                                    value="<%= user.password && user.password !== '--' ? '******' : '' %>" required
+                                    aria-label="password" disabled>
+                                <div>
+                                    <a href="/add_user_password/<%= User.id %>"
+                                        style="color: red; text-decoration: underline;">สร้างรหัสพนักงาน</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row"> <!-- Adjusted for single row -->
+                            <div class="form-group">
+                                <label for="user_role">ชื่อสิทธิ์ผู้ใช้งาน</label>
+                                <select id="permission" name="permission" required aria-label="ชื่อสิทธิ์ผู้ใช้งาน">
+                                    <option value="" disabled <%= !User.userPermission ? 'selected' : '' %>>กรุณาเลือกสิทธิ์ผู้ใช้งาน</option>
+                                    <% Permissions.forEach(function(Permissions) { %>
+                                        <option value="<%= Permissions.permission_id %>" <%= User.userPermission === Permissions.permission_id ? 'selected' : '' %>>
+                                            <%= Permissions.permission_id %> 
+                                        </option>
+                                    <% }); %>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>สถานะการใช้งาน:
+                                    <select name="status">
+                                        <option value="OFF" <% if (User.status==='OFF' ) { %> selected <% } %>
+                                                >ไม่พร้อมใช้งาน</option>
+                                        <option value="ON" <% if (User.status==='ON' ) { %> selected <% } %>
+                                                >พร้อมใช้งาน</option>
+                                    </select>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit">บันทึกการเปลี่ยนแปลง</button>
                 </div>
             </form>
         </div>
+
     </section>
 
     <!-- Link JS -->

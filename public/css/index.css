@@ -311,6 +311,35 @@ nav .profile-details i {
     border-radius: 10px; /* ทำให้กรอบโค้ง */
 }
 
+.nav-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.profile-details {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.profile-image {
+    width: 50px;
+    height: auto;
+}
+
+.user-id {
+    font-weight: bold;
+    color: #333;
+}
+
+.auth-link {
+    font-size: 16px;
+    color: #007bff;
+    text-decoration: none;
+    padding: 10px;
+}
+
 /* ============ Responsive / Breakpoints ========== */
 @media (max-width: 1080px) {}
 

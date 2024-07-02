@@ -31,97 +31,90 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 98.5%;
 }
 
 .permission-container {
-    width: 100%; /* Adjust based on your preference */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.permission-details li {
-    font-size: 20px; /* Increase font size */
-}
-
-.permission-header, .permission-content {
-    display: flex;
-    justify-content: space-between;
     width: 100%;
+}
+
+.permission-header {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    background-color: #f0f0f0;
 }
 
 .permission-details {
     display: flex;
-    justify-content: space-between;
-    list-style-type: none;
+    justify-content: space-around;
+    list-style: none;
     padding: 0;
-    margin: 0 0 10px 0; /* Reduce bottom margin to decrease space between header and content */
     width: 100%;
 }
 
-.id-permission, .name-permission, .permission-id, .permission-name {
-    flex: 1; /* Allows each item to grow equally, adjusting spacing */
-    text-align: left; /* Align text to the left for a table-like appearance */
-    margin-right: 10px; /* Adjust right margin for spacing between columns */
-    margin-left: 10px; /* Add left margin for spacing */
-}
-
-.underline {
-    border-bottom: 1px solid #000;
-    width: 100%;
-    margin-top: 20px; /* Space above the line */
-    margin-bottom: 10px; /* Space below the line */
-}
-
-/* Assuming .view-button and .delete-button are your specific classes for view and delete buttons */
-
-.view-button {
-    background-color: #2855eb; /* Deep blue */
-    color: white;
-    padding: 10px 20px;
-    border: none;
+.permission-details li {
+    flex: 1;
     text-align: center;
+}
+
+.permission-content {
+    margin-top: 10px;
+}
+
+.permission-detail {
+    display: flex;
+    justify-content: space-around;
+    list-style: none;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.permission-detail li {
+    flex: 1;
+    text-align: center;
+}
+
+
+.view-button, .delete-button, .add-permission-button {
+    padding: 5px 10px; /* Adjusted to match .view-button */
+    background-color: #007bff; /* Consistent color across buttons */
+    color: white;
+    border: none;
     border-radius: 5px;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
     cursor: pointer;
 }
 
-.view-button:hover {
-    background-color: rgba(56, 145, 248, 0.692); /* Slightly darker blue for hover effect */
+/* If there's a specific action section in employee similar to .user-action */
+.permission-action {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Ensures alignment similar to .user-action */
 }
 
 .delete-button {
-    background-color: #e93a3a; /* Red */
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    text-align: center;
-    border-radius: 5px;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-}
-
-.delete-button:hover {
-    background-color: #fa7f7f; /* Slightly darker red for hover effect */
+    background-color: #dc3545; /* Kept original color for delete button */
+    margin-left: 10px; /* Kept original spacing */
 }
 
 .add-permission-button {
-    background-color: #4CAF50; /* Custom blue */
-    color: white;
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    background-color: #4CAF50; /* Kept original color */
+    padding: 10px 20px; /* Kept original padding */
+    font-size: 16px; /* Ensured consistency in font size across buttons */
+    border-radius: 5px; /* Kept original border-radius */
+    cursor: pointer; /* Kept original cursor style */
+    transition: background-color 0.3s ease; /* Kept original transition for hover effect */
+}
+
+.view-button:hover, .delete-button:hover, .add-permission-button:hover {
+    opacity: 0.9; /* Slightly more opaque for a subtle effect */
+    transform: scale(1.05); /* Slightly larger to indicate interactivity */
+}
+
+.delete-button:hover {
+    background-color: #c82333; /* A darker shade for the delete button */
 }
 
 .add-permission-button:hover {
-    background-color: #74af76d0; /* Darker shade of blue for hover effect */
+    background-color: #369b47; /* A slightly darker green for better contrast */
 }

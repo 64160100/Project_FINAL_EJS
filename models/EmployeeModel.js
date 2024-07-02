@@ -34,8 +34,27 @@ module.exports = {
     },
 
     addEmployee: function (formData, callback) {
+        // Insert into tbl_employees
         connection.query('INSERT INTO tbl_employees SET ?', formData, (error, results) => {
-            callback(error, results);
+            if (error) {
+                return callback(error, null); // Handle error during employee insertion
+            }
+            
+            // Assuming formData contains employee_id as BKB0001 or similar
+            const employeeId = formData.employee_id; // Use this if employee_id is provided in formData
+            // const employeeId = results.insertId; // Use this if employee_id is auto-generated and not in formData
+    
+            // Prepare the INSERT statement for tbl_user
+            const insertUserSql = `
+                INSERT INTO tbl_user 
+                (tbl_employees, tbl_user_permission, username, fullname, password, profile_picture, status) 
+                VALUES (?, NULL, NULL, NULL, NULL, NULL, 'OFF');
+            `;
+    
+            // Execute the INSERT statement for tbl_user
+            connection.query(insertUserSql, [employeeId], (error, results) => {
+                callback(error, results); // Final callback after attempting to insert into tbl_user
+            });
         });
     },
 
@@ -65,13 +84,50 @@ module.exports = {
         });
     },
 
-    deleteById: function (employeeId, callback) {
-        connection.query('DELETE FROM tbl_employees WHERE employee_id = ?', [employeeId], function (error, results) {
-            callback(error, results);
+    deleteEmployeeById: function (employeeId, callback) {
+        // Start a transaction
+        connection.beginTransaction(function(err) {
+            if (err) {
+                callback(err, null);
+                return;
+            }
+    
+            // Step 1: Delete from related table(s) first
+            connection.query('DELETE FROM tbl_user WHERE tbl_employees = ?', [employeeId], function(error, results) {
+                if (error) {
+                    // Rollback the transaction if there's an error
+                    return connection.rollback(function() {
+                        callback(error, null);
+                    });
+                }
+    
+                console.log('Deleted from related table(s).');
+    
+                // Step 2: Delete from the main table
+                connection.query('DELETE FROM tbl_employees WHERE employee_id = ?', [employeeId], function(error, results) {
+                    if (error) {
+                        // Rollback the transaction if there's an error
+                        return connection.rollback(function() {
+                            callback(error, null);
+                        });
+                    }
+    
+                    // Commit the transaction
+                    connection.commit(function(err) {
+                        if (err) {
+                            return connection.rollback(function() {
+                                callback(err, null);
+                            });
+                        }
+                        console.log('Transaction completed successfully.');
+                        callback(null, results);
+                    });
+                });
+            });
         });
     },
 
-    updateById: function (employeeId, updateData, callback) {
+    updateEmployeeById: function (employeeId, updateData, callback) {
         const { title, first_name, last_name, nickname, id_number, date_of_birth, phone_number, email, other } = updateData;
         const sql = `UPDATE tbl_employees SET title = ?, first_name = ?, last_name = ?, nickname = ?, id_number = ?, date_of_birth = ?, phone_number = ?, email = ?, other = ? WHERE employee_id = ?`;
         const values = [title, first_name, last_name, nickname, id_number, date_of_birth, phone_number, email, other, employeeId];

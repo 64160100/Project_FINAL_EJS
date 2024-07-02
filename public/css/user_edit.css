@@ -1,0 +1,104 @@
+.form-group input[type="employee_id"],
+.form-group input[type="text"],
+.form-group input[type="password"],
+.form-group select {
+  display: block;
+  width: calc(100% - 20px);
+  margin: 10px 0;
+  padding: 12px 15px;
+  border: 1px solid #ccc;
+  border-radius: 1px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-group input[type="employee_id"]:focus,
+.form-group input[type="text"]:focus,
+.form-group input[type="password"]:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.form-group label {
+  margin-top: 20px;
+  display: block;
+  color: #333;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.form-group input[type="employee_id"] {
+  width: 30%;
+  box-sizing: border-box;
+}
+
+.form-row {
+  display: flex;
+  gap: 0;
+}
+
+.form-row .form-group {
+  margin-right: 20px;
+}
+
+.form-row .form-group:last-child {
+  margin-right: 0;
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"],
+.form-group select {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+button[type="submit"] {
+  background-image: linear-gradient(to right, #4CAF50, #5cb85c);
+}
+
+button[type="reset"] {
+  background-image: linear-gradient(to right, #ff4b5a, #ff6b81);
+}
+
+button {
+  margin: 10px 5px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  color: white;
+  transition: background-image 0.3s, box-shadow 0.3s;
+}
+
+.breadcrumbs {
+  font-size: 14px; /* Adjust based on your preference */
+  margin-bottom: 10px; /* Space before the next section */
+  color: #6c757d; /* A muted color for the text */
+}
+
+.breadcrumbs a {
+  color: #0275d8; /* Link color */
+  text-decoration: none; /* Removes underline from links */
+}
+
+.breadcrumbs a:hover {
+  text-decoration: underline; /* Adds underline on hover for better UX */
+}
+
+/* Topic section styling */
+.topic {
+  font-size: 40px; /* Adjust the font size as needed */
+  color: #333; /* Text color */
+  display: flex;
+  align-items: center; /* Centers the icon with the text vertically */
+}
+
+.topic a {
+  color: #333; /* Arrow and link color */
+  display: inline-flex; /* Keeps the icon aligned with the text */
+  align-items: center;
+  text-decoration: none; /* Removes underline from the link */
+}

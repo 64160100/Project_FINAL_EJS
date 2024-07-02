@@ -14,8 +14,7 @@ INSERT INTO `permission_promotion` (`permission_id`, `promotion_read`, `promotio
 
 INSERT INTO `permission_table` (`permission_id`, `table_read`, `table_create`, `table_update`, `table_delete`, `table_confirm`) VALUES ('Manger', 'Y', 'Y', 'Y', 'Y', 'Y');
 
-INSERT INTO `tbl_authority_employees` (`password`, `status`, `tbl_user_permission`, `tbl_employees`) VALUES ('1234', 'ON', 'Manger', 'BKB0001');
-
+INSERT INTO `tbl_user` (`username`, `password`, `fullname`, `profile_picture`, `status`, `tbl_user_permission`, `tbl_employees`) VALUES (NULL, NULL, NULL, NULL, 'OFF', 'Manger', 'BKB0001');
 
 -- UPDATE `permission_dashboard` SET `permission_id`='Manger',`dashboard_read`='Y',`dashboard_create`='Y',`dashboard_update`='Y',`dashboard_delete`='Y',`dashboard_confirm`='Y' WHERE 1
 
