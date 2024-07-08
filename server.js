@@ -28,6 +28,10 @@ app.get('/', (req, res) => {
     res.render('index', { user: req.session.user, permissions: permissions });
 });
 
+app.get('/404', (req, res) => {
+    res.status(404).render('404_not_found'); // Adjust the render target to your 404 page template
+});
+
 app.get('/dashboard', (req, res) => {
     if (!req.session.user) {
         return res.redirect('/login');
@@ -41,10 +45,12 @@ app.get('/dashboard', (req, res) => {
     }
 });
 
+// ===================== Login ===================== //
 app.get('/login' , require('./routes/login'));
 app.get('/logout' , require('./routes/login'));
 app.post('/loginUser' , require('./routes/login'))
 
+// ===================== Employee ===================== //
 app.get('/employee', require('./routes/employee'));
 app.get('/add_employee', require('./routes/employee'));
 app.get('/view_employee/:id', require('./routes/employee'));
@@ -53,6 +59,7 @@ app.post('/create_employee', require('./routes/employee'));
 app.post('/delete_employee/:id', require('./routes/employee'));
 app.post('/update_employee', require('./routes/employee'));
 
+// ===================== Permission ===================== //
 app.get('/permission', require('./routes/permission'));
 app.get('/add_permission', require('./routes/permission'));
 app.get('/view_permission/:id', require('./routes/permission'));
@@ -61,26 +68,37 @@ app.post('/create_permission', require('./routes/permission'));
 app.post('/delete_permission/:id', require('./routes/permission'));
 app.post('/update_permission', require('./routes/permission'));
 
+// ===================== User ===================== //
 app.get('/user', require('./routes/user'));
 app.get('/edit_user/:id', require('./routes/user'));
 app.get('/add_user_password/:id', require('./routes/user'));
 app.post('/create_password/:id', require('./routes/user'));
 app.post('/create_user/:id', require('./routes/user'));
 
+// ===================== Menu ===================== //
+app.get('/menu', require('./routes/menu'));
 
-// app.post('/add_employee', require('./routes/employee'));
-// app.get('/employee_add', (req, res) => {
-//     res.render('employee_add');
-// });
+// ===================== Table ===================== //
+app.get('/table', require('./routes/table'));
 
-// app.post('/edit_employee:id', require('./routes/employee'));
+// ===================== Buying ===================== //
+app.get('/buying', require('./routes/buying'));
+app.get('/add_buying', require('./routes/buying'));
+app.get('/view_buying/:id', require('./routes/buying'));
+app.post('/create_buying', require('./routes/buying'));
 
-// app.get('/login', require('./routes/login'));
-// // app.post('/loginUser', require('./routes/login'));
+app.get('/setting_type', require('./routes/buying'));
+app.get('/setting_add_type', require('./routes/buying'));
+app.post('/create_setting_type', require('./routes/buying'));
+app.post('/delete_setting_type/:id', require('./routes/buying'));
 
-app.get('/404', (req, res) => {
-    res.status(404).render('404_not_found'); // Adjust the render target to your 404 page template
-});
+app.get('/setting_unit', require('./routes/buying'));
+app.get('/setting_add_unit', require('./routes/buying'));
+app.post('/create_setting_unit', require('./routes/buying'));
+app.post('/delete_setting_unit/:id', require('./routes/buying'));
+
+// ===================== Promotion ===================== //
+app.get('/promotion', require('./routes/promotion'));
 
 
 app.listen(3000, () => {

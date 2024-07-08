@@ -12,6 +12,7 @@
     <!-- Styles  -->
     <link rel="shortcut icon" href="img/kxp_fav.png" type="image/x-icon">
     <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/buying.css">
 </head>
 
 <body>
@@ -42,7 +43,6 @@
             </li>
 
             <!-- -------- Non Dropdown List Item ------- -->
-            <% if (permissions && permissions.dashboard.dashboard_read==='Y' ) { %>
                 <li>
                     <div class="title">
                         <a href="/dashboard" class="link">
@@ -56,11 +56,10 @@
                         <!-- submenu links here  -->
                     </div>
                 </li>
-                <% } %>
+        
 
 
             <!-- -------- Dropdown List Item ------- -->
-            <% if (permissions && permissions.employee.employee_read==='Y' ) { %>
                 <li class="dropdown">
                     <div class="title">
                         <a href="/employee" class="link">
@@ -76,83 +75,73 @@
                         <a href="/permission" class="link">สิทธิ์ผู้ใช้งาน</a>
                     </div>
                 </li>
-                <% } %>
 
             <!-- -------- Dropdown List Item ------- -->
-            <% if (permissions && permissions.menu.menu_read==='Y' ) { %>
                 <li class="dropdown">
                     <div class="title">
-                        <a href="#" class="link">
+                        <a href="/menu" class="link">
                             <i class='bx bxs-food-menu'></i>
                             <span class="name">เมนูอาหารและบริการ</span>
                         </a>
                         <i class='bx bxs-chevron-down'></i>
                     </div>
                     <div class="submenu">
-                        <a href="#" class="link submenu-title">เมนูอาหารและบริการ</a>
-                        <a href="#" class="link">เมนูอาหาร</a>
+                        <a href="/menu" class="link submenu-title">เมนูอาหารและบริการ</a>
+                        <a href="/menu" class="link">เมนูอาหาร</a>
                         <a href="#" class="link">ตั้งค่าหมวดหมู่</a>
                         <a href="#" class="link">ตั้งค่าหน่วยสินค้า</a>
                         <a href="#" class="link">ตั้งค่าประเภท</a>
                     </div>
                 </li>
-                <% } %>
 
             <!-- -------- Non Dropdown List Item ------- -->
-            <% if (permissions && permissions.table.table_read==='Y' ) { %>
                 <li class="dropdown">
                     <div class="title">
-                        <a href="#" class="link">
+                        <a href="/table" class="link">
                             <i class='bx bx-table'></i>
                             <span class="name">โต๊ะอาหาร</span>
                         </a>
                         <i class='bx bxs-chevron-down'></i>
                     </div>
                     <div class="submenu">
-                        <a href="#" class="link submenu-title">โต๊ะอาหาร</a>
-                        <a href="#" class="link">จัดโต๊ะอาหาร</a>
+                        <a href="/table" class="link submenu-title">โต๊ะอาหาร</a>
+                        <a href="/table" class="link">จัดโต๊ะอาหาร</a>
                         <a href="#" class="link">สั่งเมนู</a>
                     </div>
                 </li>
-                <% } %>
 
             <!-- -------- Non Dropdown List Item ------- -->
-            <% if (permissions && permissions.buying.buying_read==='Y' ) { %>
                 <li class="dropdown">
                     <div class="title">
-                        <a href="#" class="link">
+                        <a href="/buying" class="link">
                             <i class='bx bx-cart-download'></i>
                             <span class="name">รายการจัดซื้อและคงคลัง</span>
                         </a>
                         <i class='bx bxs-chevron-down'></i>
                     </div>
                     <div class="submenu">
-                        <a href="#" class="link submenu-title">รายการจัดซื้อและคงคลัง</a>
-                        <a href="#" class="link">รายการจัดซื้อ</a>
+                        <a href="/buying" class="link submenu-title">รายการจัดซื้อและคงคลัง</a>
+                        <a href="/buying" class="link">รายการจัดซื้อ</a>
                         <a href="#" class="link">คงคลัง</a>
-                        <a href="#" class="link">ตั้งค่าประเภท</a>
-                        <a href="#" class="link">ตั้งค่าปริมาณ</a>
+                        <a href="/setting_type" class="link">ตั้งค่าประเภท</a>
+                        <a href="/setting_unit" class="link">ตั้งค่าปริมาณ</a>
                     </div>
                 </li>
-                <% } %>
 
             <!-- -------- Non Dropdown List Item ------- -->
-            <% if (permissions && permissions.promotion.promotion_read==='Y' ) {
-                %>
-                <li>
-                    <div class="title">
-                        <a href="#" class="link">
-                            <i class='bx bxs-dollar-circle'></i>
-                            <span class="name">โปรโมชั่น</span>
-                        </a>
-                        <!-- <i class='bx bxs-chevron-down'></i> -->
-                    </div>
-                    <div class="submenu">
-                        <a href="#" class="link submenu-title">โปรโมชั่น</a>
-                        <!-- submenu links here  -->
-                    </div>
-                </li>
-                <% } %>
+            <li>
+                <div class="title">
+                    <a href="/promotion" class="link">
+                        <i class='bx bxs-dollar-circle'></i>
+                        <span class="name">โปรโมชั่น</span>
+                    </a>
+                    <!-- <i class='bx bxs-chevron-down'></i> -->
+                </div>
+                <div class="submenu">
+                    <a href="/promotion" class="link submenu-title">โปรโมชั่น</a>
+                    <!-- submenu links here  -->
+                </div>
+            </li>
         </ul>
     </div>
 
@@ -165,33 +154,77 @@
             <nav>
                 <div class="nav-content">
                     <div class="profile-details">
-                        <% if (user) { %>
                             <img src="../img/chef.png" alt="" class="profile-image">
-                            <span class="user-id">ID: <%= user.tbl_employees %></span>
+                            <span class="user-id">ID1234</span>
                         </div>
-                        <a href="/logout" class="auth-link">Logout</a>
-                        <% } else { %>
                             <a href="/login" class="auth-link">เข้าสู่ระบบ</a>
-                        <% } %>
                 </div>
             </nav>
         </div>
 
         <!-- ============= Top Dashboard =============== -->
 
-        <div class="topic"> หน้าหลัก </div>
+        <div class="topic">
+            รายการจัดซื้อ
+            <div class="search-add-container">
+                <input type="text" id="searchBox" placeholder="ค้นหาสิทธิ์ผู้ใช้งาน..." />
+                <button onclick="window.location.href='/add_buying'" class="add-buying-button">รับเข้าสินค้า</button>
+            </div>
+        </div>
 
         <!-- ============= Center Dashboard =============== -->
 
         <div class="centered-content">
-            <div class="text"> รูปร้าน </div>
-
+            <div class="buying-container">
+                <div class="buying-header">
+                    <ul class="buying-details">
+                        <li>รหัสสินค้า</li>
+                        <li>ชื่อสินค้า</li>
+                        <li>วันที่รับเข้า</li>
+                        <li>ประเภทสินค้า</li>
+                        <li>ราคา</li>
+                        <li>เวลารับเข้า</li>
+                        <li>จัดการ</li>
+                    </ul>
+                </div>
+                <hr class="underline">
+            </div>
+            <li id="timer">เวลารับเข้า: <span>00d 00h 00m</span></li>
         </div>
-
     </section>
 
     <!-- Link JS -->
     <script src="../js/index.js"></script>
+    <script>
+        // Set the start time (example: when the page loads)
+        const startTime = new Date();
+        
+        function updateTimer() {
+            const now = new Date();
+            const diff = now - startTime; // difference in milliseconds
+        
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        
+            // Format the time string
+            const formattedTime = `${padZero(days)}d ${padZero(hours)}h ${padZero(minutes)}m`;
+        
+            // Update the timer element
+            document.getElementById('timer').children[0].textContent = formattedTime;
+        
+            // Call updateTimer every minute
+            setTimeout(updateTimer, 60000);
+        }
+        
+        // Helper function to pad numbers with leading zeros
+        function padZero(num) {
+            return num.toString().padStart(2, '0');
+        }
+        
+        // Initialize the timer
+        updateTimer();
+        </script>
 </body>
 
 </html>

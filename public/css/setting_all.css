@@ -1,0 +1,121 @@
+.topic {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    color: rgb(0, 0, 0);
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.search-add-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+#searchBox {
+    padding: 10px;
+    margin-right: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    flex-grow: 1;
+}
+
+.centered-content.dim {
+    filter: blur(5px);
+}
+
+.setting-container {
+    width: 100%;
+}
+
+.setting-header {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    background-color: #f0f0f0;
+}
+
+.setting-details {
+    display: flex;
+    justify-content: space-around;
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+
+.setting-details li {
+    flex: 1;
+    text-align: center;
+}
+
+.setting-content {
+    margin-top: 10px;
+}
+
+.setting-detail {
+    display: flex;
+    justify-content: space-around;
+    list-style: none;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.setting-detail li {
+    flex: 1;
+    text-align: center;
+}
+
+.add-setting-button {
+    color: white;
+    border: none;
+    background-color: #4CAF50;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+
+.add-setting-button:hover {
+    opacity: 0.9;
+    /* Slightly more opaque for a subtle effect */
+    transform: scale(1.05);
+    /* Slightly larger to indicate interactivity */
+}
+
+.delete-button {
+    padding: 5px 10px;
+    /* Adjusted to match .view-button */
+    background-color: #dc3545;
+    /* Consistent color across buttons */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.delete-button:hover {
+    opacity: 0.9;
+    /* Slightly more opaque for a subtle effect */
+    transform: scale(1.05);
+    /* Slightly larger to indicate interactivity */
+    background-color: #c82333;
+}
+
+.type-detail, .unit-detail {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.type-detail span, .unit-detail span {
+    flex: 1;
+    text-align: center;
+}
+

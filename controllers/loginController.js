@@ -43,6 +43,7 @@ module.exports = {
 						}
 						req.session.permissions = permissions;
 						console.log('permissions:', permissions);
+						console.log('Session logged in');
 						return res.redirect('/');
 					});
 				} else {
@@ -54,6 +55,7 @@ module.exports = {
 	},
 	logoutView: (req, res) => {
 		req.session.destroy();
+		console.log('Session logged out');
 		res.redirect('/login');
 	}
 };

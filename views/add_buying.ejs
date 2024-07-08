@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS</title>
+
+    <!-- Box Icons  -->
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Styles  -->
+    <link rel="shortcut icon" href="img/kxp_fav.png" type="image/x-icon">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/buying_add.css">
+</head>
+
+<body>
+    <div class="sidebar close">
+        <!-- ========== Logo ============  -->
+        <a href="#" class="logo-box">
+            <i class='bx bxs-cat'></i>
+            <div class="logo-name">POS</div>
+        </a>
+
+        <!-- ========== List ============  -->
+
+        <ul class="sidebar-list">
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <li>
+                <div class="title">
+                    <a href="/" class="link">
+                        <i class='bx bx-home'></i>
+                        <span class="name">หน้าหลัก</span>
+                    </a>
+                    <!-- <i class='bx bxs-chevron-down'></i> -->
+                </div>
+                <div class="submenu">
+                    <a href="/" class="link submenu-title">หน้าหลัก</a>
+                    <!-- submenu links here  -->
+                </div>
+            </li>
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <li>
+                <div class="title">
+                    <a href="/dashboard" class="link">
+                        <i class='bx bx-grid-alt'></i>
+                        <span class="name">แดชบอร์ด</span>
+                    </a>
+                    <!-- <i class='bx bxs-chevron-down'></i> -->
+                </div>
+                <div class="submenu">
+                    <a href="/dashboard" class="link submenu-title">แดชบอร์ด</a>
+                    <!-- submenu links here  -->
+                </div>
+            </li>
+
+
+
+            <!-- -------- Dropdown List Item ------- -->
+            <li class="dropdown">
+                <div class="title">
+                    <a href="/employee" class="link">
+                        <i class='bx bx-collection'></i>
+                        <span class="name">ข้อมูลพนักงาน</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="/employee" class="link submenu-title">ข้อมูลพนักงาน</a>
+                    <a href="/employee" class="link">พนักงาน</a>
+                    <a href="/user" class="link">ผู้ใช้งาน</a>
+                    <a href="/permission" class="link">สิทธิ์ผู้ใช้งาน</a>
+                </div>
+            </li>
+
+            <!-- -------- Dropdown List Item ------- -->
+            <li class="dropdown">
+                <div class="title">
+                    <a href="/menu" class="link">
+                        <i class='bx bxs-food-menu'></i>
+                        <span class="name">เมนูอาหารและบริการ</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="/menu" class="link submenu-title">เมนูอาหารและบริการ</a>
+                    <a href="/menu" class="link">เมนูอาหาร</a>
+                    <a href="#" class="link">ตั้งค่าหมวดหมู่</a>
+                    <a href="#" class="link">ตั้งค่าหน่วยสินค้า</a>
+                    <a href="#" class="link">ตั้งค่าประเภท</a>
+                </div>
+            </li>
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <li class="dropdown">
+                <div class="title">
+                    <a href="/table" class="link">
+                        <i class='bx bx-table'></i>
+                        <span class="name">โต๊ะอาหาร</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="/table" class="link submenu-title">โต๊ะอาหาร</a>
+                    <a href="/table" class="link">จัดโต๊ะอาหาร</a>
+                    <a href="#" class="link">สั่งเมนู</a>
+                </div>
+            </li>
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <li class="dropdown">
+                <div class="title">
+                    <a href="/buying" class="link">
+                        <i class='bx bx-cart-download'></i>
+                        <span class="name">รายการจัดซื้อและคงคลัง</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="/buying" class="link submenu-title">รายการจัดซื้อและคงคลัง</a>
+                    <a href="/buying" class="link">รายการจัดซื้อ</a>
+                    <a href="#" class="link">คงคลัง</a>
+                    <a href="#" class="link">ตั้งค่าประเภท</a>
+                    <a href="#" class="link">ตั้งค่าปริมาณ</a>
+                </div>
+            </li>
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <li>
+                <div class="title">
+                    <a href="/promotion" class="link">
+                        <i class='bx bxs-dollar-circle'></i>
+                        <span class="name">โปรโมชั่น</span>
+                    </a>
+                    <!-- <i class='bx bxs-chevron-down'></i> -->
+                </div>
+                <div class="submenu">
+                    <a href="/promotion" class="link submenu-title">โปรโมชั่น</a>
+                    <!-- submenu links here  -->
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- ============= Home Section =============== -->
+    <section class="home">
+        <div class="nav">
+            <div class="toggle-sidebar">
+                <i class='bx bx-menu'></i>
+            </div>
+            <nav>
+                <div class="nav-content">
+                    <div class="profile-details">
+                        <img src="../img/chef.png" alt="" class="profile-image">
+                        <span class="user-id">ID1234</span>
+                    </div>
+                    <a href="/login" class="auth-link">เข้าสู่ระบบ</a>
+                </div>
+            </nav>
+        </div>
+
+        <!-- ============= Top Dashboard =============== -->
+
+        <div class="breadcrumbs">
+            <a href="/dashboard"> หน้าหลัก</a> > <span>รับเข้าสินค้า</span>
+        </div>
+        <div class="topic"><a href="javascript:history.back()" style="text-decoration: none;">
+                <i class='bx bx-left-arrow-alt'></i></a> รับเข้าสินค้า</div>
+
+        <div class="topic">รับเข้าสินค้า</div>
+
+        <!-- ============= Center Dashboard =============== -->
+
+        <div class="centered-content">
+            <div class="form-container">
+                <form action="/create_buying" method="post">
+                    <div class="form-group">
+                        <h2>ข้อมูลส่วนตัว</h2>
+                        <hr class="underline">
+                        <div class="form-container">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="name_product">ชื่อสินค้า</label>
+                                    <input type="text" id="name_product" name="name_product" required
+                                        aria-label="ชื่อสินค้า">
+
+                                    <label for="product_code">รหัสสินค้า</label>
+                                    <input type="text" id="product_code" name="product_code" required
+                                        aria-label="รหัสสินค้า">
+
+                                    <label for="date_received">วันที่รับเข้า</label>
+                                    <input type="date" id="date_received" name="date_received" required
+                                        aria-label="วันที่รับเข้า">
+
+                                    <label for="product_type">ประเภทสินค้า</label>
+                                    <select id="product_type" name="product_type" required aria-label="ประเภทสินค้า">
+                                        <option value="">เลือกประเภทสินค้า</option>
+                                        <!-- ตัวอย่าง Option สำหรับประเภทสินค้า -->
+                                        <option value="type1">ประเภท 1</option>
+                                        <option value="type2">ประเภท 2</option>
+                                    </select>
+
+                                    <label for="time_received">เวลารับเข้า</label>
+                                    <input type="time" id="time_received" name="time_received" required
+                                        aria-label="เวลารับเข้า">
+
+                                    <label for="quantity">ปริมาณ</label>
+                                    <input type="number" id="quantity" name="quantity" required aria-label="ปริมาณ">
+
+                                    <label for="price">ราคา</label>
+                                    <input type="number" id="price" name="price" required aria-label="ราคา">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit">บันทึก</button>
+                    <button type="reset">ยกเลิก</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Link JS -->
+    <script src="../js/index.js"></script>
+</body>
+
+</html>
