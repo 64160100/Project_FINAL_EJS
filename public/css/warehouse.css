@@ -30,18 +30,18 @@
     width: 98.5%;
 }
 
-.buying-container {
+.warehouse-container {
     width: 100%;
 }
 
-.buying-header {
+.warehouse-header {
     display: flex;
     justify-content: space-around;
     padding: 10px;
     background-color: #f0f0f0;
 }
 
-.buying-details {
+.warehouse-details {
     display: flex;
     justify-content: space-around;
     list-style: none;
@@ -49,16 +49,16 @@
     width: 100%;
 }
 
-.buying-details li {
+.warehouse-details li {
     flex: 1;
     text-align: center;
 }
 
-.buying-content {
+.warehouse-content {
     margin-top: 10px;
 }
 
-.buying-detail {
+.warehouse-detail {
     display: flex;
     justify-content: space-around;
     list-style: none;
@@ -66,7 +66,7 @@
     border-bottom: 1px solid #ccc;
 }
 
-.buying-detail li {
+.warehouse-detail li {
     flex: 1;
     text-align: center;
 }
@@ -74,7 +74,7 @@
 
 /* /////////////////////// */
 
-.view-button, .delete-button, .add-buying-button {
+.view-button, .delete-button, .add-warehouse-button {
     padding: 5px 10px; /* Adjusted to match .view-button */
     background-color: #007bff; /* Consistent color across buttons */
     color: white;
@@ -84,7 +84,7 @@
 }
 
 /* If there's a specific action section in employee similar to .user-action */
-.buying-action {
+.warehouse-action {
     display: flex;
     justify-content: center;
     align-items: center; /* Ensures alignment similar to .user-action */
@@ -95,7 +95,7 @@
     margin-left: 10px; /* Kept original spacing */
 }
 
-.add-buying-button {
+.add-warehouse-button {
     background-color: #4CAF50; /* Kept original color */
     padding: 10px 20px; /* Kept original padding */
     font-size: 16px; /* Ensured consistency in font size across buttons */
@@ -104,7 +104,7 @@
     transition: background-color 0.3s ease; /* Kept original transition for hover effect */
 }
 
-.view-button:hover, .delete-button:hover, .add-buying-button:hover {
+.view-button:hover, .delete-button:hover, .add-warehouse-button:hover {
     opacity: 0.9; /* Slightly more opaque for a subtle effect */
     transform: scale(1.05); /* Slightly larger to indicate interactivity */
 }
@@ -113,6 +113,6 @@
     background-color: #c82333; /* A darker shade for the delete button */
 }
 
-.add-buying-button:hover {
+.add-warehouse-button:hover {
     background-color: #369b47; /* A slightly darker green for better contrast */
 }

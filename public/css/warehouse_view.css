@@ -1,0 +1,179 @@
+.form-container {
+    overflow: hidden;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-top: 20px;
+    color: #333;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group input[type="number"],
+.form-group select,
+.form-group textarea {
+    width: 35%;
+    padding: 12px 15px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    font-size: 16px;
+    background-color: #fdfdfd;
+    color: #495057;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(7, 7, 7, 0.5);
+}
+
+
+.breadcrumbs,
+.topic {
+    font-size: 14px;
+    margin-bottom: 10px;
+    color: #6c757d;
+}
+
+.breadcrumbs a,
+.topic a {
+    color: #0275d8;
+    text-decoration: none;
+}
+
+.breadcrumbs a:hover,
+.topic a:hover {
+    text-decoration: underline;
+}
+
+.topic {
+    font-size: 40px;
+    color: #333;
+    display: flex;
+    align-items: center;
+}
+
+.grouped-fields-container .input-group {
+    display: flex; /* Ensures that the input group acts as a flex container */
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    background-color: #ffffff;
+    padding: 0.5rem;
+    max-width: 50%; /* Controls the max width of the input group */
+}
+
+.grouped-fields-container .form-control,
+.grouped-fields-container .custom-select {
+    flex-grow: 1; /* Allows fields to grow to fill the container */
+    flex-shrink: 1; /* Allows fields to shrink if necessary */
+    flex-basis: 0%; /* Starts with the smallest base size and grows as needed */
+    position: relative;
+    margin-bottom: 0;
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    height: 50px;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 450;
+    border-radius: 0; /* Optional: Adjusts border-radius for a unified look */
+}
+
+/* Specific adjustments for form-control if needed */
+.grouped-fields-container .form-control {
+    border-right: none; /* Removes the right border to blend with adjacent select */
+}
+
+/* Breadcrumbs styling */
+.breadcrumbs {
+    font-size: 14px; /* Adjust based on your preference */
+    margin-bottom: 10px; /* Space before the next section */
+    color: #6c757d; /* A muted color for the text */
+}
+
+.breadcrumbs a {
+    color: #0275d8; /* Link color */
+    text-decoration: none; /* Removes underline from links */
+}
+
+.breadcrumbs a:hover {
+    text-decoration: underline; /* Adds underline on hover for better UX */
+}
+
+/* Topic section styling */
+.topic {
+    font-size: 40px; /* Adjust the font size as needed */
+    color: #333; /* Text color */
+    display: flex;
+    align-items: center; /* Centers the icon with the text vertically */
+}
+
+.topic a {
+    color: #333; /* Arrow and link color */
+    display: inline-flex; /* Keeps the icon aligned with the text */
+    align-items: center;
+    text-decoration: none; /* Removes underline from the link */
+}
+
+.timeCounter {
+    display: inline-block;
+    padding: 10px 12px; /* Adjusted padding for height */
+    width: 35%; /* Full width of its container */
+    border: 1px solid #ccc; /* Mimic standard input border */
+    border-radius: 4px; /* Rounded corners like typical inputs */
+    background-color: #fff; /* Background color like inputs */
+    font-family: Arial, sans-serif; /* Match your input's font-family */
+    color: #333; /* Text color similar to inputs */
+    margin: 5px 0; /* Some margin for spacing */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.timeCounter span {
+    margin-right: 5px; /* Space between time components */
+}
+
+/* Optional: Style for the label to align with the styled 'input' */
+label[for="time"] {
+    display: block;
+    margin-bottom: 5px;
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+
+
+button {
+    margin: 10px 5px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    color: white;
+    transition: background-image 0.3s, box-shadow 0.3s; /* Smooth transition for hover */
+}
+
+.submit-button {
+    padding: 8px 10px; /* Keep the adjusted horizontal padding */
+    font-size: 14px; /* Smaller font size */
+    width: 100px; /* Set a specific width to make the button narrower */
+    display: inline-block; /* Keep display to allow width adjustment */
+}
+
+/* Modern button styles with gradient and shadow */
+button[type="submit"] {
+    background-image: linear-gradient(to right, #4CAF50, #5cb85c); /* Green gradient */
+}

@@ -16,7 +16,6 @@
 
 .form-group input[type="text"],
 .form-group input[type="date"],
-.form-group input[type="time"],
 .form-group input[type="number"],
 .form-group select,
 .form-group textarea {
@@ -117,3 +116,61 @@ button[type="reset"] {
 .grouped-fields-container .form-control {
     border-right: none; /* Removes the right border to blend with adjacent select */
 }
+
+/* Breadcrumbs styling */
+.breadcrumbs {
+    font-size: 14px; /* Adjust based on your preference */
+    margin-bottom: 10px; /* Space before the next section */
+    color: #6c757d; /* A muted color for the text */
+}
+
+.breadcrumbs a {
+    color: #0275d8; /* Link color */
+    text-decoration: none; /* Removes underline from links */
+}
+
+.breadcrumbs a:hover {
+    text-decoration: underline; /* Adds underline on hover for better UX */
+}
+
+/* Topic section styling */
+.topic {
+    font-size: 40px; /* Adjust the font size as needed */
+    color: #333; /* Text color */
+    display: flex;
+    align-items: center; /* Centers the icon with the text vertically */
+}
+
+.topic a {
+    color: #333; /* Arrow and link color */
+    display: inline-flex; /* Keeps the icon aligned with the text */
+    align-items: center;
+    text-decoration: none; /* Removes underline from the link */
+}
+
+.timeCounter {
+    display: inline-block;
+    padding: 10px 12px; /* Adjusted padding for height */
+    width: 35%; /* Full width of its container */
+    border: 1px solid #ccc; /* Mimic standard input border */
+    border-radius: 4px; /* Rounded corners like typical inputs */
+    background-color: #fff; /* Background color like inputs */
+    font-family: Arial, sans-serif; /* Match your input's font-family */
+    color: #333; /* Text color similar to inputs */
+    margin: 5px 0; /* Some margin for spacing */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.timeCounter span {
+    margin-right: 5px; /* Space between time components */
+}
+
+/* Optional: Style for the label to align with the styled 'input' */
+label[for="time"] {
+    display: block;
+    margin-bottom: 5px;
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+
+

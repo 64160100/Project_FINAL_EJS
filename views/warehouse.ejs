@@ -12,7 +12,7 @@
     <!-- Styles  -->
     <link rel="shortcut icon" href="img/kxp_fav.png" type="image/x-icon">
     <link rel="stylesheet" href="../css/index.css">
-    <link rel="stylesheet" href="../css/buying_add.css">
+    <link rel="stylesheet" href="../css/warehouse.css">
 </head>
 
 <body>
@@ -123,8 +123,8 @@
                     <a href="/buying" class="link submenu-title">รายการจัดซื้อและคงคลัง</a>
                     <a href="/buying" class="link">รายการจัดซื้อ</a>
                     <a href="#" class="link">คงคลัง</a>
-                    <a href="#" class="link">ตั้งค่าประเภท</a>
-                    <a href="#" class="link">ตั้งค่าปริมาณ</a>
+                    <a href="/setting_type" class="link">ตั้งค่าประเภท</a>
+                    <a href="/setting_unit" class="link">ตั้งค่าปริมาณ</a>
                 </div>
             </li>
 
@@ -164,99 +164,51 @@
 
         <!-- ============= Top Dashboard =============== -->
 
-        <div class="breadcrumbs">
-            <a href="/dashboard"> หน้าหลัก</a> > <span>รับเข้าสินค้า</span>
+        <div class="topic">
+            รายการคลังสินค้า
         </div>
-        <div class="topic"><a href="javascript:history.back()" style="text-decoration: none;">
-                <i class='bx bx-left-arrow-alt'></i></a> รับเข้าสินค้า</div>
-
-        <div class="topic">รับเข้าสินค้า</div>
 
         <!-- ============= Center Dashboard =============== -->
 
         <div class="centered-content">
-            <div class="form-container">
-                <form action="/create_buying" method="post">
-                    <% if (error) { %>
-                        <div class="form-group">
-                            <label for="id_buying_list">รหัสสินค้า</label>
-                            <input type="text" id="id_buying_list" name="id_buying_list" required>
-                            <% if (error.id_buying_list) { %>
-                                <p style="color: red;">
-                                    <%= error.id_buying_list %> มีอยู่แล้ว
-                                </p>
-                            <% } %>
-                        </div>
-                        <div class="form-group">
-                            <label for="name_product">ชื่อสินค้า</label>
-                            <input type="text" id="name_product" name="name_product" required>
-                            <% if (error.name_product) { %>
-                                <p style="color: red;">
-                                    <%= error.name_product %> มีอยู่แล้ว
-                                </p>
-                            <% } %>
-                        </div>
-                    <% } %>
-                    <div class="form-group">
-                        <label for="date_of_receipt">วันที่รับสินค้า</label>
-                        <input type="date" id="date_of_receipt" name="date_of_receipt" required readonly>
+            <div class="warehouse-container">
+                <div class="warehouse-header">
+                    <ul class="warehouse-details">
+                        <li>รหัสรายการ</li>
+                        <li>ชื่อสินค้า</li>
+                        <li>ประเภทสินค้า</li>
+                        <li>ปริมาณ</li>
+                        <li>จัดการ</li>
+                    </ul>
+                </div>
+                <hr class="underline">
+                <% results.forEach(function(item) { %>
+                    <div class="warehouse-item">
+                        <ul class="warehouse-detail">
+                            <li><%= item.id_warehouse %></li>
+                            <li><%= item.name_product %></li>
+                            <li><%= item.setting_type_id %></li>
+                            <li>
+                                <%= item.unit_quantity_all %>
+                                <%= item.setting_unit_id %> / 
+                                <%= item.unit_quantity_max %>
+                                <%= item.setting_unit_id %> 
+                            </li>
+                            <li class="warehouse-action ">
+                                <button onclick="location.href='/view_warehouse/<%= item.id_warehouse %>'"
+                                    class="view-button">ดูข้อมูล</button>
+                               
+                            </li>
+                        </ul>
                     </div>
-
-                    <div class="form-group">
-                        <label for="setting_type_id">ประเภทสินค้า</label>
-                        <select id="setting_type_id" name="setting_type_id" required aria-label="ประเภทสินค้า">
-                            <option value="" disabled <%=!selectedSettingType ? 'selected' : '' %>
-                                >กรุณาเลือกประเภทสินค้า</option>
-                            <% settingTypes.forEach(function(type) { %>
-                                <option value="<%= type.id_type %>" <%=selectedSettingType===type.id_type ? 'selected' : '' %>><%=
-                                        type.id_type %>
-                                </option>
-                                <% }); %>
-                        </select>
-                    </div>
-
-                    <div class="form-row grouped-fields-container">
-                        <div class="form-group col-md-12">
-                            <label for="unit_quantity">ปริมาณและหน่วยสินค้า</label>
-                            <div class="input-group">
-                                <input type="number" class="form-control" id="unit_quantity" name="unit_quantity"
-                                    placeholder="กรอกปริมาณ" required>
-                                <select id="setting_unit_id" name="setting_unit_id" class="custom-select" required
-                                    aria-label="หน่วยสินค้า">
-                                    <option value="" disabled <%=!selectedSettingUnit ? 'selected' : '' %>>เลือกหน่วย
-                                    </option>
-                                    <% settingUnits.forEach(function(unit) { %>
-                                        <option value="<%= unit.id_unit %>" <%=selectedSettingUnit===unit.id_unit ? 'selected'
-                                            : '' %>><%= unit.id_unit %>
-                                        </option>
-                                        <% }); %>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="price">ราคา</label>
-                        <input type="number" id="price" name="price" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="time">เวลา (วัน:ชั่วโมง:นาที:วินาที):</label>
-                        <input type="text" id="time" name="time" value="00d : 00h : 00m : 00s" readonly>
-                    </div>
-                    <button type="submit" class="submit-button">บันทึก</button>
-                </form>
+                <% }); %>
             </div>
         </div>
     </section>
 
     <!-- Link JS -->
     <script src="../js/index.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var today = new Date().toISOString().split('T')[0];
-            document.getElementById('date_of_receipt').value = today;
-        });
-    </script>
+    <script src="../js/buying.js"></script>
 </body>
 
 </html>

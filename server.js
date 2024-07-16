@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const flash = require('express-flash');
 const session = require('express-session');
+const { spawn } = require('child_process');
 const cors = require('cors');
 const ejs = require('ejs');
 
@@ -19,6 +20,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs'); 
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// ===================== Python-Script ===================== //
 
 app.get('/', (req, res) => {
     if (!req.session.user) {
@@ -86,6 +88,7 @@ app.get('/buying', require('./routes/buying'));
 app.get('/add_buying', require('./routes/buying'));
 app.get('/view_buying/:id', require('./routes/buying'));
 app.post('/create_buying', require('./routes/buying'));
+app.post('/delete_buying/:id', require('./routes/buying'));
 
 app.get('/setting_type', require('./routes/buying'));
 app.get('/setting_add_type', require('./routes/buying'));
@@ -97,11 +100,23 @@ app.get('/setting_add_unit', require('./routes/buying'));
 app.post('/create_setting_unit', require('./routes/buying'));
 app.post('/delete_setting_unit/:id', require('./routes/buying'));
 
+app.post('/updateBuyingTime', require('./routes/buying'));
+
+app.get('/warehouse', require('./routes/buying'));
+app.get('/view_warehouse/:id', require('./routes/buying'));
+app.post('/update_warehouse', require('./routes/buying'));
+
 // ===================== Promotion ===================== //
 app.get('/promotion', require('./routes/promotion'));
-
 
 app.listen(3000, () => {
     console.log('Server has started with port 3000');
     console.log('http://localhost:3000');
+    startPythonScript();
 });
+
+function startPythonScript() {
+    const pythonProcess = spawn('python', ['server.py']);
+    console.log('Python script started');
+
+}

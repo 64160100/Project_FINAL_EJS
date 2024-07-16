@@ -16,4 +16,11 @@ INSERT INTO `permission_table` (`permission_id`, `table_read`, `table_create`, `
 
 INSERT INTO `tbl_user` (`tbl_employees`, `tbl_user_permission`, `username`, `password`, `profile_picture`, `status`) VALUES ('BKB0001', 'Manger', 'user', '1234', NULL, 'ON');
 
--- UPDATE `permission_dashboard` SET `permission_id`='Manger',`dashboard_read`='Y',`dashboard_create`='Y',`dashboard_update`='Y',`dashboard_delete`='Y',`dashboard_confirm`='Y' WHERE 1
+INSERT INTO `setting_type` (`id_type`) VALUES ('หมูสด');
+
+INSERT INTO `setting_unit` (`id_unit`) VALUES ('กรัม');
+
+INSERT INTO `tbl_buying` (`id_buying_list`, `name_product`, `date_of_receipt`, `setting_type_id`, `unit_quantity`, `setting_unit_id`, `price`, `day`, `hour`, `minute`, `second`) VALUES ('R001', 'ต้นหอม', '2024-07-13', 'หมูสด', '123', 'กรัม', '499', '0', '0', '0', '0');
+
+INSERT INTO `tbl_buying` (`id_buying_list`, `name_product`, `date_of_receipt`, `setting_type_id`, `unit_quantity`, `setting_unit_id`, `price`, `day`, `hour`, `minute`, `second`) VALUES ('R002', 'ต้นหอม', '2024-07-13', 'หมูสด', '123', 'กรัม', '499', '0', '0', '0', '0');
+
