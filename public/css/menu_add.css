@@ -1,0 +1,226 @@
+/* Enhanced input styles for a more modern look */
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="status"] {
+    display: block;
+    width: calc(100% - 20px); /* Match width calculation of other inputs */
+    margin: 10px 0;
+    padding: 12px 15px; /* Consistent padding with other inputs */
+    border: 1px solid #ccc; /* Consistent border color */
+    border-radius: 1px; /* Consistent rounded corners */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Consistent shadow */
+    font-size: 16px; /* Consistent font size */
+    background-color: #fdfdfd; /* Light grey background for readonly */
+    color: #495057; /* Dark grey text for contrast */
+    transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition for focus */
+    -webkit-appearance: none; /* Removes default chrome and safari style */
+    -moz-appearance: none; /* Removes default Firefox style */
+    appearance: none; /* Removes default style for other browsers */
+}
+
+/* Focus state for inputs to highlight the active field */
+.form-group input[type="text"]:focus,
+.form-group input[type="number"]:focus,
+.form-group input[type="status"]:focus {
+    outline: none; /* Removes the default focus outline */
+    box-shadow: 0 0 5px rgba(7, 7, 7, 0.5); /* Adjusted focus shadow for consistency */
+}
+
+/* Enhanced label styles for better alignment and visibility */
+.form-group label {
+    margin-top: 20px;
+    display: block;
+    color: #333;
+    font-weight: bold; /* Make labels bold */
+    font-size: 14px; /* Slightly larger font size */
+}
+
+/* Modern button styles with gradient and shadow */
+button[type="submit"] {
+    background-image: linear-gradient(to right, #4CAF50, #5cb85c); /* Green gradient */
+}
+
+button[type="reset"] {
+    background-image: linear-gradient(to right, #ff4b5a, #ff6b81); /* Red gradient */
+}
+
+button {
+    margin: 10px 5px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    color: white;
+    transition: background-image 0.3s, box-shadow 0.3s; /* Smooth transition for hover */
+}
+
+#menu_id,
+#number,
+#status,
+#other_contact {
+    max-width: 500px; /* Adjust this value as needed to make the fields shorter */
+    width: 100%; /* Ensures the fields take up the full width of their container, up to the max-width */
+}
+
+#title {
+    display: block;
+    width: calc(115% - 20px); /* Match width calculation of other inputs */
+    margin: 10px 0;
+    padding: 12px 15px; /* Consistent padding with other inputs */
+    border: 1px solid #ccc; /* Consistent border color */
+    border-radius: 1px; /* Consistent rounded corners */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Consistent shadow */
+    font-size: 16px; /* Consistent font size */
+    background-color: #fdfdfd; /* Light grey background for readonly */
+    color: #495057; /* Dark grey text for contrast */
+    transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition for focus */
+    -webkit-appearance: none; /* Removes default chrome and safari style */
+    -moz-appearance: none; /* Removes default Firefox style */
+    appearance: none; /* Removes default style for other browsers */
+}
+
+#title:focus {
+    outline: none; /* Removes the default focus outline */
+    box-shadow: 0 0 5px rgba(7, 7, 7, 0.5); /* Adjusted focus shadow for consistency */
+}
+
+
+#other_contact {
+    height: auto; /* Adjust height based on content */
+    overflow-y: hidden; /* Prevent vertical scrollbar */
+    resize: vertical; /* Allow users to resize it vertically if they wish */
+    max-height: 150px; /* Maximum height before scrolling */
+}
+
+.form-group input {
+    width: 100%; /* Ensures input fields take up the full width of their container */
+    transition: width 0.3s ease-in-out; /* Smooth transition for width changes */
+}
+
+.form-group input:focus {
+    width: 101%; /* Increase width upon focus */
+    position: relative; /* Ensure the input field can expand out of its container */
+    z-index: 2; /* Ensure the expanded input field is above other content */
+}
+
+/* Adjust the .form-container to prevent overflow issues */
+.form-container {
+    overflow: hidden; /* Hide the overflow caused by expanded input fields */
+}
+
+/* Optional: Adjust the .form-row to handle the layout of expanded fields */
+.form-row {
+    display: flex;
+    flex-wrap: wrap; /* Allow form groups to wrap if there's not enough space */
+    gap: 10px; /* Add some space between form groups */
+}
+
+
+textarea {
+    display: block;
+    width: calc(100% - 20px); /* Match width calculation of other inputs */
+    margin: 10px 0;
+    padding: 12px 15px; /* Consistent padding with other inputs */
+    border: 1px solid #ccc; /* Consistent border color */
+    border-radius: 1px; /* Consistent rounded corners */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Consistent shadow */
+    font-size: 16px; /* Consistent font size */
+    background-color: #fdfdfd; /* Light grey background for readonly */
+    color: #495057; /* Dark grey text for contrast */
+    transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition for focus */
+    -webkit-appearance: none; /* Removes default chrome and safari style */
+    -moz-appearance: none; /* Removes default Firefox style */
+    appearance: none; /* Removes default style for other browsers */
+}
+
+textarea:focus {
+    outline: none; /* Removes the default focus outline */
+    box-shadow: 0 0 5px rgba(7, 7, 7, 0.5); /* Adjusted focus shadow for consistency */
+}
+
+/* Breadcrumbs styling */
+.breadcrumbs {
+    font-size: 14px; /* Adjust based on your preference */
+    margin-bottom: 10px; /* Space before the next section */
+    color: #6c757d; /* A muted color for the text */
+}
+
+.breadcrumbs a {
+    color: #0275d8; /* Link color */
+    text-decoration: none; /* Removes underline from links */
+}
+
+.breadcrumbs a:hover {
+    text-decoration: underline; /* Adds underline on hover for better UX */
+}
+
+/* Topic section styling */
+.topic {
+    font-size: 40px; /* Adjust the font size as needed */
+    color: #333; /* Text color */
+    display: flex;
+    align-items: center; /* Centers the icon with the text vertically */
+}
+
+.topic a {
+    color: #333; /* Arrow and link color */
+    display: inline-flex; /* Keeps the icon aligned with the text */
+    align-items: center;
+    text-decoration: none; /* Removes underline from the link */
+}
+
+/* /////////////////////// */
+.flex-container {
+    display: flex;
+    justify-content: flex-start; /* Align items to the left */
+}
+
+.form-image-upload {
+    padding: 20px;
+    border: 2px dashed #ccc; /* Dashed border */
+    border-radius: 5px; /* Rounded corners */
+    background-color: #f9f9f9; /* Light background */
+    text-align: center; /* Center the content */
+    margin: 10px 0; /* Some margin */
+}
+
+.form-image-upload label {
+    display: block; /* Make the label a block to occupy the full width */
+    margin-bottom: 10px; /* Space below the label */
+    font-weight: bold; /* Make the text bold */
+    color: #333; /* Label text color */
+}
+
+.form-image-upload input[type="file"] {
+    display: none; /* Hide the default input */
+}
+
+.form-image-upload button {
+    background-color: #4CAF50; /* Green background */
+    color: white; /* White text */
+    padding: 10px 20px; /* Padding */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+.form-image-upload button:hover {
+    background-color: #45a049; /* Darker shade of green on hover */
+}
+
+#drop_zone {
+    border: 2px dashed #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+    margin: 10px 0;
+    cursor: pointer;
+}
+
+#delete_image {
+    cursor: pointer;
+    background-color: red;
+    color: white;
+    border: none;
+}

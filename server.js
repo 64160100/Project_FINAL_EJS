@@ -79,9 +79,13 @@ app.post('/create_user/:id', require('./routes/user'));
 
 // ===================== Menu ===================== //
 app.get('/menu', require('./routes/menu'));
+app.get('/add_menu', require('./routes/menu'));
 
 // ===================== Table ===================== //
 app.get('/table', require('./routes/table'));
+app.get('/add_table', require('./routes/table'));
+app.get('/view_zone/:id', require('./routes/table'));
+app.post('/create_area', require('./routes/table'));
 
 // ===================== Buying ===================== //
 app.get('/buying', require('./routes/buying'));

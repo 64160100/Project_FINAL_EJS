@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
 .topic {
     display: flex;
     justify-content: space-between;
@@ -7,3 +13,37 @@
     border-radius: 5px;
     margin-bottom: 20px;
 }
+
+.centered-content {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.text p {
+    margin: 12px 0;
+    color: #444;
+    font-size: 18px;
+}
+
+.create-area-button button {
+    font-size: 20px;
+    padding: 12px 24px;
+    color: white;
+    background: linear-gradient(60deg, #007bff, #0056b3);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.create-area-button button:hover {
+    background: linear-gradient(60deg, #0056b3, #003875);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+/* //////////////// */

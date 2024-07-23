@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS</title>
+
+    <!-- Box Icons  -->
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Styles  -->
+    <link rel="shortcut icon" href="img/kxp_fav.png" type="image/x-icon">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/menu_add.css">
+</head>
+
+<body>
+    <div class="sidebar close">
+        <!-- ========== Logo ============  -->
+        <a href="#" class="logo-box">
+            <i class='bx bxs-cat'></i>
+            <div class="logo-name">POS</div>
+        </a>
+
+        <!-- ========== List ============  -->
+
+        <ul class="sidebar-list">
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <li>
+                <div class="title">
+                    <a href="/" class="link">
+                        <i class='bx bx-home'></i>
+                        <span class="name">หน้าหลัก</span>
+                    </a>
+                    <!-- <i class='bx bxs-chevron-down'></i> -->
+                </div>
+                <div class="submenu">
+                    <a href="/" class="link submenu-title">หน้าหลัก</a>
+                    <!-- submenu links here  -->
+                </div>
+            </li>
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <li>
+                <div class="title">
+                    <a href="/dashboard" class="link">
+                        <i class='bx bx-grid-alt'></i>
+                        <span class="name">แดชบอร์ด</span>
+                    </a>
+                    <!-- <i class='bx bxs-chevron-down'></i> -->
+                </div>
+                <div class="submenu">
+                    <a href="/dashboard" class="link submenu-title">แดชบอร์ด</a>
+                    <!-- submenu links here  -->
+                </div>
+            </li>
+
+
+
+            <!-- -------- Dropdown List Item ------- -->
+            <li class="dropdown">
+                <div class="title">
+                    <a href="/employee" class="link">
+                        <i class='bx bx-collection'></i>
+                        <span class="name">ข้อมูลพนักงาน</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="/employee" class="link submenu-title">ข้อมูลพนักงาน</a>
+                    <a href="/employee" class="link">พนักงาน</a>
+                    <a href="/user" class="link">ผู้ใช้งาน</a>
+                    <a href="/permission" class="link">สิทธิ์ผู้ใช้งาน</a>
+                </div>
+            </li>
+
+            <!-- -------- Dropdown List Item ------- -->
+            <li class="dropdown">
+                <div class="title">
+                    <a href="/menu" class="link">
+                        <i class='bx bxs-food-menu'></i>
+                        <span class="name">เมนูอาหารและบริการ</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="/menu" class="link submenu-title">เมนูอาหารและบริการ</a>
+                    <a href="/menu" class="link">เมนูอาหาร</a>
+                    <a href="#" class="link">ตั้งค่าหมวดหมู่</a>
+                    <a href="#" class="link">ตั้งค่าหน่วยสินค้า</a>
+                    <a href="#" class="link">ตั้งค่าประเภท</a>
+                </div>
+            </li>
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <li class="dropdown">
+                <div class="title">
+                    <a href="/table" class="link">
+                        <i class='bx bx-table'></i>
+                        <span class="name">โต๊ะอาหาร</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="/table" class="link submenu-title">โต๊ะอาหาร</a>
+                    <a href="/table" class="link">จัดโต๊ะอาหาร</a>
+                    <a href="#" class="link">สั่งเมนู</a>
+                </div>
+            </li>
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <li class="dropdown">
+                <div class="title">
+                    <a href="/buying" class="link">
+                        <i class='bx bx-cart-download'></i>
+                        <span class="name">รายการจัดซื้อและคงคลัง</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="/buying" class="link submenu-title">รายการจัดซื้อและคงคลัง</a>
+                    <a href="/buying" class="link">รายการจัดซื้อ</a>
+                    <a href="#" class="link">คงคลัง</a>
+                    <a href="#" class="link">ตั้งค่าประเภท</a>
+                    <a href="#" class="link">ตั้งค่าปริมาณ</a>
+                </div>
+            </li>
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <li>
+                <div class="title">
+                    <a href="/promotion" class="link">
+                        <i class='bx bxs-dollar-circle'></i>
+                        <span class="name">โปรโมชั่น</span>
+                    </a>
+                    <!-- <i class='bx bxs-chevron-down'></i> -->
+                </div>
+                <div class="submenu">
+                    <a href="/promotion" class="link submenu-title">โปรโมชั่น</a>
+                    <!-- submenu links here  -->
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- ============= Home Section =============== -->
+    <section class="home">
+        <div class="nav">
+            <div class="toggle-sidebar">
+                <i class='bx bx-menu'></i>
+            </div>
+            <nav>
+                <div class="nav-content">
+                    <div class="profile-details">
+                        <img src="../img/chef.png" alt="" class="profile-image">
+                        <span class="user-id">ID1234</span>
+                    </div>
+                    <a href="/login" class="auth-link">เข้าสู่ระบบ</a>
+                </div>
+            </nav>
+        </div>
+
+        <!-- ============= Top Dashboard =============== -->
+
+        <div class="breadcrumbs">
+            <a href="/dashboard"> หน้าหลัก</a> > <a href="/menu">เมนูอาหารและบริการ</a> > <span>สร้างเมนูอาหาร</span>
+        </div>
+        <div class="topic"><a href="javascript:history.back()" style="text-decoration: none;">
+                <i class='bx bx-left-arrow-alt'></i></a> สร้างเมนูอาหาร</div>
+
+        <div class="topic">สร้างเมนูอาหาร</div>
+
+        <!-- ============= Center Dashboard =============== -->
+
+        <div class="centered-content">
+            <div class="form-container">
+                <form action="/create_menu" method="post" id="menuForm">
+                    <div class="form-group">
+                        <h2>ข้อมูลเมนูอาหาร</h2>
+                        <hr class="underline">
+
+                        <div class="flex-container">
+                            <!-- Container for specified fields -->
+                            <div class="fields-container">
+                                <!-- Row 1: ชื่อสินค้า -->
+                                <div class="form-row">
+                                    <div class="form-container">
+                                        <label for="name_product">ชื่อสินค้า</label>
+                                        <input type="text" id="name_product" name="name_product" required
+                                            aria-label="ชื่อสินค้า">
+                                    </div>
+                                </div>
+                                <!-- Row 2: รหัสสินค้า, ประเภทสินค้า -->
+                                <div class="form-row">
+                                    <div class="form-container">
+                                        <label for="id_menu">รหัสสินค้า</label>
+                                        <input type="text" id="id_menu" name="id_menu" required aria-label="รหัสสินค้า">
+                                    </div>
+                                    <div class="form-container">
+                                        <label for="manu_category">ประเภทสินค้า</label>
+                                        <input type="text" id="manu_category" name="manu_category" required
+                                            aria-label="ประเภทสินค้า">
+                                    </div>
+                                    <div class="form-container">
+                                        <label for="manu_type">หมวดหมู่สินค้า</label>
+                                        <input type="text" id="manu_type" name="manu_type" required
+                                            aria-label="หมวดหมู่สินค้า">
+                                    </div>
+                                </div>
+                                <!-- Row 3: ราคา, หน่วยการใช้, สถานะ -->
+                                <div class="form-row">
+                                    <div class="form-container">
+                                        <label for="price">ราคา</label>
+                                        <input type="number" id="price" name="price" required aria-label="ราคา">
+                                    </div>
+                                    <div class="form-container">
+                                        <label for="manu_unit">หน่วยการใช้</label>
+                                        <input type="text" id="manu_unit" name="manu_unit" required
+                                            aria-label="หน่วยการใช้">
+                                    </div>
+                                    <div class="form-container">
+                                        <label for="status">สถานะ</label>
+                                        <select id="status" name="status" class="custom-select" required
+                                            aria-label="สถานะ">
+                                            <option value="" disabled selected>เลือกสถานะ</option>
+                                            <option value="1">เปิดใช้งาน</option>
+                                            <option value="0">ปิดใช้งาน</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Buttons -->
+                            <div class="form-image-upload">
+                                <label for="menu_image" id="label_menu_image">รูปภาพสินค้า</label>
+                                <div id="drop_zone" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
+                                    Drag and drop a file here or click to select
+                                </div>
+                                <!-- Hidden file input -->
+                                <input type="file" id="menu_image" name="menu_image" required aria-label="รูปภาพสินค้า"
+                                    onchange="showImage(this)">
+                                <!-- Custom button that triggers the file input -->
+                                <button type="button" id="choose_file_button"
+                                    onclick="document.getElementById('menu_image').click();">Choose File</button>
+                                <div id="image_container" style="display:none; position: relative;">
+                                    <img id="preview" style="max-width: 100%; height: auto;">
+                                    <button type="button" id="delete_image"
+                                        style="position: absolute; top: 0; right: 0;">X</button>
+                                </div>
+                            </div>
+
+                        </div>
+                        <button type="submit">บันทึก</button>
+                        <button type="reset">ยกเลิก</button>
+                    </div>
+            </div>
+            </form>
+        </div>
+        </div>
+    </section>
+
+
+    <!-- Link JS -->
+    <script src="../js/index.js"></script>
+    <script>
+        function dragOverHandler(ev) {
+            ev.preventDefault();
+        }
+
+        function dropHandler(ev) {
+            ev.preventDefault();
+            if (ev.dataTransfer.items) {
+                if (ev.dataTransfer.items[0].kind === 'file') {
+                    var file = ev.dataTransfer.items[0].getAsFile();
+                    document.getElementById('menu_image').files = ev.dataTransfer.files;
+                    showImage(file);
+                }
+            }
+        }
+
+        function showImage(file) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('preview').src = e.target.result;
+                document.getElementById('image_container').style.display = 'block';
+                document.getElementById('drop_zone').style.display = 'none';
+                document.getElementById('label_menu_image').style.display = 'none';
+                document.getElementById('choose_file_button').style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        document.getElementById('delete_image').addEventListener('click', function () {
+            document.getElementById('menu_image').value = "";
+            document.getElementById('image_container').style.display = 'none';
+            document.getElementById('preview').src = "";
+            document.getElementById('drop_zone').style.display = 'block';
+            document.getElementById('label_menu_image').style.display = 'block';
+            document.getElementById('choose_file_button').style.display = 'inline-block';
+        });
+    </script>
+</body>

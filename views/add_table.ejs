@@ -13,7 +13,7 @@
     <!-- Styles  -->
     <link rel="shortcut icon" href="img/kxp_fav.png" type="image/x-icon">
     <link rel="stylesheet" href="../css/index.css">
-    <link rel="stylesheet" href="../css/table.css">
+    <link rel="stylesheet" href="../css/table_add.css">
 </head>
 
 <body>
@@ -170,51 +170,63 @@
         <!-- ============= Center Dashboard =============== -->
 
         <div class="centered-content">
-            <% if (tables.length> 0 || zones.length > 0) { %>
-                <div class="zone-controls">
-                    <% zones.forEach(function(zone) { %>
-                        <button class="zone-name-btn" data-zone-id="<%= zone.zone_name %>">Zone: <%= zone.zone_name %></button>
-                        <% }); %>
-                            <a href="/zone/add" class="add-zone-btn">Add Zone</a>
-                </div>
+            <div class="text">
+                <p>ไม่มีพื้นที่</p>
+                <p>กรุณากด "สร้างพื้นที่ใหม่" เพื่อจัดการโต๊ะอาหารในร้าน</p>
+            </div>
+            <div class="create-area-button">
+                <button onclick="window.location.href='/add_table';">สร้างพื้นที่ใหม่</button>
+            </div>
 
-                <div class="tables-list">
-                    <% tables.forEach(function(table) { %>
-                        <!-- Wrap the table info in an anchor tag -->
-                        <a href="/table/zone/<%= table.id_table %>" class="table-link">
-                            <div class="table-box">
-                                <p>Table ID: <%= table.id_table %>
-                                </p>
-                                <!-- Add more table details as needed -->
-                            </div>
-                        </a>
-                        <% }); %>
+            <div id="myModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="togglePopup()" >&times;</span>
+                    <h2>สร้างพื้นที่ใหม่</h2>
+                    <form action="/create_area" method="post">
+                        <div class="input-container">
+                            <input type="text" name="zone_name" placeholder="ชื่อโซน" required>
+                            <input type="number" name="id_table" placeholder="จำนวนโต๊ะ" required>
+                        </div>
+                        <div>
+                            <button type="submit">เพิ่ม</button>
+                            <button type="button" onclick="togglePopup()" style="background-color: white; color: black; border: 1px solid #ccc;">ปิดหน้านี้</button>
+                        </div>
+                    </form>
                 </div>
-                <% } else { %>
-                    <div class="text">
-                        <p>ไม่มีพื้นที่</p>
-                        <p>กรุณากด "สร้างพื้นที่ใหม่" เพื่อจัดการโต๊ะอาหารในร้าน</p>
-                    </div>
-                    <div class="create-area-button">
-                        <button onclick="window.location.href='/add_table';">สร้างพื้นที่ใหม่</button>
-                    </div>
+            </div>
         </div>
-        <% } %>
+
     </section>
     <!-- Link JS -->
     <script src="../js/index.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const zoneButtons = document.querySelectorAll('.zone-name-btn');
+        var modal = document.getElementById("myModal");
+        var btn = document.getElementById("myBtn"); // Ensure this ID matches your button for opening the modal
+        var span = document.getElementsByClassName("close")[0];
 
-            zoneButtons.forEach(button => {
-                button.addEventListener('click', function () {
-                    const zoneId = this.getAttribute('data-zone-id');
-                    window.location.href = `/view_zone/${zoneId}`;
-                });
-            });
-        });
+        btn.onclick = function () {
+            modal.style.display = "block";
+        };
+
+        function closeModalAndRedirect() {
+            modal.style.display = "none";
+            window.location.href = "/table"; // Adjust the redirect URL as needed
+        }
+
+        span.onclick = closeModalAndRedirect;
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                closeModalAndRedirect();
+            }
+        };
+
+        function togglePopup() {
+            closeModalAndRedirect();
+        }
     </script>
-</body>
+</body >
 
-</html>
+
+
+</html >

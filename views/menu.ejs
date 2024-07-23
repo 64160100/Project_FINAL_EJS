@@ -168,7 +168,7 @@
             เมนูอาหารและบริการ
             <div class="search-add-container">
                 <input type="text" id="searchBox" placeholder="ค้นหาสิทธิ์ผู้ใช้งาน..." />
-                <button onclick="window.location.href='/'" class="add-menu-button">สร้างสินค้า</button>
+                <button onclick="window.location.href='/add_menu'" class="add-menu-button">สร้างสินค้า</button>
             </div>
         </div>
 
@@ -181,6 +181,7 @@
                         <li>ชื่อสินค้า</li>
                         <li>รหัสสินค้า</li>
                         <li>ประเภทสินค้า</li>
+                        <li>หมวดหมู่</li>
                         <li>ราคา</li>
                         <li>หน่วยการใช้</li>
                         <li>คงเหลือ</li>
@@ -189,6 +190,44 @@
                     </ul>
                 </div>
                 <hr class="underline">
+                    <% menu.forEach(function(menu) { %>
+                        <div class="menu-item">
+                            <ul class="menu-detail">
+                                <li>
+                                    <%= menu.name_product %>
+                                </li>
+                                <li>
+                                    <%= menu.id_menu %>
+                                </li>
+                                <li>
+                                    <%= menu.manu_category %>
+                                </li>
+                                <li>
+                                    <%= menu.manu_type %>
+                                </li>
+                                <li>
+                                    <%= menu.price %>
+                                </li>
+                                <li>
+                                    <%= menu.manu_unit %>
+                                </li>
+                                <li>
+                                    <%= menu.remain %>
+                                </li>
+                                <li>
+                                    <%= menu.status %>
+                                </li>
+                                <li class="menu-action ">
+                                    <button onclick="location.href='/view_menu/<%= menu.id_menu %>'"
+                                        class="view-button">ดูข้อมูล</button>
+                                    <form action="/delete_menu/<%= menu.id_menu %>" method="post"
+                                        style="display: inline;">
+                                        <button type="submit" class="delete-button">ลบ</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                        <% }); %>
             </div>
         </div>
     </section>

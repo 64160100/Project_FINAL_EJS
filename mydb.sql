@@ -20,7 +20,8 @@ INSERT INTO `setting_type` (`id_type`) VALUES ('หมูสด');
 
 INSERT INTO `setting_unit` (`id_unit`) VALUES ('กรัม');
 
-INSERT INTO `tbl_buying` (`id_buying_list`, `name_product`, `date_of_receipt`, `setting_type_id`, `unit_quantity`, `setting_unit_id`, `price`, `day`, `hour`, `minute`, `second`) VALUES ('R001', 'ต้นหอม', '2024-07-13', 'หมูสด', '123', 'กรัม', '499', '0', '0', '0', '0');
+INSERT INTO `manu_category` (`manu_category`) VALUES ('ผัด');
 
-INSERT INTO `tbl_buying` (`id_buying_list`, `name_product`, `date_of_receipt`, `setting_type_id`, `unit_quantity`, `setting_unit_id`, `price`, `day`, `hour`, `minute`, `second`) VALUES ('R002', 'ต้นหอม', '2024-07-13', 'หมูสด', '123', 'กรัม', '499', '0', '0', '0', '0');
+INSERT INTO `manu_type` (`manu_type`) VALUES ('ราดข้าว');
 
+INSERT INTO `manu_unit` (`manu_unit`) VALUES ('จาน');

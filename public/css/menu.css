@@ -82,7 +82,39 @@
     transition: background-color 0.3s ease;
 }
 
-.add-menu-button:hover {
+/* ///////////////////////////// */
+
+.view-button, .delete-button, .add-menu-button {
+    padding: 5px 10px; /* Adjusted to match .view-button */
+    background-color: #007bff; /* Consistent color across buttons */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* If there's a specific action section in employee similar to .user-action */
+.menu-action {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Ensures alignment similar to .user-action */
+}
+
+.delete-button {
+    background-color: #dc3545; /* Kept original color for delete button */
+    margin-left: 10px; /* Kept original spacing */
+}
+
+.add-menu-button {
+    background-color: #4CAF50; /* Kept original color */
+    padding: 10px 20px; /* Kept original padding */
+    font-size: 16px; /* Ensured consistency in font size across buttons */
+    border-radius: 5px; /* Kept original border-radius */
+    cursor: pointer; /* Kept original cursor style */
+    transition: background-color 0.3s ease; /* Kept original transition for hover effect */
+}
+
+.view-button:hover, .delete-button:hover, .add-menu-button:hover {
     opacity: 0.9; /* Slightly more opaque for a subtle effect */
     transform: scale(1.05); /* Slightly larger to indicate interactivity */
 }

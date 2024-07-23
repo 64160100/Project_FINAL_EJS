@@ -1,0 +1,275 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+.topic {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    color: rgb(0, 0, 0);
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.centered-content {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.text p {
+    margin: 12px 0;
+    color: #444;
+    font-size: 18px;
+}
+
+.create-area-button button {
+    font-size: 20px;
+    padding: 12px 24px;
+    color: white;
+    background: linear-gradient(60deg, #007bff, #0056b3);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.create-area-button button:hover {
+    background: linear-gradient(60deg, #0056b3, #003875);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+
+.topic {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    color: rgb(0, 0, 0);
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.search-add-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+#searchBox {
+    padding: 10px;
+    margin-right: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    flex-grow: 1;
+}
+
+.centered-content.dim {
+    filter: blur(5px);
+}
+
+.setting-container {
+    width: 100%;
+}
+
+.setting-header {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    background-color: #f0f0f0;
+}
+
+.setting-details {
+    display: flex;
+    justify-content: space-around;
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+
+.setting-details li {
+    flex: 1;
+    text-align: center;
+}
+
+.setting-content {
+    margin-top: 10px;
+}
+
+.setting-detail {
+    display: flex;
+    justify-content: space-around;
+    list-style: none;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.setting-detail li {
+    flex: 1;
+    text-align: center;
+}
+
+.add-setting-button {
+    color: white;
+    border: none;
+    background-color: #4CAF50;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+
+.add-setting-button:hover {
+    opacity: 0.9;
+    /* Slightly more opaque for a subtle effect */
+    transform: scale(1.05);
+    /* Slightly larger to indicate interactivity */
+}
+
+.delete-button {
+    padding: 5px 10px;
+    /* Adjusted to match .view-button */
+    background-color: #dc3545;
+    /* Consistent color across buttons */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.delete-button:hover {
+    opacity: 0.9;
+    /* Slightly more opaque for a subtle effect */
+    transform: scale(1.05);
+    /* Slightly larger to indicate interactivity */
+    background-color: #c82333;
+}
+
+.type-detail, .unit-detail {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.type-detail span, .unit-detail span {
+    flex: 1;
+    text-align: center;
+}
+
+
+/* Popup */
+.modal {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Dark background for contrast */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.5s; /* Smooth fade-in */
+}
+
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+.modal-content {
+    background-color: #fefefe; /* Lighter background */
+    margin: auto;
+    padding: 20px; /* Adjust padding */
+    border: 1px solid #888;
+    width: 25%; /* Adjust width */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Enhanced shadow for depth */
+    animation: scaleIn 0.3s; /* Dynamic appearance */
+}
+
+@keyframes scaleIn {
+    from {transform: scale(0.7);}
+    to {transform: scale(1);}
+}
+
+.input-container {
+    display: flex; /* Use Flexbox */
+    flex-direction: column; /* Stack children vertically */
+    gap: 10px; /* Space between the input fields */
+}
+
+.input-container input[type="text"],
+.input-container input[type="number"] {
+    width: 100%; /* Each input field will take up the full container width */
+}
+
+.close {
+    color: #d63535; /* Neutral color */
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #ec8989; /* Darker color for visibility */
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Additional styling for improved aesthetics */
+.modal-header, .modal-footer {
+    padding: 2px 16px;
+    background-color: #5cb85c; /* Green header/footer */
+    color: white; /* Text color */
+}
+
+/* Enhance buttons and inputs within modal for consistency */
+/* Enhanced buttons and inputs */
+.modal-content button,
+.modal-content input[type="text"],
+.modal-content input[type="number"] {
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: all 0.2s ease-in-out; /* Smooth transition for hover effects */
+}
+
+.modal-content button {
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    font-size: 14px; /* Slightly larger for readability */
+}
+
+.modal-content button:hover {
+    background-color: #45a049;
+    transform: scale(1.1); /* Slightly larger on hover */
+}
+
+/* Specific style for the 'close this page' button to differentiate */
+.modal-content button[type="button"] {
+    background-color: white;
+    color: black;
+    border: 1px solid #ccc;
+}
+
+.modal-content button[type="button"]:hover {
+    background-color: #f9f9f9;
+}
