@@ -172,16 +172,23 @@
         <div class="centered-content">
             <div class="zone-controls">
                 <% zones.forEach(function(zone) { %>
-                    <button class="zone-name-btn" data-zone-id="<%= zone.zone_name %>">Zone: <%= zone.zone_name %></button>
+                    <a href="/view_zone/<%= zone.zone_name %>">
+                        <button class="zone-name-btn" data-zone-id="<%= zone.zone_name %>">Zone: <%= zone.zone_name %></button>
+                    </a>
                 <% }); %>
-                <a href="/zone/add" class="add-zone-btn">Add Zone</a>
+                <a href="/add_table" class="add-zone-btn">Add Zone</a>
             </div>
             <% if (tables.length > 0) { %>
-                <ul>
+                <div class="table-container">
                     <% tables.forEach(function(table) { %>
-                        <li>Table ID: <%= table.id_table %></li>
+                        <a href="/table/zone/<%= table.id_table %>" class="table-link">
+                            <div class="table-box">
+                                <p>Table ID: <%= table.id_table %></p>
+                                <!-- Add more table details as needed -->
+                            </div>
+                        </a>
                     <% }); %>
-                </ul>
+                </div>
             <% } else { %>
                 <p>No tables found in this zone.</p>
             <% } %>
@@ -190,6 +197,18 @@
     </section>
     <!-- Link JS -->
     <script src="../js/index.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const zoneButtons = document.querySelectorAll('.zone-name-btn');
+
+            zoneButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const zoneId = this.getAttribute('data-zone-id');
+                    window.location.href = `/view_zone/${zoneId}`;
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

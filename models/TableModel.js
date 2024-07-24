@@ -25,22 +25,31 @@ module.exports = {
     },
 
     getTablesByZone: function (zoneId, callback) {
-        // Adjust the query to join tbl_table with tbl_zones and filter by zoneId
-        const query = `
+        // First query to get tables by zone
+        const queryTables = `
             SELECT tbl_table.id_table 
             FROM tbl_table
             JOIN tbl_zones ON tbl_table.zone_name = tbl_zones.zone_name
             WHERE tbl_zones.zone_name = ?
         `;
     
-        connection.query(query, [zoneId], (error, results) => {
+        connection.query(queryTables, [zoneId], (error, tables) => {
             if (error) {
                 console.error('Error fetching tables from database:', error);
                 return callback(error, null);
             }
     
-            // Return only the tables in the specified zone
-            callback(null, results);
+            // Second query to get all zones, nested within the callback of the first query
+            const queryZones = 'SELECT * FROM tbl_zones';
+            connection.query(queryZones, (error, zones) => {
+                if (error) {
+                    console.error('Error fetching zones from database:', error);
+                    return callback(error, null);
+                }
+    
+                // If both queries succeed, return the results together
+                callback(null, { tables: tables, zones: zones });
+            });
         });
     },
 

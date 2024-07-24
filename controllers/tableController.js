@@ -42,22 +42,18 @@ module.exports = {
 				return res.status(500).send('Error fetching zones from database');
 			}
 	
-			// Ensure zones is an array
-			if (!Array.isArray(zones)) {
-				zones = []; // Convert zones to an empty array if it's not an array
-			}
-	
-			TableModel.getTablesByZone(zoneId, (error, tables) => {
+			TableModel.getTablesByZone(zoneId, (error, results) => {
 				if (error) {
 					console.error('Error fetching tables from database:', error);
 					return res.status(500).send('Error fetching tables from database');
 				}
-	
+		
+				// Render the view_zone template with both tables and zones data
 				res.render('view_zone', {
 					title: `Tables in Zone ${zoneId}`,
 					zoneId: zoneId,
-					tables: tables,
-					zones: zones // Now zones is guaranteed to be an array
+					tables: results.tables, // Pass the tables to the view
+                    zones: results.zones, // Assuming zones is fetched correctly
 				});
 			});
 		});

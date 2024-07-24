@@ -173,9 +173,11 @@
             <% if (tables.length> 0 || zones.length > 0) { %>
                 <div class="zone-controls">
                     <% zones.forEach(function(zone) { %>
-                        <button class="zone-name-btn" data-zone-id="<%= zone.zone_name %>">Zone: <%= zone.zone_name %></button>
+                        <a href="/view_zone/<%= zone.zone_name %>">
+                            <button class="zone-name-btn" data-zone-id="<%= zone.zone_name %>">Zone: <%= zone.zone_name %></button>
+                        </a>
                         <% }); %>
-                            <a href="/zone/add" class="add-zone-btn">Add Zone</a>
+                            <a href="/add_table" class="add-zone-btn">Add Zone</a>
                 </div>
 
                 <div class="tables-list">
