@@ -88,9 +88,9 @@
                 <div class="submenu">
                     <a href="/menu" class="link submenu-title">เมนูอาหารและบริการ</a>
                     <a href="/menu" class="link">เมนูอาหาร</a>
-                    <a href="#" class="link">ตั้งค่าหมวดหมู่</a>
-                    <a href="#" class="link">ตั้งค่าหน่วยสินค้า</a>
-                    <a href="#" class="link">ตั้งค่าประเภท</a>
+                    <a href="/setting_menu_category" class="link">ตั้งค่าหมวดหมู่</a>
+                    <a href="/setting_menu_type" class="link">ตั้งค่าหน่วยสินค้า</a>
+                    <a href="/setting_menu_unit" class="link">ตั้งค่าประเภท</a>
                 </div>
             </li>
 
@@ -190,44 +190,44 @@
                     </ul>
                 </div>
                 <hr class="underline">
-                    <% menu.forEach(function(menu) { %>
-                        <div class="menu-item">
-                            <ul class="menu-detail">
-                                <li>
-                                    <%= menu.name_product %>
-                                </li>
-                                <li>
-                                    <%= menu.id_menu %>
-                                </li>
-                                <li>
-                                    <%= menu.manu_category %>
-                                </li>
-                                <li>
-                                    <%= menu.manu_type %>
-                                </li>
-                                <li>
-                                    <%= menu.price %>
-                                </li>
-                                <li>
-                                    <%= menu.manu_unit %>
-                                </li>
-                                <li>
-                                    <%= menu.remain %>
-                                </li>
-                                <li>
-                                    <%= menu.status %>
-                                </li>
-                                <li class="menu-action ">
-                                    <button onclick="location.href='/view_menu/<%= menu.id_menu %>'"
-                                        class="view-button">ดูข้อมูล</button>
-                                    <form action="/delete_menu/<%= menu.id_menu %>" method="post"
-                                        style="display: inline;">
-                                        <button type="submit" class="delete-button">ลบ</button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </div>
-                        <% }); %>
+                <% menu.forEach(function(menu) { %>
+                    <div class="menu-item">
+                        <ul class="menu-detail">
+                            <li class="menu-item-inline">
+                                <!-- <img src="../img/<%= menu.menu_picture %>" title="" alt=""> -->
+                                <img src="../img/cat.jpg" title="" alt="" class="small-image">
+                                <span class="product-name"><%= menu.name_product %></span>
+                            </li>
+                            <li>
+                                <%= menu.id_menu %>
+                            </li>
+                            <li>
+                                <%= menu.menu_category %>
+                            </li>
+                            <li>
+                                <%= menu.menu_unit %>
+                            </li>
+                            <li>
+                                <%= menu.price %>
+                            </li>
+                            <li>
+                                <%= menu.menu_type %>
+                            </li>
+                            <li>
+                                <%= menu.remain %>
+                            </li>
+                            <li>
+                                <%= menu.status %>
+                            </li>
+                            <li class="menu-action">
+                                <button onclick="location.href='/view_menu/<%= menu.id_menu %>'" class="view-button">ดูข้อมูล</button>
+                                <form action="/delete_menu/<%= menu.id_menu %>" method="post" style="display: inline;">
+                                    <button type="submit" class="delete-button">ลบ</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                <% }); %>
             </div>
         </div>
     </section>

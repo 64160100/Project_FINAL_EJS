@@ -170,36 +170,38 @@
         <!-- ============= Center Dashboard =============== -->
 
         <div class="centered-content">
-            <% if (tables.length> 0 || zones.length > 0) { %>
+            <% if (tables.length > 0 || zones.length > 0) { %>
                 <div class="zone-controls">
                     <% zones.forEach(function(zone) { %>
-                        <button class="zone-name-btn" data-zone-id="<%= zone.zone_name %>">Zone: <%= zone.zone_name %></button>
-                        <% }); %>
-                            <a href="/zone/add" class="add-zone-btn">Add Zone</a>
-                </div>
-
-                <div class="tables-list">
-                    <% tables.forEach(function(table) { %>
-                        <!-- Wrap the table info in an anchor tag -->
-                        <a href="/table/zone/<%= table.id_table %>" class="table-link">
-                            <div class="table-box">
-                                <p>Table ID: <%= table.id_table %>
-                                </p>
-                                <!-- Add more table details as needed -->
-                            </div>
+                        <a href="/view_zone/<%= zone.zone_name %>">
+                            <button class="zone-name-btn" data-zone-id="<%= zone.zone_name %>">Zone: <%= zone.zone_name %></button>
                         </a>
-                        <% }); %>
+                    <% }); %>
+                    <a href="/add_table" class="add-zone-btn">Add Zone</a>
                 </div>
-                <% } else { %>
-                    <div class="text">
-                        <p>ไม่มีพื้นที่</p>
-                        <p>กรุณากด "สร้างพื้นที่ใหม่" เพื่อจัดการโต๊ะอาหารในร้าน</p>
-                    </div>
-                    <div class="create-area-button">
-                        <button onclick="window.location.href='/add_table';">สร้างพื้นที่ใหม่</button>
-                    </div>
+                <% } %>
+                <div class="tables-list">
+                    <% if (tables.length > 0) { %>
+                        <% tables.forEach(function(table) { %>
+                            <!-- Wrap the table info in an anchor tag -->
+                            <a href="/table/zone/<%= table.id_table %>" class="table-link">
+                                <div class="table-box">
+                                    <p>Table ID: <%= table.id_table %></p>
+                                    <!-- Add more table details as needed -->
+                                </div>
+                            </a>
+                        <% }); %>
+                    <% } else { %>
+                        <div class="text">
+                            <p>ไม่มีพื้นที่</p>
+                            <p>กรุณากด "สร้างพื้นที่ใหม่" เพื่อจัดการโต๊ะอาหารในร้าน</p>
+                        </div>
+                        <div class="create-area-button">
+                            <button onclick="window.location.href='/add_table';">สร้างพื้นที่ใหม่</button>
+                        </div>
+                    <% } %>
+                </div>
         </div>
-        <% } %>
     </section>
     <!-- Link JS -->
     <script src="../js/index.js"></script>

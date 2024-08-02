@@ -126,3 +126,18 @@
 .add-menu-button:hover {
     background-color: #369b47; /* A slightly darker green for better contrast */
 }
+
+.menu-item-inline {
+    display: flex;
+    align-items: center; /* Align items vertically in the center */
+}
+
+.small-image {
+    width: 50px; /* Set the desired width */
+    height: auto; /* Maintain aspect ratio */
+    margin-right: 10px; /* Add space between the image and the product name */
+}
+
+.product-name {
+    /* Add any additional styling for the product name here */
+}

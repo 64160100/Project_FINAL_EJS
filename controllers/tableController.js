@@ -3,35 +3,41 @@ const TableModel = require('../models/TableModel.js');
 module.exports = {
 
 	tableView: (req, res) => {
-        // Step 1: Query the database for all tables and zones
-        TableModel.getTablesAndZones((error, results) => {
-            if (error) {
-                // Handle error (e.g., render an error page or send an error response)
-                console.error('Error fetching data from database:', error);
-                return res.status(500).send('Error fetching data from database');
-            }
-    
-            // Step 2: Pass the results to the view
-            // Check if both tables and zones are not empty
-            if (results.tables.length > 0 || results.zones.length > 0) {
-                // There are tables or zones in the database, pass them to the view
-                res.render('table', {
-                    title: 'Table View',
-                    tables: results.tables, // Pass the tables to the view
-                    zones: results.zones, // Pass the zones to the view
-                    message: `Total tables: ${results.tables.length}, Total zones: ${results.zones.length}` // Display the number of tables and zones
-                });
-            } else {
-                // No tables or zones found, pass an empty array or a message indicating no data found
-                res.render('table', {
-                    title: 'Table View',
-                    tables: [], // Pass an empty array for tables
-                    zones: [], // Pass an empty array for zones
-                    message: 'No tables or zones found'
-                });
-            }
-        });
-    },
+		// Step 1: Query the database for all tables and zones
+		TableModel.getTablesAndZones((error, results) => {
+			if (error) {
+				// Handle error (e.g., render an error page or send an error response)
+				console.error('Error fetching data from database:', error);
+				return res.status(500).send('Error fetching data from database');
+			}
+	
+			// Step 2: Check if both tables and zones are not empty
+			if (results.tables.length > 0 || results.zones.length > 0) {
+				// Check if zones array is not empty and redirect to the first zone's ID
+				if (results.zones.length > 0) {
+					console.log('Redirecting to /view_zone/:id with zone ID:', results.zones[0].zone_name);
+					return res.redirect(`/view_zone/${results.zones[0].zone_name}`);
+				} else {
+					// If zones array is empty but tables array is not, handle accordingly
+					console.log('No zones found, but tables are available');
+					return res.render('table', {
+						title: 'Table View',
+						tables: results.tables,
+						zones: [],
+						message: 'No zones found, but tables are available',
+					});
+				}
+			} else {
+				// No tables or zones found, render the /table view with a message
+				res.render('table', {
+					title: 'Table View',
+					tables: [], // Pass an empty array for tables
+					zones: [], // Pass an empty array for zones
+					message: 'No tables or zones found',
+				});
+			}
+		});
+	},
 
 	viewZone: (req, res) => {
 		const zoneId = req.params.id;
@@ -42,22 +48,18 @@ module.exports = {
 				return res.status(500).send('Error fetching zones from database');
 			}
 	
-			// Ensure zones is an array
-			if (!Array.isArray(zones)) {
-				zones = []; // Convert zones to an empty array if it's not an array
-			}
-	
-			TableModel.getTablesByZone(zoneId, (error, tables) => {
+			TableModel.getTablesByZone(zoneId, (error, results) => {
 				if (error) {
 					console.error('Error fetching tables from database:', error);
 					return res.status(500).send('Error fetching tables from database');
 				}
-	
+		
+				// Render the view_zone template with both tables and zones data
 				res.render('view_zone', {
 					title: `Tables in Zone ${zoneId}`,
 					zoneId: zoneId,
-					tables: tables,
-					zones: zones // Now zones is guaranteed to be an array
+					tables: results.tables, // Pass the tables to the view
+                    zones: results.zones, // Assuming zones is fetched correctly
 				});
 			});
 		});

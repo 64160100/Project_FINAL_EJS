@@ -80,6 +80,34 @@ app.post('/create_user/:id', require('./routes/user'));
 // ===================== Menu ===================== //
 app.get('/menu', require('./routes/menu'));
 app.get('/add_menu', require('./routes/menu'));
+app.post('/create_menu', require('./routes/menu'));
+app.post('/delete_menu/:id', require('./routes/menu'));
+
+app.get('/setting_menu_category', require('./routes/menu'));
+app.post('/create_menu_category', require('./routes/menu'));
+app.post('/delete_menu_category/:id', require('./routes/menu'));
+
+app.get('/setting_menu_type', require('./routes/menu'));
+app.post('/create_menu_type', require('./routes/menu'));
+app.post('/delete_menu_type/:id', require('./routes/menu'));
+
+app.get('/setting_menu_unit', require('./routes/menu'));
+app.post('/create_menu_unit', require('./routes/menu'));
+app.post('/delete_menu_unit/:id', require('./routes/menu'));
+
+app.get('/setting_add_menu_category', require('./routes/menu'));
+app.get('/setting_add_menu_type', require('./routes/menu'));
+app.get('/setting_add_menu_unit', require('./routes/menu'));
+
+
+
+
+
+
+
+
+
+
 
 // ===================== Table ===================== //
 app.get('/table', require('./routes/table'));

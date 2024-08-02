@@ -20,8 +20,9 @@ INSERT INTO `setting_type` (`id_type`) VALUES ('หมูสด');
 
 INSERT INTO `setting_unit` (`id_unit`) VALUES ('กรัม');
 
-INSERT INTO `manu_category` (`manu_category`) VALUES ('ผัด');
+INSERT INTO `menu_category` (`menu_category`) VALUES ('ผัด');
 
-INSERT INTO `manu_type` (`manu_type`) VALUES ('ราดข้าว');
+INSERT INTO `menu_type` (`menu_type`) VALUES ('ราดข้าว');
 
-INSERT INTO `manu_unit` (`manu_unit`) VALUES ('จาน');
+INSERT INTO `menu_unit` (`menu_unit`) VALUES ('จาน');
+
