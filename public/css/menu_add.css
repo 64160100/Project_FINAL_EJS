@@ -74,6 +74,12 @@ button {
     /* Smooth transition for hover */
 }
 
+
+button:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Slightly larger shadow on hover */
+}
+
 #menu_id,
 #number,
 #other_contact {
@@ -375,29 +381,74 @@ textarea:focus {
     box-shadow: 0 0 8px rgba(0, 123, 255, 0.5); /* Larger focus shadow */
 }
 
-.custom-select {
-    flex-grow: 1; /* Allows fields to grow to fill the container */
-    flex-shrink: 1; /* Allows fields to shrink if necessary */
-    flex-basis: 0%; /* Starts with the smallest base size and grows as needed */
-    position: relative;
-    margin-bottom: 0;
-    max-width: 500px; /* Sets a maximum width for the select box */
-    background: linear-gradient(to bottom, #f8f9fa, #e9ecef); /* Subtle gradient */
+/* เพิ่มปริมาณ */
+
+.custom-flex-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+
+}
+
+.custom-fields-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.custom-form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+}
+
+.custom-form-container {
+    flex: 1;
+    min-width: 200px;
+}
+
+.custom-form-container label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+.custom-form-container input,
+.custom-form-container select {
+    width: 100%;
+    padding: 10px;
     border: 1px solid #ced4da;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, background-color 0.3s;
-    height: 50px;
-    font-family: Arial, sans-serif;
+    border-radius: 4px;
+    box-sizing: border-box;
     font-size: 16px;
-    font-weight: 450;
-    border-radius: 6px; /* Increased border-radius for a smoother look */
 }
 
-.custom-select:hover {
-    background-color: #dee2e6; /* Slightly darker hover background */
+
+.addIngredient, .removeIngredient {
+    background-color: #4CAF50; /* Green background */
+    border: none; /* Remove borders */
+    color: white; /* White text */
+    width: 40px; /* Set width */
+    height: 40px; /* Set height */
+    text-align: center; /* Centered text */
+    text-decoration: none; /* Remove underline */
+    display: inline-block; /* Get the element to line up correctly */
+    font-size: 16px; /* Increase font size */
+    margin: 40px 2px 4px 2px; /* Increase top margin to move the button down */
+    cursor: pointer; /* Pointer/hand icon */
+    border-radius: 50%; /* Rounded corners to make it circular */
+    display: flex; /* Use flexbox to center the icon */
+    align-items: center; /* Center icon vertically */
+    justify-content: center; /* Center icon horizontally */
 }
 
-.custom-select:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5); /* Larger focus shadow */
+.removeIngredient {
+    background-color: #f44336; /* Red background for remove button */
+}
+
+.addIngredient i, .removeIngredient i {
+    vertical-align: middle; /* Align icon vertically in the middle */
 }

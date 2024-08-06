@@ -14,6 +14,9 @@ git push -u origin main
 git push -u origin 10-percent
 git pull origin 10-percent
 
+หากคุณต้องการบังคับให้ push โดยไม่สนใจการเปลี่ยนแปลงใน remote repository (ซึ่งอาจทำให้ข้อมูลสูญหาย)
+git push --force origin main
+
 
 คำสั่ง docker 
 docker build . -t <ตั้งชื่อ> --> เพื่อ build container เก็บเป็น image อะไรที่เคย run ก็จะถูก Cast(โยน) ไว้

@@ -1,4 +1,3 @@
-const { viewSettingUnit } = require('./BuyingModel');
 const connection = require('./ConMysql');
 
 module.exports = {
@@ -8,7 +7,25 @@ module.exports = {
             if (error) {
                 return callback(error, null);
             }
-            return callback(null, results); 
+            return callback(null, results);
+        });
+    },
+
+    getMenuFormbuying: function (callback) {
+        connection.query('SELECT * FROM tbl_buying', (error, results) => {
+            if (error) {
+                return callback(error, null);
+            }
+            return callback(null, results);
+        });
+    },
+
+    createMenuHasBuying: function (data, callback) {
+        connection.query('INSERT INTO tbl_buying_menu SET ?', data, (error, results) => {
+            if (error) {
+                return callback(error);
+            }
+            return callback(null, results);
         });
     },
 

@@ -1,4 +1,5 @@
 const MenuModel = require('../models/MenuModel.js');
+
 const multer = require('multer');
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
@@ -45,11 +46,19 @@ module.exports = {
 										console.error('Error fetching setting category: ', error);
 										res.status(500).send('Internal Server Error');
 									} else {
-										res.render('add_menu', {
-											menu: menu,
-											settingType: settingType,
-											settingUnit: settingUnit,
-											settingCategory: settingCategory
+										MenuModel.getMenuFormbuying((error, menuFormbuying) => {
+											if (error) {
+												console.error('Error fetching menu form buying: ', error);
+												res.status(500).send('Internal Server Error');
+											} else {
+												res.render('add_menu', {
+													menu: menu,
+													settingType: settingType,
+													settingUnit: settingUnit,
+													settingCategory: settingCategory,
+													menuFormbuying: menuFormbuying
+												});
+											}
 										});
 									}
 								});
@@ -78,16 +87,45 @@ module.exports = {
 				price: req.body.price,
 				menu_unit: req.body.settingUnit, // Corrected column name
 				status: req.body.status,
-				manu_picture: req.file ? req.file.path : null,
+				menu_picture: req.file ? `${req.file.filename}` : null, // Corrected path
 				remain: 0 // Set default value for remain
 			};
 	
+			// Extract new form data
+			const name_ingredient = req.body.name_ingredient;
+			const quantity = req.body.quantity;
+			const setting_unit_id = req.body.setting_unit_id;
+	
+			// Validate the new form data (optional but recommended)
+			if (!name_ingredient || !quantity || !setting_unit_id) {
+				return res.status(400).send('All fields are required');
+			}
+	
+			// Process the new form data (e.g., save to the database)
+			const ingredient = {
+				name_ingredient,
+				quantity,
+				setting_unit_id
+			};
+	
+			console.log(menu);
+			console.log(ingredient);
+	
+			// Assuming you have a MenuModel and IngredientModel
 			MenuModel.createMenu(menu, (error, result) => {
 				if (error) {
 					console.error('Error creating menu: ', error);
 					res.status(500).send('Internal Server Error');
 				} else {
-					res.redirect('/menu');
+					// Save the ingredient data
+					MenuModel.createMenuHasBuying(ingredient, (err, res) => {
+						if (err) {
+							console.error('Error creating ingredient: ', err);
+							res.status(500).send('Internal Server Error');
+						} else {
+							res.redirect('/menu');
+						}
+					});
 				}
 			});
 		});
