@@ -80,6 +80,8 @@ app.post('/create_user/:id', require('./routes/user'));
 // ===================== Menu ===================== //
 app.get('/menu', require('./routes/menu'));
 app.get('/add_menu', require('./routes/menu'));
+app.get('/view_menu/:id', require('./routes/menu'));
+app.get('/edit_menu/:id', require('./routes/menu'));
 app.post('/create_menu', require('./routes/menu'));
 app.post('/delete_menu/:id', require('./routes/menu'));
 
@@ -98,16 +100,6 @@ app.post('/delete_menu_unit/:id', require('./routes/menu'));
 app.get('/setting_add_menu_category', require('./routes/menu'));
 app.get('/setting_add_menu_type', require('./routes/menu'));
 app.get('/setting_add_menu_unit', require('./routes/menu'));
-
-
-
-
-
-
-
-
-
-
 
 // ===================== Table ===================== //
 app.get('/table', require('./routes/table'));
