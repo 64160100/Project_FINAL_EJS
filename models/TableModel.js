@@ -108,5 +108,23 @@ module.exports = {
                 });
             }
         }
+    },
+
+    getOrderFood: function (callback) {
+        connection.query('SELECT * FROM tbl_menu', (error, results) => {
+            if (error) {
+                return callback(error, null);
+            } else {
+                const menu = results.map(item => ({
+                    id: item.id_menu,
+                    name: item.name_product,
+                    picture: item.menu_picture,
+                    price: item.price,
+                    category: item.menu_category,
+                    type: item.menu_type,
+                }));
+                return callback(null, menu);
+            }
+        });
     }
 };

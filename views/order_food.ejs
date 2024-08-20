@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS</title>
+
+    <!-- Box Icons  -->
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Styles  -->
+    <link rel="shortcut icon" href="img/kxp_fav.png" type="image/x-icon">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/order_food.css">
+</head>
+
+<body>
+    <div class="sidebar close">
+        <!-- ========== Logo ============  -->
+        <a href="#" class="logo-box">
+            <i class='bx bxs-cat'></i>
+            <div class="logo-name">POS</div>
+        </a>
+
+        <!-- ========== List ============  -->
+
+        <ul class="sidebar-list">
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <li>
+                <div class="title">
+                    <a href="/" class="link">
+                        <i class='bx bx-home'></i>
+                        <span class="name">หน้าหลัก</span>
+                    </a>
+                    <!-- <i class='bx bxs-chevron-down'></i> -->
+                </div>
+                <div class="submenu">
+                    <a href="/" class="link submenu-title">หน้าหลัก</a>
+                    <!-- submenu links here  -->
+                </div>
+            </li>
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <li>
+                <div class="title">
+                    <a href="/dashboard" class="link">
+                        <i class='bx bx-grid-alt'></i>
+                        <span class="name">แดชบอร์ด</span>
+                    </a>
+                    <!-- <i class='bx bxs-chevron-down'></i> -->
+                </div>
+                <div class="submenu">
+                    <a href="/dashboard" class="link submenu-title">แดชบอร์ด</a>
+                    <!-- submenu links here  -->
+                </div>
+            </li>
+
+
+
+            <!-- -------- Dropdown List Item ------- -->
+            <li class="dropdown">
+                <div class="title">
+                    <a href="/employee" class="link">
+                        <i class='bx bx-collection'></i>
+                        <span class="name">ข้อมูลพนักงาน</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="/employee" class="link submenu-title">ข้อมูลพนักงาน</a>
+                    <a href="/employee" class="link">พนักงาน</a>
+                    <a href="/user" class="link">ผู้ใช้งาน</a>
+                    <a href="/permission" class="link">สิทธิ์ผู้ใช้งาน</a>
+                </div>
+            </li>
+
+            <!-- -------- Dropdown List Item ------- -->
+            <li class="dropdown">
+                <div class="title">
+                    <a href="/menu" class="link">
+                        <i class='bx bxs-food-menu'></i>
+                        <span class="name">เมนูอาหารและบริการ</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="/menu" class="link submenu-title">เมนูอาหารและบริการ</a>
+                    <a href="/menu" class="link">เมนูอาหาร</a>
+                    <a href="#" class="link">ตั้งค่าหมวดหมู่</a>
+                    <a href="#" class="link">ตั้งค่าหน่วยสินค้า</a>
+                    <a href="#" class="link">ตั้งค่าประเภท</a>
+                </div>
+            </li>
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <li class="dropdown">
+                <div class="title">
+                    <a href="/table" class="link">
+                        <i class='bx bx-table'></i>
+                        <span class="name">โต๊ะอาหาร</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="/table" class="link submenu-title">โต๊ะอาหาร</a>
+                    <a href="/table" class="link">จัดโต๊ะอาหาร</a>
+                    <a href="#" class="link">สั่งเมนู</a>
+                </div>
+            </li>
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <li class="dropdown">
+                <div class="title">
+                    <a href="/buying" class="link">
+                        <i class='bx bx-cart-download'></i>
+                        <span class="name">รายการจัดซื้อและคงคลัง</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="/buying" class="link submenu-title">รายการจัดซื้อและคงคลัง</a>
+                    <a href="/buying" class="link">รายการจัดซื้อ</a>
+                    <a href="#" class="link">คงคลัง</a>
+                    <a href="#" class="link">ตั้งค่าประเภท</a>
+                    <a href="#" class="link">ตั้งค่าปริมาณ</a>
+                </div>
+            </li>
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <li>
+                <div class="title">
+                    <a href="/promotion" class="link">
+                        <i class='bx bxs-dollar-circle'></i>
+                        <span class="name">โปรโมชั่น</span>
+                    </a>
+                    <!-- <i class='bx bxs-chevron-down'></i> -->
+                </div>
+                <div class="submenu">
+                    <a href="/promotion" class="link submenu-title">โปรโมชั่น</a>
+                    <!-- submenu links here  -->
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- ============= Home Section =============== -->
+    <section class="home">
+        <div class="nav">
+            <div class="toggle-sidebar">
+                <i class='bx bx-menu'></i>
+            </div>
+            <nav>
+                <div class="nav-content">
+                    <div class="profile-details">
+                        <img src="../img/chef.png" alt="" class="profile-image">
+                        <span class="user-id">ID1234</span>
+                    </div>
+                    <a href="/login" class="auth-link">เข้าสู่ระบบ</a>
+                </div>
+            </nav>
+        </div>
+
+        <!-- ============= Top Dashboard =============== -->
+
+        <div class="breadcrumbs">
+            <a href="/dashboard"> หน้าหลัก</a> > <span>สั่งเมนูอาหาร</span>
+        </div>
+        <div class="topic"><a href="javascript:history.back()" style="text-decoration: none;">
+                <i class='bx bx-left-arrow-alt'></i></a> สั่งเมนูอาหาร</div>
+
+        <div class="topic">รับเข้าสินค้า</div>
+
+        <!-- ============= Center Dashboard =============== -->
+
+        <div class="centered-content">
+            <% for (let category in groupedMenu) { %>
+                <div class="category">
+                    <h3>
+                        <%= category %>
+                    </h3>
+                    <div class="menu-items">
+                        <% groupedMenu[category].forEach(menuItem=> { %>
+                            <form class="menu-item" action="/order" method="POST">
+                                <input type="hidden" name="id" value="<%= menuItem.id %>">
+                                <input type="hidden" name="name" value="<%= menuItem.name %>">
+                                <input type="hidden" name="price" value="<%= menuItem.price %>">
+                                <input type="hidden" name="category" value="<%= menuItem.category %>">
+                                <img id="preview" src="../img/<%= menuItem.picture %>" alt="<%= menuItem.name %>">
+                                <h4>
+                                    <%= menuItem.name %>
+                                </h4>
+                                <p>Price: <%= menuItem.price %>
+                                </p>
+                                <button type="submit">Order</button>
+                            </form>
+                            <% }); %>
+                    </div>
+                </div>
+                <% } %>
+        </div>
+
+        <div class="basket-container">
+            <div class="basket-sidebar close">
+                <ul class="basket-list">
+                    รายการอาหาร
+                    <li class="basket-header">
+                        <span>รายการสินค้า</span>
+                        <span>หน่วย</span>
+                        <span>ราคาสินค้า</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="toggle-basket">
+                <!-- Assuming this is your basket element -->
+                <div class="basket">
+                    <span class="basket-count">0</span>
+                    <i class='bx bx-basket'></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="../js/index.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const basketToggle = document.querySelector(".toggle-basket");
+            const orderForms = document.querySelectorAll(".menu-item");
+
+            basketToggle.addEventListener("click", (event) => {
+                event.preventDefault(); // Prevent default anchor behavior
+                toggleBasket();
+            });
+
+            orderForms.forEach(form => {
+                form.addEventListener("submit", (event) => {
+                    event.preventDefault(); // Prevent default form submission
+
+                    const formData = new FormData(form);
+                    const menuItem = {
+                        id: formData.get("id"),
+                        name: formData.get("name"),
+                        price: parseFloat(formData.get("price")),
+                        category: formData.get("category"),
+                        picture: form.querySelector("img").src,
+                        quantity: 1
+                    };
+
+                    addItemToBasket(menuItem);
+                });
+            });
+
+            // Load basket items from localStorage
+            loadBasketFromLocalStorage();
+        });
+
+        function toggleBasket() {
+            const basketSidebar = document.querySelector('.basket-sidebar');
+            basketSidebar.classList.toggle('open');
+            basketSidebar.classList.toggle('close');
+        }
+
+        function addItemToBasket(item) {
+            const basketList = document.querySelector('.basket-list');
+            let listItem = basketList.querySelector(`li[data-id="${item.id}"]`);
+
+            if (listItem) {
+                // Item already exists, update its quantity and price
+                const quantityElement = listItem.querySelector('.item-quantity');
+                const priceElement = listItem.querySelector('.item-price');
+                let quantity = parseInt(quantityElement.textContent);
+                quantity += 1;
+                quantityElement.textContent = quantity;
+                priceElement.textContent = (item.price * quantity).toFixed(2);
+            } else {
+                // Item does not exist, add as new list item
+                listItem = document.createElement('li');
+                listItem.dataset.id = item.id;
+                listItem.innerHTML = `
+            <img src="${item.picture}" alt="${item.name}" style="width: 50px; height: 50px;">
+            <span>${item.name}</span>
+            <div class="quantity-controls">
+                <button class="decrease-quantity">-</button>
+                <span class="item-quantity">${item.quantity}</span>
+                <button class="increase-quantity">+</button>
+            </div>
+            <span class="item-price">${item.price.toFixed(2)}</span>
+        `;
+                basketList.appendChild(listItem);
+
+                listItem.querySelector('.increase-quantity').addEventListener('click', () => updateQuantity(item.id, item.price, 1));
+                listItem.querySelector('.decrease-quantity').addEventListener('click', () => updateQuantity(item.id, item.price, -1));
+            }
+
+            updateTotalPrice();
+            saveBasketToLocalStorage();
+            updateBasketCount();
+        }
+
+        function updateQuantity(itemId, itemPrice, change) {
+            const listItem = document.querySelector(`li[data-id="${itemId}"]`);
+            const quantityElement = listItem.querySelector('.item-quantity');
+            const priceElement = listItem.querySelector('.item-price');
+            let quantity = parseInt(quantityElement.textContent);
+            quantity += change;
+            if (quantity < 1) {
+                removeItemFromBasket(itemId);
+            } else {
+                quantityElement.textContent = quantity;
+                priceElement.textContent = (itemPrice * quantity).toFixed(2);
+            }
+            updateTotalPrice();
+            saveBasketToLocalStorage();
+            updateBasketCount();
+        }
+
+        function removeItemFromBasket(itemId) {
+            const listItem = document.querySelector(`li[data-id="${itemId}"]`);
+            listItem.remove();
+            updateTotalPrice();
+            saveBasketToLocalStorage();
+            updateBasketCount();
+        }
+
+        function updateTotalPrice() {
+            const basketList = document.querySelector('.basket-list');
+            const priceElements = basketList.querySelectorAll('.item-price');
+            let totalPrice = 0;
+            priceElements.forEach(priceElement => {
+                totalPrice += parseFloat(priceElement.textContent);
+            });
+            const totalPriceElement = document.querySelector('.total-price');
+            if (totalPriceElement) {
+                totalPriceElement.textContent = totalPrice.toFixed(2);
+            }
+        }
+
+        function saveBasketToLocalStorage() {
+            const basketList = document.querySelector('.basket-list');
+            const items = [];
+            basketList.querySelectorAll('li').forEach(listItem => {
+                const id = listItem.dataset.id;
+                const name = listItem.querySelector('span').textContent;
+                const imgElement = listItem.querySelector('img');
+                const picture = imgElement ? imgElement.src : '';
+                const quantity = parseInt(listItem.querySelector('.item-quantity').textContent);
+                const price = parseFloat(listItem.querySelector('.item-price').textContent) / quantity;
+                items.push({ id, name, picture, quantity, price });
+            });
+            localStorage.setItem('basketItems', JSON.stringify(items));
+        }
+
+        function loadBasketFromLocalStorage() {
+            const basketList = document.querySelector('.basket-list');
+            const items = JSON.parse(localStorage.getItem('basketItems')) || [];
+            items.forEach(item => {
+                const listItem = document.createElement('li');
+                listItem.dataset.id = item.id;
+                listItem.innerHTML = `
+            <img src="${item.picture}" alt="${item.name}" style="width: 50px; height: 50px;">
+            <span>${item.name}</span>
+            <div class="quantity-controls">
+                <button class="decrease-quantity">-</button>
+                <span class="item-quantity">${item.quantity}</span>
+                <button class="increase-quantity">+</button>
+            </div>
+            <span class="item-price">${(item.price * item.quantity).toFixed(2)}</span>
+        `;
+                basketList.appendChild(listItem);
+
+                listItem.querySelector('.increase-quantity').addEventListener('click', () => updateQuantity(item.id, item.price, 1));
+                listItem.querySelector('.decrease-quantity').addEventListener('click', () => updateQuantity(item.id, item.price, -1));
+            });
+            updateTotalPrice();
+            updateBasketCount();
+        }
+
+        function updateBasketCount() {
+            const basketList = document.querySelector('.basket-list');
+            let itemCount = 0;
+            basketList.querySelectorAll('li').forEach(listItem => {
+                const quantity = parseInt(listItem.querySelector('.item-quantity').textContent);
+                itemCount += quantity;
+            });
+            const basketCountElement = document.querySelector('.basket-count');
+            if (basketCountElement) {
+                basketCountElement.textContent = itemCount;
+            }
+        }
+    </script>
+</body>
+
+</html>

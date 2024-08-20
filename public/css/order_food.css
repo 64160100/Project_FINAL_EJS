@@ -1,0 +1,164 @@
+.centered-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.category {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.category h3 {
+    border-bottom: 2px solid #000;
+    padding-bottom: 5px;
+}
+
+.menu-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.menu-item {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 10px;
+    width: 200px;
+    text-align: center;
+}
+
+.menu-item img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* =============== Basket Container =============== */
+.basket-container {
+    position: fixed;
+    top: 80px; /* Adjust as needed */
+    right: 0; /* Position on the right side */
+    height: 100%;
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    align-items: flex-end; /* Align items to the right */
+    z-index: 100;
+}
+
+/* =============== Basket Sidebar =============== */
+.basket-sidebar {
+    height: 100%;
+    width: 400px;
+    background-color: var(--color_Dark1);
+    transition: all .5s ease;
+    z-index: 100;
+    transform: translateX(400px); /* Initially hide the sidebar off-screen to the right */
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center items horizontally */
+    padding: 20px; /* Add padding for better spacing */
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5); /* Add shadow for better visibility */
+    overflow-y: auto; /* Enable scrolling if content overflows */
+}
+
+.basket-sidebar.open {
+    transform: translateX(0); /* Slide in the sidebar from the right */
+}
+
+/* =============== Toggle Basket =============== */
+.toggle-basket {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60px; /* Adjust as needed */
+    width: 60px; /* Adjust as needed */
+    background-color: var(--color_Dark1);
+    cursor: pointer;
+    transition: all .5s ease;
+    z-index: 101; /* Ensure it is above the sidebar */
+    border-radius: 50%; /* Make it circular */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow for better visibility */
+    position: absolute; /* Position it absolutely */
+    top: 10px; /* Adjust as needed */
+    right: 10px; /* Adjust as needed */
+}
+
+.toggle-basket i {
+    font-size: 35px; /* Increase icon size */
+    color: var(--color_Light1); /* Ensure the icon color contrasts with the background */
+}
+
+/* =============== Basket List =============== */
+.basket-list {
+    color: white; /* Change font color to white */
+    list-style: none; /* Remove default list styling */
+    padding: 0; /* Remove default padding */
+    margin: 0; /* Remove default margin */
+    width: 100%; /* Make the list take full width */
+}
+
+.basket-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid var(--color_Light1);
+}
+
+.basket-header {
+    font-weight: bold;
+    text-align: left;
+}
+
+.basket-list img {
+    margin-right: 10px;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+}
+
+.quantity-controls button {
+    background-color: var(--color_Light1);
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.quantity-controls .item-quantity {
+    margin: 0 10px;
+}
+
+.remove-item {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+}
+
+/* ////////////////// */
+.basket {
+    position: relative; /* Set the basket to relative positioning */
+}
+
+.basket-count {
+    background-color: #ff0000; /* สีพื้นหลัง */
+    color: #ffffff; /* สีตัวอักษร */
+    border-radius: 50%; /* ทำให้เป็นวงกลม */
+    padding: 5px 10px; /* ระยะห่างภายใน */
+    font-size: 14px; /* ขนาดตัวอักษร */
+    font-weight: bold; /* ตัวหนา */
+    position: absolute; /* ตำแหน่งแบบ absolute */
+    top: -15px; /* ระยะห่างจากด้านบน */
+    right: -15px; /* ระยะห่างจากด้านขวา */
+    display: flex; /* ใช้ flexbox */
+    align-items: center; /* จัดกึ่งกลางแนวตั้ง */
+    justify-content: center; /* จัดกึ่งกลางแนวนอน */
+    width: 25px; /* ความกว้าง */
+    height: 25px; /* ความสูง */
+    text-align: center; /* จัดกึ่งกลางข้อความ */
+}

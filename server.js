@@ -107,6 +107,8 @@ app.get('/add_table', require('./routes/table'));
 app.get('/view_zone/:id', require('./routes/table'));
 app.post('/create_area', require('./routes/table'));
 
+app.get('/order_food', require('./routes/table'));
+
 // ===================== Buying ===================== //
 app.get('/buying', require('./routes/buying'));
 app.get('/add_buying', require('./routes/buying'));
@@ -132,6 +134,11 @@ app.post('/update_warehouse', require('./routes/buying'));
 
 // ===================== Promotion ===================== //
 app.get('/promotion', require('./routes/promotion'));
+
+
+app.get('/test', (req, res) => {
+    res.render('Test', { message: 'Test route is working!' });
+});
 
 app.listen(3000, () => {
     console.log('Server has started with port 3000');

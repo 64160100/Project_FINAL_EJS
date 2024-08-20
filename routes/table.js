@@ -7,4 +7,6 @@ router.get('/add_table', table.addTableView);
 router.get('/view_zone/:id', table.viewZone);
 router.post('/create_area', table.createTable);
 
+router.get('/order_food', table.orderFood);
+
 module.exports = router;

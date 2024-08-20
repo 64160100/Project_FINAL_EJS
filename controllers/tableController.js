@@ -91,4 +91,27 @@ module.exports = {
 			}
 		});
 	},
+
+	orderFood: (req, res) => {
+        TableModel.getOrderFood((error, menu) => {
+            if (error) {
+                console.error(error);
+                res.status(500).send("An error occurred");
+            } else {
+                // Group menu items by category
+                const groupedMenu = menu.reduce((acc, item) => {
+                    if (!acc[item.category]) {
+                        acc[item.category] = [];
+                    }
+                    acc[item.category].push(item);
+                    return acc;
+                }, {});
+				console.log('Grouped Menu:', groupedMenu);
+                res.render('order_food', {
+                    groupedMenu: groupedMenu,
+                    zone_name: req.body.zone_name || 'default_zone_name'
+                });
+            }
+        });
+    }
 };
