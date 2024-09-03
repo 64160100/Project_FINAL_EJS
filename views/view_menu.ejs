@@ -231,31 +231,76 @@
                     </div>
 
                     <!-- ปริมาณของวัตถุดิบ -->
-                    <h2>ปริมาณของวัตถุดิบ</h2>
-                    <hr class="underline">
-                    <div class="custom-flex-container">
-                        <div class="custom-fields-container" id="fieldsContainer">
-                            <% menu.ingredients.forEach(ingredient=> { %>
-                                <div class="custom-form-row">
-                                    <div class="custom-form-container">
-                                        <label for="name_ingredient">ชื่อวัตถุดิบ</label>
-                                        <input type="text" id="name_ingredient" class="short-input"
-                                            value="<%= ingredient.name_ingredient %>" readonly>
-                                    </div>
-                                    <div class="custom-form-container">
-                                        <label for="quantity">ปริมาณ</label>
-                                        <input type="text" id="quantity" class="short-input"
-                                            value="<%= ingredient.unit_quantity %>" readonly>
-                                    </div>
-                                    <div class="custom-form-container">
-                                        <label for="settingUnit">หน่วยการใช้</label>
-                                        <input type="text" id="setting_unit_id" class="short-input"
-                                            value="<%= ingredient.unit_id %>" readonly>
-                                    </div>
+                    <div class="split-container">
+                        <div class="left-section">
+                            <h2>ปริมาณของวัตถุดิบ</h2>
+                            <hr class="underline">
+                            <div class="custom-flex-container">
+                                <div class="custom-fields-container" id="fieldsContainer">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>ชื่อวัตถุดิบ</th>
+                                                <th>ปริมาณ</th>
+                                                <th>หน่วยการใช้</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% menu.ingredients.forEach(ingredient => { %>
+                                                <tr>
+                                                    <td><input type="text" id="name_ingredient" class="short-input" value="<%= ingredient.name_ingredient %>" readonly></td>
+                                                    <td><input type="text" id="quantity" class="short-input" value="<%= ingredient.unit_quantity %>" readonly></td>
+                                                    <td><input type="text" id="setting_unit_id" class="short-input" value="<%= ingredient.unit_id %>" readonly></td>
+                                                </tr>
+                                            <% }); %>
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <% }); %>
+                            </div>
+                        </div>
+                        
+                        <div class="right-section">
+                            <div class="header-container">
+                                <h2 class="header-title">เพิ่มเติม(ไม่บังคับ)</h2>
+                            </div>
+                            <hr class="underline">
+                            <% if (Object.keys(groupedMenuOptions).length > 0) { %>
+                                <table class="custom-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="center-align">ชื่อหมวดหมู่เพิ่มเติม</th>
+                                            <th class="center-align">ราคา</th>
+                                            <th>ชื่อวัตถุดิบ</th>
+                                            <th>ปริมาณวัตถุดิบ</th>
+                                            <th>หน่วยวัตถุดิบ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% Object.keys(groupedMenuOptions).forEach(name_options => { %>
+                                            <% 
+                                                // Calculate the maximum price for the current category
+                                                const maxPrice = Math.max(...groupedMenuOptions[name_options].map(option => option.price));
+                                            %>
+                                            <% groupedMenuOptions[name_options].forEach((option, index) => { %>
+                                                <tr>
+                                                    <% if (index === 0) { %>
+                                                        <td class="center-align" rowspan="<%= groupedMenuOptions[name_options].length %>"><%= name_options %></td>
+                                                        <td class="center-align" rowspan="<%= groupedMenuOptions[name_options].length %>"><%= maxPrice %></td>
+                                                    <% } %>
+                                                    <td><%= option.name_ingredient_menu_options %></td>
+                                                    <td><%= option.unit_quantity_menu_options %></td>
+                                                    <td><%= option.unit_id_menu_options %></td>
+                                                </tr>
+                                            <% }); %>
+                                        <% }); %>
+                                    </tbody>
+                                </table>
+                            <% } else { %>
+                                <p>ไม่มีหมวดหมู่เพิ่มเติม</p>
+                            <% } %>
                         </div>
                     </div>
+
                     <a href="/edit_menu/<%= menu.id_menu %>" class="edit-button">แก้ไข</a>
                 </div>
             </div>

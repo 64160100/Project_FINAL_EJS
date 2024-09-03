@@ -12,7 +12,7 @@
     <!-- Styles  -->
     <link rel="shortcut icon" href="img/kxp_fav.png" type="image/x-icon">
     <link rel="stylesheet" href="../css/index.css">
-    <link rel="stylesheet" href="../css/order_food.css">
+    <link rel="stylesheet" href="../css/customize.css">
 </head>
 
 <body>
@@ -168,73 +168,101 @@
             <a href="/dashboard"> หน้าหลัก</a> > <span>สั่งเมนูอาหาร</span>
         </div>
         <div class="topic"><a href="javascript:history.back()" style="text-decoration: none;">
-                <i class='bx bx-left-arrow-alt'></i></a> สั่งเมนูอาหาร</div>
-        <!-- ============= Center Dashboard =============== -->
+                <i class='bx bx-left-arrow-alt'></i></a> ปรับแต่งเมนูอาหาร</div>
+
+
+        <!-- ============= customize =============== -->
 
         <div class="centered-content">
-            <% for (let category in groupedMenu) { %>
-                <div class="category">
-                    <h3>
-                        <%= category %>
-                    </h3>
-                    <div class="menu-items">
-                        <% groupedMenu[category].forEach(menuItem => { %>
-                            <form class="menu-item" action="/order" method="POST">
-                                <input type="hidden" name="id" value="<%= menuItem.id %>">
-                                <input type="hidden" name="name" value="<%= menuItem.name %>">
-                                <input type="hidden" name="price" value="<%= menuItem.price %>">
-                                <input type="hidden" name="category" value="<%= menuItem.category %>">
-                                <a href="/customize/<%= menuItem.id %>">
-                                    <div class="image-container">
-                                        <img class="menu-item-image" src="../img/<%= menuItem.picture %>" alt="<%= menuItem.name %>">
-                                    </div>
-                                    <h4>
-                                        <%= menuItem.name %>
-                                    </h4>
-                                    <p><%= menuItem.price %> บาท </p>
-                                </a>
-                            </form>
-                        <% }); %>
+            <h1 class="top-left">เมนูอาหาร</h1>
+            <div class="customize-container">
+                <h1>
+                    <%= item.name %>
+                </h1>
+                <div class="item-details">
+                    <div class="item-details">
+                        <div class="image-container">
+                            <img id="preview" src="/img/<%= item.picture %>" alt="<%= item.name %>">
+                        </div>
+                        <p>ราคา <span id="total-price">
+                                <%= item.price %>
+                            </span> บาท</p>
                     </div>
                 </div>
-            <% } %>
-        </div>
+                <form action="/order" method="POST">
+                    <input type="hidden" name="id" value="<%= item.id %>">
+                    <input type="hidden" name="name" value="<%= item.name %>">
+                    <input type="hidden" name="price" value="<%= item.price %>">
+                    <input type="hidden" name="category" value="<%= item.category %>">
+                    <input type="hidden" name="type" value="<%= item.type %>">
         
-        <div class="basket-container">
-            <div class="basket-sidebar close">
-                <ul class="basket-list">
-                    <li class="basket-header">
-                        <span>รายการสินค้า</span>
-                        <span>หน่วย</span>
-                        <span>ราคาสินค้า</span>
-                    </li>
-                    <% basket.forEach(item => { %>
-                        <li data-id="<%= item.id %>">
-                            <img class="basket-item-image" src="<%= item.picture %>" alt="<%= item.name %>" style="width: 50px; height: 50px;">
-                            <span><%= item.name %></span>
-                            <div class="quantity-controls">
-                                <button class="decrease-quantity">-</button>
-                                <span class="item-quantity"><%= item.quantity %></span>
-                                <button class="increase-quantity">+</button>
-                            </div>
-                            <span class="item-price"><%= (item.price * item.quantity).toFixed(2) %></span>
-                        </li>
-                    <% }); %>
-                </ul>
-            </div>
-            <div class="toggle-basket">
-                <div class="basket">
-                    <span class="basket-count"><%= basket.reduce((acc, item) => acc + item.quantity, 0) %></span>
-                    <i class='bx bx-basket'></i>
-                </div>
+                    <!-- Special options -->
+                    <div class="special-options">
+                        <label>เพิ่มเติม</label>
+                        <hr class="underline">
+                        <div class="checkbox-group">
+                            <% menuOptions.forEach(option => { %>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="<%= option.id_menu_options %>" name="special_options" value="<%= option.id_menu_options %>">
+                                    <label for="<%= option.id_menu_options %>">
+                                        <%= option.name_options %> +<%= option.price %>
+                                    </label>
+                                </div>
+                            <% }); %>
+                        </div>
+                    </div>
+        
+                    <!-- Quantity input -->
+                    <div class="quantity">
+                        <label for="quantity">จำนวนเมนู</label>
+                        <hr class="underline">
+                        <div class="quantity-input">
+                            <button type="button" id="decrement-btn">-</button>
+                            <input type="number" id="quantity" name="quantity" value="1" min="1">
+                            <button type="button" id="increment-btn">+</button>
+                        </div>
+                    </div>
+        
+                    <button type="submit">Order</button>
+                </form>
             </div>
         </div>
     </section>
 
-
     <script src="../js/index.js"></script>
     <script>
-
+        document.addEventListener('DOMContentLoaded', function() {
+            const quantityInput = document.getElementById('quantity');
+            const totalPriceElement = document.getElementById('total-price');
+            const pricePerItem = parseFloat(<%= item.price %>);
+    
+            function updatePrice() {
+                const quantity = parseInt(quantityInput.value, 10) || 0;
+                const totalPrice = quantity * pricePerItem;
+                totalPriceElement.innerText = totalPrice.toFixed(2);
+            }
+    
+            function incrementValue() {
+                let value = parseInt(quantityInput.value, 10) || 0;
+                quantityInput.value = ++value;
+                updatePrice();
+            }
+    
+            function decrementValue() {
+                let value = parseInt(quantityInput.value, 10) || 0;
+                if (value > 1) {
+                    quantityInput.value = --value;
+                    updatePrice();
+                }
+            }
+    
+            document.getElementById('increment-btn').addEventListener('click', incrementValue);
+            document.getElementById('decrement-btn').addEventListener('click', decrementValue);
+            quantityInput.addEventListener('input', updatePrice);
+    
+            // Initial price update
+            updatePrice();
+        });
     </script>
 </body>
 

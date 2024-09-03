@@ -126,5 +126,117 @@ module.exports = {
                 return callback(null, menu);
             }
         });
+    },
+
+    getMenuItemById: function (itemId, callback) {
+        const sql = 'SELECT * FROM tbl_menu WHERE id_menu = ?';
+        connection.query(sql, [itemId], (error, results) => {
+            if (error) {
+                return callback(error, null);
+            }
+    
+            if (results.length === 0) {
+                return callback(null, null);
+            }
+    
+            const menu = results.map(item => ({
+                id: item.id_menu,
+                name: item.name_product,
+                picture: item.menu_picture,
+                price: item.price,
+                category: item.menu_category,
+                type: item.menu_type,
+            }));
+    
+            return callback(null, menu[0]); // Assuming you want to return a single item
+        });
+    },
+
+    getMenuOptionsByMenuId: (menuId, callback) => {
+        const query = `
+            SELECT 
+                id_menu_options, 
+                menu_id, 
+                name_options, 
+                price, 
+                name_ingredient_menu_options, 
+                unit_quantity_menu_options, 
+                unit_id_menu_options 
+            FROM tbl_menu_options 
+            WHERE menu_id = ?
+        `;
+        connection.query(query, [menuId], (error, results) => {
+            if (error) {
+                return callback(error, null);
+            }
+    
+            // จัดกลุ่มข้อมูลใน JavaScript
+            const groupedResults = results.reduce((acc, curr) => {
+                const key = curr.name_options;
+                if (!acc[key]) {
+                    acc[key] = {
+                        name_options: curr.name_options,
+                        price: curr.price, // แสดงราคาที่มากที่สุด
+                        ingredients: [],
+                        quantities: [], // แยก total_quantity ออกมาเป็น array
+                        unit_ids: [] // แยก unit_id_menu_options ออกมาเป็น array
+                    };
+                } else {
+                    // อัปเดตราคาให้เป็นราคาที่มากที่สุด
+                    acc[key].price = Math.max(acc[key].price, curr.price);
+                }
+                acc[key].ingredients.push(curr.name_ingredient_menu_options);
+                acc[key].quantities.push(curr.unit_quantity_menu_options); // เพิ่ม quantity ลงใน array
+                acc[key].unit_ids.push(curr.unit_id_menu_options); // เพิ่ม unit_id ลงใน array
+                return acc;
+            }, {});
+    
+            // แปลง Object กลับเป็น Array
+            const finalResults = Object.values(groupedResults);
+    
+            callback(null, finalResults);
+        });
+    },
+
+    getFoodRecipesByMenuId: (menuId, callback) => {
+        const query = `
+            SELECT 
+                id_food_recipes, 
+                tbl_menu_id, 
+                name_ingredient, 
+                unit_quantity, 
+                unit_id 
+            FROM tbl_food_recipes 
+            WHERE tbl_menu_id = ?
+        `;
+        connection.query(query, [menuId], (error, results) => {
+            if (error) {
+                return callback(error, null);
+            }
+    
+            // จัดกลุ่มข้อมูลใน JavaScript
+            const groupedResults = results.reduce((acc, curr) => {
+                const key = curr.id_food_recipes;
+                if (!acc[key]) {
+                    acc[key] = {
+                        id_food_recipes: curr.id_food_recipes,
+                        tbl_menu_id: curr.tbl_menu_id,
+                        ingredients: [],
+                        quantities: [],
+                        unit_ids: []
+                    };
+                }
+                acc[key].ingredients.push(curr.name_ingredient);
+                acc[key].quantities.push(curr.unit_quantity);
+                acc[key].unit_ids.push(curr.unit_id);
+                return acc;
+            }, {});
+    
+            // แปลง Object กลับเป็น Array
+            const finalResults = Object.values(groupedResults);
+    
+            callback(null, finalResults);
+        });
     }
+
 };

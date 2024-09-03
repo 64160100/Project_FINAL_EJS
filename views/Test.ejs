@@ -1,201 +1,177 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>POS</title>
-
-    <!-- Box Icons  -->
-    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
-    <!-- Styles  -->
-    <link rel="shortcut icon" href="img/kxp_fav.png" type="image/x-icon">
-    <link rel="stylesheet" href="../css/index.css">
-    <link rel="stylesheet" href="../css/order_food.css">
-</head>
-
-<body>
-
-    <div class="sidebar close">
-        <!-- ========== Logo ============  -->
-        <a href="#" class="logo-box">
-            <i class='bx bxs-cat'></i>
-            <div class="logo-name">POS</div>
-        </a>
-
-        <!-- ========== List ============  -->
-
-        <ul class="sidebar-list">
-
-            <!-- -------- Non Dropdown List Item ------- -->
-            <li>
-                <div class="title">
-                    <a href="/" class="link">
-                        <i class='bx bx-home'></i>
-                        <span class="name">หน้าหลัก</span>
-                    </a>
-                    <!-- <i class='bx bxs-chevron-down'></i> -->
-                </div>
-                <div class="submenu">
-                    <a href="/" class="link submenu-title">หน้าหลัก</a>
-                    <!-- submenu links here  -->
-                </div>
-            </li>
-
-            <!-- -------- Non Dropdown List Item ------- -->
-            <li>
-                <div class="title">
-                    <a href="/dashboard" class="link">
-                        <i class='bx bx-grid-alt'></i>
-                        <span class="name">แดชบอร์ด</span>
-                    </a>
-                    <!-- <i class='bx bxs-chevron-down'></i> -->
-                </div>
-                <div class="submenu">
-                    <a href="/dashboard" class="link submenu-title">แดชบอร์ด</a>
-                    <!-- submenu links here  -->
-                </div>
-            </li>
-
-            <!-- -------- Dropdown List Item ------- -->
-            <li class="dropdown">
-                <div class="title">
-                    <a href="/employee" class="link">
-                        <i class='bx bx-collection'></i>
-                        <span class="name">ข้อมูลพนักงาน</span>
-                    </a>
-                    <i class='bx bxs-chevron-down'></i>
-                </div>
-                <div class="submenu">
-                    <a href="/employee" class="link submenu-title">ข้อมูลพนักงาน</a>
-                    <a href="/employee" class="link">พนักงาน</a>
-                    <a href="/user" class="link">ผู้ใช้งาน</a>
-                    <a href="/permission" class="link">สิทธิ์ผู้ใช้งาน</a>
-                </div>
-            </li>
-
-            <!-- -------- Dropdown List Item ------- -->
-            <li class="dropdown">
-                <div class="title">
-                    <a href="/menu" class="link">
-                        <i class='bx bxs-food-menu'></i>
-                        <span class="name">เมนูอาหารและบริการ</span>
-                    </a>
-                    <i class='bx bxs-chevron-down'></i>
-                </div>
-                <div class="submenu">
-                    <a href="/menu" class="link submenu-title">เมนูอาหารและบริการ</a>
-                    <a href="/menu" class="link">เมนูอาหาร</a>
-                    <a href="#" class="link">ตั้งค่าหมวดหมู่</a>
-                    <a href="#" class="link">ตั้งค่าหน่วยสินค้า</a>
-                    <a href="#" class="link">ตั้งค่าประเภท</a>
-                </div>
-            </li>
-
-            <!-- -------- Non Dropdown List Item ------- -->
-            <li class="dropdown">
-                <div class="title">
-                    <a href="/table" class="link">
-                        <i class='bx bx-table'></i>
-                        <span class="name">โต๊ะอาหาร</span>
-                    </a>
-                    <i class='bx bxs-chevron-down'></i>
-                </div>
-                <div class="submenu">
-                    <a href="/table" class="link submenu-title">โต๊ะอาหาร</a>
-                    <a href="/table" class="link">จัดโต๊ะอาหาร</a>
-                    <a href="#" class="link">สั่งเมนู</a>
-                </div>
-            </li>
-
-            <!-- -------- Non Dropdown List Item ------- -->
-            <li class="dropdown">
-                <div class="title">
-                    <a href="/buying" class="link">
-                        <i class='bx bx-cart-download'></i>
-                        <span class="name">รายการจัดซื้อและคงคลัง</span>
-                    </a>
-                    <i class='bx bxs-chevron-down'></i>
-                </div>
-                <div class="submenu">
-                    <a href="/buying" class="link submenu-title">รายการจัดซื้อและคงคลัง</a>
-                    <a href="/buying" class="link">รายการจัดซื้อ</a>
-                    <a href="#" class="link">คงคลัง</a>
-                    <a href="#" class="link">ตั้งค่าประเภท</a>
-                    <a href="#" class="link">ตั้งค่าปริมาณ</a>
-                </div>
-            </li>
-
-            <!-- -------- Non Dropdown List Item ------- -->
-            <li>
-                <div class="title">
-                    <a href="/promotion" class="link">
-                        <i class='bx bxs-dollar-circle'></i>
-                        <span class="name">โปรโมชั่น</span>
-                    </a>
-                    <!-- <i class='bx bxs-chevron-down'></i> -->
-                </div>
-                <div class="submenu">
-                    <a href="/promotion" class="link submenu-title">โปรโมชั่น</a>
-                    <!-- submenu links here  -->
-                </div>
-            </li>
-        </ul>
-    </div>
-
-    <!-- ============= Home Section =============== -->
-    <section class="home">
-        <div class="nav">
-            <div class="toggle-sidebar-left">
-                <i class='bx bx-menu'></i>
-            </div>
-            <div class="toggle-sidebar-right">
-                <i class='bx bx-menu'></i>
-            </div>
-            <nav>
-                <div class="nav-content">
-                    <div class="profile-details">
-                        <img src="../img/chef.png" alt="" class="profile-image">
-                        <span class="user-id">ID1234</span>
-                    </div>
-                    <a href="/login" class="auth-link">เข้าสู่ระบบ</a>
-                </div>
-            </nav>
-        </div>
-
-<div class="basket-container">
-    <div class="basket-sidebar close">
-        <a href="#" class="logo-basket">
-            <i class='bx bx-basket'></i>
-        </a>
-        <ul class="basket-list">
-            <!-- Basket items will appear here -->
-        </ul>
-    </div>
-    
-    <div class="toggle-basket">
-        <i class='bx bx-basket'></i>
-    </div>
-</div>
-
-    </section>
-
-    <script>
-        function toggleBasket() {
-            const basketSidebar = document.querySelector('.basket-sidebar');
-            basketSidebar.classList.toggle('open');
-            basketSidebar.classList.toggle('close');
+menuUpdate: function (req, res) {
+    upload.single('menu_image')(req, res, (err) => {
+        if (err) {
+            console.error('Error uploading file:', err);
+            return res.status(500).json({
+                message: 'Internal Server Error',
+            });
         }
-    
-        document.addEventListener("DOMContentLoaded", () => {
-            const basketToggle = document.querySelector(".toggle-basket");
-    
-            basketToggle.addEventListener("click", (event) => {
-                event.preventDefault(); // Prevent default anchor behavior
-                toggleBasket();
+
+        console.log('Uploaded file:', req.file);
+
+        const menu = {
+            id_menu: req.body.id_menu,
+            name_product: req.body.name_product,
+            menu_type: req.body.settingType,
+            menu_category: req.body.settingCategory,
+            price: req.body.price,
+            menu_unit: req.body.settingUnit,
+            status: req.body.status,
+            menu_picture: req.file ? `${req.file.filename}` : null,
+            remain: 0
+        };
+
+        let name_ingredients = req.body.name_ingredient || [];
+        let unit_quantity = req.body.quantity || [];
+        let unit_id = req.body.setting_unit_id || [];
+        let id_food_recipes = req.body.id_food_recipes || [];
+
+        // Ensure these are arrays
+        if (!Array.isArray(name_ingredients)) {
+            name_ingredients = [name_ingredients];
+        }
+        if (!Array.isArray(unit_quantity)) {
+            unit_quantity = [unit_quantity];
+        }
+        if (!Array.isArray(unit_id)) {
+            unit_id = [unit_id];
+        }
+        if (!Array.isArray(id_food_recipes)) {
+            id_food_recipes = [id_food_recipes];
+        }
+
+        // Check if there is an existing picture in the database
+        MenuModel.getMenuById(menu.id_menu, (error, existingMenu) => {
+            if (error) {
+                console.error('Error fetching menu: ', error);
+                return res.status(500).send('Internal Server Error');
+            }
+
+            // If no new file is uploaded and delete_flag is true, use the default image
+            if (!req.file && req.body.delete_flag === 'true') {
+                menu.menu_picture = 'Default_menu.png';
+            } else if (!req.file && existingMenu && existingMenu.menu_picture) {
+                // If no new file is uploaded, use the existing picture
+                menu.menu_picture = existingMenu.menu_picture;
+            }
+
+            MenuModel.updateMenu(menu, (error, result) => {
+                if (error) {
+                    console.error('Error updating menu: ', error);
+                    return res.status(500).send('Internal Server Error');
+                } else {
+                    const id_menu = req.body.id_menu;
+
+                    let errorOccurred = false;
+
+                    MenuModel.getMaxIdFoodRecipes((error, maxId) => {
+                        if (error) {
+                            console.error('Error getting max id_food_recipes: ', error);
+                            return res.status(500).send('Internal Server Error');
+                        }
+
+                        // Get existing ingredients for the menu
+                        MenuModel.getIngredientsByMenuId(id_menu, (error, existingIngredients) => {
+                            if (error) {
+                                console.error('Error fetching ingredients: ', error);
+                                return res.status(500).send('Internal Server Error');
+                            }
+
+                            // Convert existing ingredients to a map for easy lookup
+                            const existingIngredientsMap = new Map();
+                            existingIngredients.forEach(ingredient => {
+                                existingIngredientsMap.set(ingredient.id_food_recipes, ingredient);
+                            });
+
+                            // Process each ingredient from the form
+                            name_ingredients.forEach((name_ingredient, index) => {
+                                // Check if id_food_recipes is undefined or null
+                                if (!id_food_recipes[index]) {
+                                    id_food_recipes[index] = maxId + 1;
+                                    maxId++;
+                                }
+
+                                const ingredient = {
+                                    id_food_recipes: id_food_recipes[index],
+                                    tbl_menu_id: id_menu,
+                                    name_ingredient: name_ingredient,
+                                    unit_quantity: unit_quantity[index],
+                                    unit_id: unit_id[index],
+                                };
+
+                                console.log('ingredient:', ingredient);
+
+                                // Check if the ingredient already exists
+                                MenuModel.getIngredientByMenuIdAndNameIngredient(ingredient.tbl_menu_id, ingredient.name_ingredient, (error, existingIngredient) => {
+                                    if (error) {
+                                        console.error('Error fetching ingredient: ', error);
+                                        errorOccurred = true;
+                                    } else if (!existingIngredient) {
+                                        console.log('Ingredient does not exist:', existingIngredient);
+                                        // Only update if the ingredient does not exist
+                                        MenuModel.updateIngredient(ingredient, (error, result) => {
+                                            if (error) {
+                                                console.error('Error updating ingredient: ', error);
+                                                errorOccurred = true;
+                                            }
+
+                                            if (index === name_ingredients.length - 1) {
+                                                if (errorOccurred) {
+                                                    return res.status(500).send('Internal Server Error');
+                                                } else {
+                                                    // Remove ingredients that are not in the form
+                                                    existingIngredients.forEach(existingIngredient => {
+                                                        if (!id_food_recipes.includes(existingIngredient.id_food_recipes)) {
+                                                            MenuModel.deleteIngredient(existingIngredient.id_food_recipes, (error, result) => {
+                                                                if (error) {
+                                                                    console.error('Error deleting ingredient: ', error);
+                                                                    errorOccurred = true;
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+
+                                                    if (errorOccurred) {
+                                                        return res.status(500).send('Internal Server Error');
+                                                    } else {
+                                                        return res.redirect(`/view_menu/${id_menu}`);
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    } else {
+                                        console.log('Ingredient already exists:', existingIngredient);
+
+                                        if (index === name_ingredients.length - 1) {
+                                            if (errorOccurred) {
+                                                return res.status(500).send('Internal Server Error');
+                                            } else {
+                                                // Remove ingredients that are not in the form
+                                                existingIngredients.forEach(existingIngredient => {
+                                                    if (!id_food_recipes.includes(existingIngredient.id_food_recipes)) {
+                                                        MenuModel.deleteIngredient(existingIngredient.id_food_recipes, (error, result) => {
+                                                            if (error) {
+                                                                console.error('Error deleting ingredient: ', error);
+                                                                errorOccurred = true;
+                                                            }
+                                                        });
+                                                    }
+                                                });
+
+                                                if (errorOccurred) {
+                                                    return res.status(500).send('Internal Server Error');
+                                                } else {
+                                                    return res.redirect(`/view_menu/${id_menu}`);
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                            });
+                        });
+                    });
+                }
             });
         });
-    </script>
-</body>
-</html>
+    });
+},

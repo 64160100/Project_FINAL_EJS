@@ -10,7 +10,7 @@ module.exports = {
 				console.error('Error fetching data from database:', error);
 				return res.status(500).send('Error fetching data from database');
 			}
-	
+
 			// Step 2: Check if both tables and zones are not empty
 			if (results.tables.length > 0 || results.zones.length > 0) {
 				// Check if zones array is not empty and redirect to the first zone's ID
@@ -41,25 +41,25 @@ module.exports = {
 
 	viewZone: (req, res) => {
 		const zoneId = req.params.id;
-	
+
 		TableModel.getTablesAndZones((error, zones) => {
 			if (error) {
 				console.error('Error fetching zones from database:', error);
 				return res.status(500).send('Error fetching zones from database');
 			}
-	
+
 			TableModel.getTablesByZone(zoneId, (error, results) => {
 				if (error) {
 					console.error('Error fetching tables from database:', error);
 					return res.status(500).send('Error fetching tables from database');
 				}
-		
+
 				// Render the view_zone template with both tables and zones data
 				res.render('view_zone', {
 					title: `Tables in Zone ${zoneId}`,
 					zoneId: zoneId,
 					tables: results.tables, // Pass the tables to the view
-                    zones: results.zones, // Assuming zones is fetched correctly
+					zones: results.zones, // Assuming zones is fetched correctly
 				});
 			});
 		});
@@ -72,46 +72,96 @@ module.exports = {
 	},
 
 	createTable: (req, res) => {
-		// Assuming req.body contains 'id_table' and 'zone_name'
 		const tableData = {
 			id_table: req.body.id_table,
 			zone_name: req.body.zone_name,
 		};
-	
-		// Call the createTable function from the TableModel
-		// Assuming this is in your controller
+
 		TableModel.createTable(tableData, (error, result) => {
 			if (error) {
-				// Handle error (e.g., send error response to client)
 				console.error(error);
 				res.status(500).send("An error occurred");
 			} else {
-				// Redirect to '/view_zone/:id' where :id is the id_table from the request
 				res.redirect(`/view_zone/${req.body.zone_name}`);
 			}
 		});
 	},
 
 	orderFood: (req, res) => {
-        TableModel.getOrderFood((error, menu) => {
-            if (error) {
-                console.error(error);
-                res.status(500).send("An error occurred");
-            } else {
-                // Group menu items by category
-                const groupedMenu = menu.reduce((acc, item) => {
-                    if (!acc[item.category]) {
-                        acc[item.category] = [];
-                    }
-                    acc[item.category].push(item);
-                    return acc;
-                }, {});
-				console.log('Grouped Menu:', groupedMenu);
-                res.render('order_food', {
-                    groupedMenu: groupedMenu,
-                    zone_name: req.body.zone_name || 'default_zone_name'
-                });
-            }
-        });
-    }
+		TableModel.getOrderFood((error, menu) => {
+			if (error) {
+				console.error(error);
+				res.status(500).send("An error occurred");
+			} else {
+				// Group menu items by category
+				const groupedMenu = menu.reduce((acc, item) => {
+					if (!acc[item.category]) {
+						acc[item.category] = [];
+					}
+					acc[item.category].push(item);
+					return acc;
+				}, {});
+
+				// Load basket items from session
+				const basket = req.session.basket || [];
+
+				res.render('order_food', {
+					groupedMenu: groupedMenu,
+					basket: basket,
+					zone_name: req.body.zone_name || 'default_zone_name'
+				});
+			}
+		});
+	},
+
+	customize: (req, res) => {
+		const itemId = req.params.id;
+	
+		console.log('Customizing item with ID:', itemId);
+	
+		TableModel.getMenuItemById(itemId, (error, item) => {
+			if (error) {
+				console.error('Error fetching item:', error);
+				return res.status(500).send("An error occurred");
+			}
+	
+			if (!item) {
+				return res.status(404).send("Item not found");
+			}
+	
+			TableModel.getMenuOptionsByMenuId(itemId, (error, menuOptions) => {
+				if (error) {
+					console.error('Error fetching menu options:', error);
+					return res.status(500).send("An error occurred");
+				}
+	
+				TableModel.getFoodRecipesByMenuId(itemId, (error, foodRecipes) => {
+					if (error) {
+						console.error('Error fetching food recipes:', error);
+						return res.status(500).send("An error occurred");
+					}
+
+					console.group('Menu Item');
+					console.log(item);
+					console.groupEnd();
+
+					console.group('Food Recipes');
+					console.log(foodRecipes);
+					console.groupEnd();
+					console.groupEnd();
+	
+					console.group('Menu Options');
+					console.log(menuOptions);
+					console.groupEnd();
+	
+					res.render('customize', {
+						item: item,
+						menuOptions: menuOptions,
+						foodRecipes: foodRecipes
+					});
+				});
+			});
+		});
+	}
+
 };

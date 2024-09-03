@@ -307,151 +307,174 @@ textarea:focus {
 }
 
 /* Custom flex container for ingredients */
-
 .custom-flex-container {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    padding: 20px;
 }
 
 .custom-fields-container {
     display: flex;
     flex-direction: column;
-    gap: 15px;
 }
 
 .custom-form-row {
     display: flex;
-    gap: 15px;
+    flex-wrap: nowrap;
+    margin-bottom: 10px;
+    align-items: center; /* Ensure items are aligned in the center */
 }
 
 .custom-form-container {
-    margin: 0;
-    padding: 0;
+    flex: 1;
+    margin-right: 10px;
 }
 
-.custom-form-container label {
-    display: block;
-    margin-bottom: 1px;
-    font-weight: bold;
-    color: #333;
+.custom-form-container:last-child {
+    margin-right: 0;
+    flex: 0; /* Ensure the button container does not stretch */
 }
 
-.custom-form-container input,
-.custom-form-container select {
+.custom-select, input[type="number"], input[type="text"] {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ced4da;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
-    font-size: 16px;
 }
 
-.short-input {
-    max-width: 200px; /* Adjust the value as needed */
+input[type="number"] {
+    -moz-appearance: textfield; /* Remove spinner for Firefox */
 }
 
-.addIngredient, .removeIngredient {
-    background-color: #4CAF50;
-    border: none;
-    color: white;
-    width: 40px;
-    height: 40px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 40px 2px 4px 2px;
-    cursor: pointer;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none; /* Remove spinner for Chrome, Safari, Edge, Opera */
+    margin: 0;
 }
 
-.removeIngredient {
-    background-color: #f44336;
+.ingredientAction {
+    background-color: #4CAF50; /* Green background */
+    border: none; /* Remove borders */
+    color: white; /* White text */
+    width: 40px; /* Set width */
+    height: 40px; /* Set height */
+    text-align: center; /* Centered text */
+    text-decoration: none; /* Remove underline */
+    display: inline-block; /* Get the element to line up correctly */
+    font-size: 16px; /* Increase font size */
+    margin: 40px 2px 4px 2px; /* Increase top margin to move the button down */
+    cursor: pointer; /* Pointer/hand icon */
+    border-radius: 50%; /* Rounded corners to make it circular */
+    display: flex; /* Use flexbox to center the icon */
+    align-items: center; /* Center icon vertically */
+    justify-content: center; /* Center icon horizontally */
 }
 
-.addIngredient i, .removeIngredient i {
-    vertical-align: middle;
+.ingredientAction[aria-label="ลบวัตถุดิบ"] {
+    background-color: #f44336; /* Red background for remove button */
 }
 
-
-.edit-button {
-    float: right;
-    background-image: linear-gradient(to right, #ff4b5a, #ff6b81); /* Red gradient */
+.ingredientAction i, .outOfStock i {
+    vertical-align: middle; /* Align icon vertically in the middle */
 }
 
-.edit-button {
-    margin: 10px 5px;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    color: white;
+.ingredientAction.disabled {
+    background-color: yellow; /* Yellow background for disabled button */
+    color: gray; /* Gray text for disabled button */
 }
 
 /* เพิ่มเติม */
-/* เพิ่มเติม */
-
 .split-container {
     display: flex;
-    width: 100%;
-    height: auto;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .left-section, .right-section {
     flex: 1;
+    min-width: 300px;
     padding: 20px;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif; /* Ensure the font is the same as the <h2> element */
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.left-section {
-    border-right: 1px solid #ccc;
+.left-section h2, .right-section h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333;
 }
 
-.right-section {
-    padding: 0px 20px; /* Adjust padding for more space */
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
+.underline {
+    border: 0;
+    height: 1px;
+    background: #ddd;
+    margin-bottom: 20px;
+}
+
+.custom-flex-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.custom-fields-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.custom-form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.custom-form-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.custom-form-container label {
+    font-size: 14px;
+    color: #555;
+}
+
+.custom-select, .custom-input {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    transition: border-color 0.3s;
 }
 
 .header-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 .header-title {
-    font-size: 24px; /* Set a consistent font size */
-    line-height: 1.5; /* Set a consistent line height */
+    font-size: 24px;
+    color: #333;
 }
 
-.custom-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
+.red-button {
+    background-color: #dc3545;
 }
 
-.custom-button:hover {
-    background-color: #0056b3;
-}
-
-.underline {
-    border: none;
-    border-bottom: 2px solid #ccc;
-    margin-top: 10px;
-    margin-bottom: 20px;
-    width: 100%; /* Set the width to match the container */
+.red-button:hover {
+    background-color: #c82333;
 }
 
 .custom-table {
@@ -468,13 +491,74 @@ textarea:focus {
 
 .custom-table th {
     background-color: #f2f2f2;
-    font-weight: bold;
+    color: #333;
 }
 
-.custom-table tr:nth-child(even) {
-    background-color: #f9f9f9;
+.center-align {
+    text-align: center;
 }
 
-.custom-table tr:hover {
-    background-color: #ddd;
+/* รูป */
+.form-image-upload {
+    text-align: center;
+    margin: 20px 0;
 }
+
+.drop-zone {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 150px;
+    transition: background-color 0.3s;
+    background: url('path/to/your/background/image.jpg') no-repeat center center;
+    background-size: cover;
+}
+
+.drop-zone:hover {
+    background-color: rgba(240, 240, 240, 0.5);
+}
+
+.drop-zone span {
+    font-size: 16px;
+    color: #666;
+}
+
+.custom-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    display: inline-block;
+    text-align: center;
+}
+
+.custom-button.red-button {
+    background-color: red;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    display: inline-block;
+    text-align: center;
+}
+.delete-btn {
+    background-color: #e74c3c; /* สีแดง */
+    color: white;
+    border: none;
+    padding: 6px 10px; /* ขนาดปุ่ม */
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px; /* ขนาดตัวอักษร */
+    transition: background-color 0.3s ease;
+}
+
+.delete-btn:hover {
+    background-color: #c0392b; /* สีแดงเข้มเมื่อ hover */
+}
+
+/* ส่วนของการแสดงผล */

@@ -329,8 +329,6 @@ textarea:focus {
 }
 
 #image_container {
-    display: none;
-    position: relative;
     width: 300px;
     height: 300px;
     border: 1px solid #ccc;
@@ -386,44 +384,68 @@ textarea:focus {
 .custom-flex-container {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    padding: 20px;
-
 }
 
 .custom-fields-container {
     display: flex;
     flex-direction: column;
-    gap: 15px;
 }
 
 .custom-form-row {
     display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    align-items: center;
+    flex-wrap: nowrap;
+    margin-bottom: 10px;
+    align-items: center; /* Ensure items are aligned in the center */
 }
 
 .custom-form-container {
     flex: 1;
-    min-width: 200px;
+    margin-right: 10px;
 }
 
-.custom-form-container label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #333;
+.custom-form-container:last-child {
+    margin-right: 0;
+    flex: 0; /* Ensure the button container does not stretch */
 }
 
-.custom-form-container input,
-.custom-form-container select {
+.custom-select, input[type="number"], input[type="text"] {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ced4da;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield; /* Remove spinner for Firefox */
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none; /* Remove spinner for Chrome, Safari, Edge, Opera */
+    margin: 0;
+}
+
+button.addIngredient {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
     font-size: 16px;
+}
+
+button.addIngredient:hover {
+    background-color: #218838;
+}
+
+.underline {
+    border: none;
+    border-bottom: 2px solid #ccc;
+    margin-bottom: 20px;
 }
 
 
@@ -452,3 +474,62 @@ textarea:focus {
 .addIngredient i, .removeIngredient i {
     vertical-align: middle; /* Align icon vertically in the middle */
 }
+
+/* เพิ่มเติม */
+.split-container {
+    display: flex;
+    width: 100%;
+    height: auto;
+}
+
+.left-section, .right-section {
+    flex: 1;
+    padding: 20px;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif; /* Ensure the font is the same as the <h2> element */
+}
+
+.left-section {
+    border-right: 1px solid #ccc;
+}
+
+.right-section {
+    padding: 0px 20px; /* Adjust padding for more space */
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-title {
+    font-size: 24px; /* Set a consistent font size */
+    line-height: 1.5; /* Set a consistent line height */
+}
+
+.custom-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.custom-button:hover {
+    background-color: #0056b3;
+}
+
+.underline {
+    border: none;
+    border-bottom: 2px solid #ccc;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    width: 100%; /* Set the width to match the container */
+}
+
+

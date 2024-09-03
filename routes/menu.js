@@ -6,9 +6,15 @@ router.get('/menu', menu.menuView);
 router.get('/add_menu', menu.menuAdd);
 router.get('/view_menu/:id', menu.menuViewId);
 router.get('/edit_menu/:id', menu.menuEdit);
+router.post('/update_menu/:id', menu.menuUpdate);
 router.post('/create_menu', menu.menuCreate);
 router.post('/delete_menu/:id', menu.menuDelete);
-router.post('/update_menu', menu.menuUpdate);
+
+router.get('/menu_options/:id', menu.menuOptions);
+router.get('/edit_menu_options/:id', menu.menuOptionsEdit);
+router.post('/create_menu_options/:id', menu.menuOptionsCreate);
+router.post('/delete_menu_options/:id', menu.menuOptionsDelete);
+router.post('/update_menu_options/:id', menu.menuOptionsUpdate);
 
 router.get('/setting_menu_category', menu.menuCategoryView);
 router.get('/setting_menu_type', menu.menuTypeView);

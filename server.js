@@ -82,8 +82,16 @@ app.get('/menu', require('./routes/menu'));
 app.get('/add_menu', require('./routes/menu'));
 app.get('/view_menu/:id', require('./routes/menu'));
 app.get('/edit_menu/:id', require('./routes/menu'));
+app.post('/update_menu/:id', require('./routes/menu'));
+
 app.post('/create_menu', require('./routes/menu'));
 app.post('/delete_menu/:id', require('./routes/menu'));
+
+app.get('/menu_options/:id', require('./routes/menu'));
+app.get('/edit_menu_options/:id', require('./routes/menu'));
+app.post('/create_menu_options/:id', require('./routes/menu'));
+app.post('/delete_menu_options/:id', require('./routes/menu'));
+app.post('/update_menu_options/:id', require('./routes/menu'));
 
 app.get('/setting_menu_category', require('./routes/menu'));
 app.post('/create_menu_category', require('./routes/menu'));
@@ -108,6 +116,7 @@ app.get('/view_zone/:id', require('./routes/table'));
 app.post('/create_area', require('./routes/table'));
 
 app.get('/order_food', require('./routes/table'));
+app.get('/customize/:id', require('./routes/table'));
 
 // ===================== Buying ===================== //
 app.get('/buying', require('./routes/buying'));

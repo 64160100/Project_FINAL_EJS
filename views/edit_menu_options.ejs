@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS</title>
+
+    <!-- Box Icons  -->
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Styles  -->
+    <link rel="shortcut icon" href="img/kxp_fav.png" type="image/x-icon">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/menu_add.css">
+    <link rel="stylesheet" href="../css/edit_menu_options.css">
+</head>
+
+<body>
+    <div class="sidebar close">
+        <!-- ========== Logo ============  -->
+        <a href="#" class="logo-box">
+            <i class='bx bxs-cat'></i>
+            <div class="logo-name">POS</div>
+        </a>
+
+        <!-- ========== List ============  -->
+
+        <ul class="sidebar-list">
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <li>
+                <div class="title">
+                    <a href="/" class="link">
+                        <i class='bx bx-home'></i>
+                        <span class="name">หน้าหลัก</span>
+                    </a>
+                    <!-- <i class='bx bxs-chevron-down'></i> -->
+                </div>
+                <div class="submenu">
+                    <a href="/" class="link submenu-title">หน้าหลัก</a>
+                    <!-- submenu links here  -->
+                </div>
+            </li>
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <li>
+                <div class="title">
+                    <a href="/dashboard" class="link">
+                        <i class='bx bx-grid-alt'></i>
+                        <span class="name">แดชบอร์ด</span>
+                    </a>
+                    <!-- <i class='bx bxs-chevron-down'></i> -->
+                </div>
+                <div class="submenu">
+                    <a href="/dashboard" class="link submenu-title">แดชบอร์ด</a>
+                    <!-- submenu links here  -->
+                </div>
+            </li>
+
+
+
+            <!-- -------- Dropdown List Item ------- -->
+            <li class="dropdown">
+                <div class="title">
+                    <a href="/employee" class="link">
+                        <i class='bx bx-collection'></i>
+                        <span class="name">ข้อมูลพนักงาน</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="/employee" class="link submenu-title">ข้อมูลพนักงาน</a>
+                    <a href="/employee" class="link">พนักงาน</a>
+                    <a href="/user" class="link">ผู้ใช้งาน</a>
+                    <a href="/permission" class="link">สิทธิ์ผู้ใช้งาน</a>
+                </div>
+            </li>
+
+            <!-- -------- Dropdown List Item ------- -->
+            <li class="dropdown">
+                <div class="title">
+                    <a href="/menu" class="link">
+                        <i class='bx bxs-food-menu'></i>
+                        <span class="name">เมนูอาหารและบริการ</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="/menu" class="link submenu-title">เมนูอาหารและบริการ</a>
+                    <a href="/menu" class="link">เมนูอาหาร</a>
+                    <a href="#" class="link">ตั้งค่าหมวดหมู่</a>
+                    <a href="#" class="link">ตั้งค่าหน่วยสินค้า</a>
+                    <a href="#" class="link">ตั้งค่าประเภท</a>
+                </div>
+            </li>
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <li class="dropdown">
+                <div class="title">
+                    <a href="/table" class="link">
+                        <i class='bx bx-table'></i>
+                        <span class="name">โต๊ะอาหาร</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="/table" class="link submenu-title">โต๊ะอาหาร</a>
+                    <a href="/table" class="link">จัดโต๊ะอาหาร</a>
+                    <a href="#" class="link">สั่งเมนู</a>
+                </div>
+            </li>
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <li class="dropdown">
+                <div class="title">
+                    <a href="/buying" class="link">
+                        <i class='bx bx-cart-download'></i>
+                        <span class="name">รายการจัดซื้อและคงคลัง</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="/buying" class="link submenu-title">รายการจัดซื้อและคงคลัง</a>
+                    <a href="/buying" class="link">รายการจัดซื้อ</a>
+                    <a href="#" class="link">คงคลัง</a>
+                    <a href="#" class="link">ตั้งค่าประเภท</a>
+                    <a href="#" class="link">ตั้งค่าปริมาณ</a>
+                </div>
+            </li>
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <li>
+                <div class="title">
+                    <a href="/promotion" class="link">
+                        <i class='bx bxs-dollar-circle'></i>
+                        <span class="name">โปรโมชั่น</span>
+                    </a>
+                    <!-- <i class='bx bxs-chevron-down'></i> -->
+                </div>
+                <div class="submenu">
+                    <a href="/promotion" class="link submenu-title">โปรโมชั่น</a>
+                    <!-- submenu links here  -->
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- ============= Home Section =============== -->
+    <section class="home">
+        <div class="nav">
+            <div class="toggle-sidebar">
+                <i class='bx bx-menu'></i>
+            </div>
+            <nav>
+                <div class="nav-content">
+                    <div class="profile-details">
+                        <img src="../img/chef.png" alt="" class="profile-image">
+                        <span class="user-id">ID1234</span>
+                    </div>
+                    <a href="/login" class="auth-link">เข้าสู่ระบบ</a>
+                </div>
+            </nav>
+        </div>
+
+        <!-- ============= Top Dashboard =============== -->
+
+        <div class="breadcrumbs">
+            <a href="/dashboard"> หน้าหลัก</a> > <a href="/menu">เมนูอาหารและบริการ</a> > <span>สร้างเมนูอาหาร</span>
+        </div>
+        <div class="topic"><a href="javascript:history.back()" style="text-decoration: none;">
+                <i class='bx bx-left-arrow-alt'></i></a> สร้างเมนูอาหาร</div>
+
+        <div class="topic">สร้างเมนูอาหาร</div>
+
+        <!-- ============= Center Dashboard =============== -->
+
+        <div class="centered-content">
+            <div class="form-container">
+                <div class="form-group">
+                    <h2>ข้อมูลเมนูอาหาร</h2>
+                    <hr class="underline">
+                    <div class="flex-container">
+                        <!-- Container for specified fields -->
+                        <div class="fields-container">
+                            <!-- Row 1: ชื่อสินค้า -->
+                            <div class="form-row">
+                                <div class="form-container">
+                                    <label for="name_product">ชื่อสินค้า</label>
+                                    <input type="text" id="name_product" name="name_product" aria-label="ชื่อสินค้า">
+                                </div>
+                            </div>
+                            <!-- Row 2: รหัสสินค้า, ประเภทสินค้า -->
+                            <div class="form-row">
+                                <div class="form-container">
+                                    <label for="id_menu">รหัสสินค้า</label>
+                                    <input type="text" id="id_menu" name="id_menu" aria-label="รหัสสินค้า">
+                                </div>
+                                <div class="form-container">
+                                    <label for="settingType">ประเภทสินค้า</label>
+                                    <select id="settingType" name="settingType"></select>
+                                </div>
+                                <div class="form-container">
+                                    <label for="settingCategory">หมวดหมู่สินค้า</label>
+                                    <select id="settingCategory" name="settingCategory"></select>
+                                </div>
+                            </div>
+                            <!-- Row 3: ราคา, หน่วยการใช้, สถานะ -->
+                            <div class="form-row">
+                                <div class="form-container">
+                                    <label for="price">ราคา</label>
+                                    <input type="number" id="price" name="price" aria-label="ราคา">
+                                </div>
+                                <div class="form-container">
+                                    <label for="settingUnit">หน่วยสินค้า</label>
+                                    <select id="settingUnit" name="settingUnit"></select>
+                                </div>
+                                <div class="form-container">
+                                    <label for="status">สถานะ</label>
+                                    <select id="status" name="status" class="custom-select" aria-label="สถานะ">
+                                        <option value="" disabled selected>เลือกสถานะ</option>
+                                        <option value="1">เปิดใช้งาน</option>
+                                        <option value="0">ปิดใช้งาน</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Image Upload -->
+                        <div class="form-image-upload">
+                            <label for="menu_image" id="label_menu_image">รูปภาพสินค้า</label>
+                            <div id="drop_zone" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
+                                <i class='bx bxs-arrow-to-bottom'></i>
+                                <span>เลือกรูปภาพของคุณ</span>
+                            </div>
+                            <!-- Hidden file input -->
+                            <input type="file" id="menu_image" name="menu_image" aria-label="รูปภาพสินค้า"
+                                onchange="showImage(this)" style="display: none;"
+                                accept="image/png, image/jpeg, image/gif">
+                            <!-- Custom button that triggers the file input -->
+                            <div id="image_container" style="display:none; position: relative;">
+                                <img id="preview">
+                                <button type="button" id="delete_image" onclick="deleteImage()"> X </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- เพิ่มปริมาณของวัตถุดิบ -->
+                    <div class="split-container">
+                        <div class="left-section">
+                            <h2>ปริมาณของวัตถุดิบ</h2>
+                            <hr class="underline">
+                            <div class="custom-flex-container">
+                                <div class="custom-fields-container" id="fieldsContainer">
+                                    <div class="custom-form-row">
+                                        <div class="custom-form-container">
+                                            <label for="name_ingredient">ชื่อวัตถุดิบ</label>
+                                            <select id="name_ingredient" name="name_ingredient" class="custom-select"
+                                                aria-label="ชื่อวัตถุดิบ">
+                                                <option value="" disabled selected>กรุณาเลือกวัตถุดิบ</option>
+                                            </select>
+                                        </div>
+                                        <div class="custom-form-container">
+                                            <label for="quantity">ปริมาณ</label>
+                                            <input type="number" id="quantity" name="quantity" aria-label="ปริมาณ">
+                                        </div>
+                                        <div class="custom-form-container">
+                                            <label for="settingUnit">หน่วยการใช้</label>
+                                            <input type="text" id="setting_unit_id" name="setting_unit_id"
+                                                aria-label="หน่วยการใช้">
+                                        </div>
+                                        <div class="custom-form-container">
+                                            <button type="button" class="addIngredient" aria-label="เพิ่มวัตถุดิบ">
+                                                <i class='bx bx-plus-medical'></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="right-section">
+                            <div class="header-container">
+                                <h2 class="header-title">เพิ่มเติม(ไม่บังคับ)</h2>
+                                <button id="additionalButton" class="custom-button">สร้างเมนูเพิ่มเติม</button>
+                            </div>
+                            <hr class="underline">
+                        </div>
+
+                        <!-- Popup Modal -->
+                        <div id="myModal" class="modal">
+                            <div class="modal-content">
+                                <span class="close" onclick="togglePopup()">&times;</span>
+                                <h2>แก้ไขหรือลบหมวดหมู่เพิ่มเติม</h2>
+                                <form id="menuOptionsForm" action="/update_menu_options/<%= menuId %>" method="post" onsubmit="return validateForm()">
+                                    <input type="hidden" name="menuId" value="<%= menuId %>">
+                                    <table class="styled-table">
+                                        <thead>
+                                            <tr>
+                                                <th>ชื่อหมวดหมู่</th>
+                                                <th>ราคา</th>
+                                                <th class="wide-column">วัตถุดิบ</th>
+                                                <th>ปริมาณ</th>
+                                                <th>หน่วย</th>
+                                                <th>การกระทำ</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% 
+                                            const groupedOptions = {};
+                                            allMenuOptions.forEach(option => {
+                                                if (!groupedOptions[option.name_options]) {
+                                                    groupedOptions[option.name_options] = [];
+                                                }
+                                                groupedOptions[option.name_options].push(option);
+                                            });
+                        
+                                            Object.keys(groupedOptions).forEach(name_options => { 
+                                                const maxPrice = Math.max(...groupedOptions[name_options].map(option => option.price));
+                                                const firstOption = groupedOptions[name_options][0];
+                                            %>
+                                                <tr class="category-row" data-category="<%= name_options %>">
+                                                    <td>
+                                                        <input type="hidden" name="menuOptionsId[]" value="<%= firstOption.id_menu_options %>">
+                                                        <input type="text" name="name_options[]" value="<%= name_options %>" style="width: 100px;" oninput="updateCategoryNames('<%= name_options %>', this.value)">
+                                                    </td>
+                                                    <td><input type="number" name="price[]" value="<%= maxPrice %>" style="width: 50px;"></td>
+                                                    <td class="wide-column">
+                                                        <select name="name_ingredient_menu_options[]" data-original-value="<%= firstOption.name_ingredient_menu_options %>">
+                                                            <% menuFormbuying.forEach(item => { %>
+                                                                <option value="<%= item.name_product %>" <%= item.name_product === firstOption.name_ingredient_menu_options ? 'selected' : '' %>><%= item.name_product %></option>
+                                                            <% }); %>
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="number" name="unit_quantity_menu_options[]" value="<%= firstOption.unit_quantity_menu_options %>" data-original-value="<%= firstOption.unit_quantity_menu_options %>"></td>
+                                                    <td><input type="text" name="unit_id_menu_options[]" value="<%= firstOption.unit_id_menu_options %>" data-original-value="<%= firstOption.unit_id_menu_options %>"></td>
+                                                    <td>
+                                                        <button type="button" class="delete-btn" onclick="deleteOption('<%= firstOption.id_menu_options %>')">ลบ</button>
+                                                    </td>
+                                                </tr>
+                                                <% groupedOptions[name_options].slice(1).forEach((option, index) => { %>
+                                                    <tr data-category="<%= name_options %>">
+                                                        <td>
+                                                            <input type="hidden" name="menuOptionsId[]" value="<%= option.id_menu_options %>">
+                                                            <input type="hidden" name="name_options[]" value="<%= option.name_options %>">
+                                                        </td>
+                                                        <td><input type="hidden" name="price[]" value="<%= option.price %>"></td>
+                                                        <td class="wide-column">
+                                                            <select name="name_ingredient_menu_options[]" data-original-value="<%= option.name_ingredient_menu_options %>">
+                                                                <% menuFormbuying.forEach(item => { %>
+                                                                    <option value="<%= item.name_product %>" <%= item.name_product === option.name_ingredient_menu_options ? 'selected' : '' %>><%= item.name_product %></option>
+                                                                <% }); %>
+                                                            </select>
+                                                        </td>
+                                                        <td><input type="number" name="unit_quantity_menu_options[]" value="<%= option.unit_quantity_menu_options %>" data-original-value="<%= option.unit_quantity_menu_options %>"></td>
+                                                        <td><input type="text" name="unit_id_menu_options[]" value="<%= option.unit_id_menu_options %>" data-original-value="<%= option.unit_id_menu_options %>"></td>
+                                                        <td>
+                                                            <button type="button" class="delete-btn" onclick="deleteOption('<%= option.id_menu_options %>')">ลบ</button>
+                                                        </td>
+                                                    </tr>
+                                                <% }); %>
+                                            <% }); %>
+                                        </tbody>
+                                    </table>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="save-btn">บันทึก</button>
+                                        <button type="button" class="close-btn" onclick="togglePopup()">ปิดหน้านี้</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+    </section>
+
+    <script src="../js/index.js"></script>
+    <script src="../js/menu_add_image.js"></script>
+
+    <script>
+        function updateCategoryNames(oldName, newName) {
+            document.querySelectorAll(`tr[data-category="${oldName}"]`).forEach(row => {
+                row.dataset.category = newName;
+                row.querySelectorAll('input[name="name_options[]"]').forEach(input => {
+                    input.value = newName;
+                });
+            });
+        }
+    </script>
+
+    <script>
+        function validateForm() {
+            const categories = document.querySelectorAll('.category-row');
+            for (let category of categories) {
+                const ingredients = category.querySelectorAll('select[name="name_ingredient_menu_options[]"]');
+                const ingredientNames = new Set();
+                for (let ingredient of ingredients) {
+                    if (ingredientNames.has(ingredient.value)) {
+                        alert('วัตถุดิบในหมวดหมู่เดียวกันต้องไม่ซ้ำกัน');
+                        return false;
+                    }
+                    ingredientNames.add(ingredient.value);
+                }
+            }
+            return true;
+        }
+    
+        function editOption(id, name, price, ingredient, quantity, unit) {
+            document.querySelector('input[name="menuOptionsId"]').value = id;
+            document.querySelector('input[name="name_options"]').value = name;
+            document.querySelector('input[name="price"]').value = price;
+            document.querySelector('select[name="name_ingredient_menu_options"]').value = ingredient;
+            document.querySelector('input[name="unit_quantity_menu_options"]').value = quantity;
+            document.querySelector('input[name="unit_id_menu_options"]').value = unit;
+            togglePopup();
+        }
+    
+        function deleteOption(id) {
+            if (confirm('คุณแน่ใจหรือไม่ว่าต้องการลบหมวดหมู่นี้?')) {
+                const form = document.createElement('form');
+                form.method = 'post';
+                form.action = '/delete_menu_options/' + id;
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    
+        document.addEventListener('DOMContentLoaded', function () {
+            const categoryRows = document.querySelectorAll('.category-row');
+    
+            function updateSelectOptions(categoryRow) {
+                const category = categoryRow.getAttribute('data-category');
+                const ingredientSelects = document.querySelectorAll(`tr[data-category="${category}"] select[name="name_ingredient_menu_options[]"]`);
+                const selectedIngredients = Array.from(ingredientSelects).map(select => select.value).filter(value => value);
+    
+                ingredientSelects.forEach(select => {
+                    const currentValue = select.value;
+                    const options = Array.from(select.options);
+    
+                    options.forEach(option => {
+                        if (selectedIngredients.includes(option.value) && option.value !== currentValue) {
+                            option.style.display = 'none';
+                        } else {
+                            option.style.display = '';
+                        }
+                    });
+                });
+            }
+    
+            categoryRows.forEach(categoryRow => {
+                const ingredientSelects = categoryRow.querySelectorAll('select[name="name_ingredient_menu_options[]"]');
+                ingredientSelects.forEach(select => {
+                    select.addEventListener('change', () => updateSelectOptions(categoryRow));
+                });
+                updateSelectOptions(categoryRow);
+            });
+        });
+    </script>
+    
+    <script>
+        var modal = document.getElementById("myModal");
+        var btn = document.getElementById("myBtn");
+        var span = document.getElementsByClassName("close")[0];
+        var menuId = "<%= menuId %>"; // Assuming you have the menuId available in your template
+
+        // Function to open the modal
+        btn.onclick = function () {
+            modal.style.display = "block";
+        };
+
+        // Function to close the modal and redirect
+        function closeModalAndRedirect() {
+            modal.style.display = "none";
+            window.location.href = "/edit_menu/" + menuId; // Redirect immediately after closing
+        }
+
+        // Attach closeModalAndRedirect to the close button
+        span.onclick = closeModalAndRedirect;
+
+        // Close the modal and redirect when clicking outside of the modal
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                closeModalAndRedirect();
+            }
+        };
+
+        // Simplified function to close the modal and redirect, ensuring a single action
+        function togglePopup() {
+            closeModalAndRedirect(); // Use the existing function for consistency
+        }
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Modal form elements
+            const nameIngredientSelect = document.getElementById('name_ingredient_menu_options');
+            const quantityInput = document.getElementById('unit_quantity_menu_options');
+            const settingUnitInput = document.getElementById('unit_id_menu_options');
+            const fieldsContainer = document.getElementById('fieldsContainer');
+
+            function updateSelectOptions() {
+                const selectedIngredients = Array.from(fieldsContainer.querySelectorAll('select[name="name_ingredient_menu_options"]'))
+                    .map(select => select.value)
+                    .filter(value => value);
+
+                const allOptions = Array.from(document.querySelectorAll('select[name="name_ingredient_menu_options"] option'));
+
+                allOptions.forEach(option => {
+                    if (selectedIngredients.includes(option.value)) {
+                        option.style.display = 'none';
+                    } else {
+                        option.style.display = '';
+                    }
+                });
+
+                // Check if there are any available options left
+                const availableOptions = allOptions.filter(option => option.style.display !== 'none' && option.value !== '');
+                const addButton = fieldsContainer.querySelector('.addIngredient');
+
+                if (availableOptions.length === 0) {
+                    addButton.innerHTML = "<i class='bx bx-error' style='font-size: 24px;'></i>";
+                    addButton.style.backgroundColor = 'yellow';
+                    addButton.style.color = 'gray';
+                    addButton.disabled = true;
+                } else {
+                    addButton.innerHTML = "<i class='bx bx-plus-medical'></i>";
+                    addButton.style.backgroundColor = '';
+                    addButton.style.color = 'white';
+                    addButton.disabled = false;
+                }
+            }
+
+            // Event listener for modal form ingredient selection
+            nameIngredientSelect.addEventListener('change', function () {
+                const selectedOption = this.options[this.selectedIndex];
+                const quantity = selectedOption.getAttribute('data-quantity');
+                const unit = selectedOption.getAttribute('data-unit');
+
+                quantityInput.value = quantity;
+                settingUnitInput.value = unit;
+            });
+
+            // Event listener for add/remove ingredient buttons
+            document.addEventListener('click', function (event) {
+                const target = event.target.closest('.addIngredient, .removeIngredient');
+                if (target) {
+                    if (target.classList.contains('addIngredient')) {
+                        addIngredientHandler(target);
+                    } else if (target.classList.contains('removeIngredient')) {
+                        removeIngredientHandler(target);
+                    }
+                }
+            });
+
+            function addIngredientHandler(button) {
+                const currentRow = button.closest('.custom-form-row');
+                const nameIngredientSelect = currentRow.querySelector('select[name="name_ingredient_menu_options"]');
+                const nameIngredient = nameIngredientSelect.value;
+                const quantity = currentRow.querySelector('input[name="unit_quantity_menu_options"]').value;
+                const settingUnit = currentRow.querySelector('input[name="unit_id_menu_options"]').value;
+
+                if (!nameIngredient) {
+                    alert('กรุณาเลือกชื่อวัตถุดิบ');
+                    nameIngredientSelect.focus();
+                    return;
+                }
+
+                if (!quantity) {
+                    alert('กรุณากรอกปริมาณ');
+                    return;
+                }
+
+                if (!settingUnit) {
+                    alert('กรุณาเลือกหน่วยการใช้');
+                    return;
+                }
+
+                // Change the icon of the current button to a delete icon
+                button.innerHTML = "<i class='bx bx-minus'></i>";
+                button.classList.replace('addIngredient', 'removeIngredient');
+                button.classList.add('removeIngredient');
+
+                // Create a new form row
+                const newRow = document.createElement('div');
+                newRow.className = 'custom-form-row';
+
+                // Create new input fields
+                newRow.innerHTML = `
+            <div class="custom-form-container">
+                <label for="name_ingredient_menu_options">ชื่อวัตถุดิบ</label>
+                <select name="name_ingredient_menu_options" class="custom-select" required aria-label="ชื่อวัตถุดิบ">
+                    <option value="" disabled selected>กรุณาเลือกวัตถุดิบ</option>
+                    <% menuFormbuying.forEach(item => { %>
+                        <option value="<%= item.name_product %>" data-quantity="<%= item.unit_quantity %>" data-unit="<%= item.setting_unit_id %>">
+                            <%= item.name_product %>
+                        </option>
+                    <% }); %>
+                </select>
+            </div>
+            <div class="custom-form-container">
+                <label for="unit_quantity_menu_options">ปริมาณ</label>
+                <input type="number" name="unit_quantity_menu_options" class="custom-input" required aria-label="ปริมาณ">
+            </div>
+            <div class="custom-form-container">
+                <label for="unit_id_menu_options">หน่วยการใช้</label>
+                <input type="text" name="unit_id_menu_options" class="custom-input" required aria-label="หน่วยการใช้">
+            </div>
+            <div class="custom-form-container">
+                <button type="button" class="addIngredient" aria-label="เพิ่มวัตถุดิบ">
+                    <i class='bx bx-plus-medical'></i>
+                </button>
+            </div>
+        `;
+
+                // Append the new row to the appropriate fields container
+                const containerId = button.closest('#modalFieldsContainer') ? 'modalFieldsContainer' : 'fieldsContainer';
+                document.getElementById(containerId).appendChild(newRow);
+
+                // Add event listener to the new name_ingredient select element
+                newRow.querySelector('select[name="name_ingredient_menu_options"]').addEventListener('change', function () {
+                    const selectedOption = this.options[this.selectedIndex];
+                    const quantity = selectedOption.getAttribute('data-quantity');
+                    const unit = selectedOption.getAttribute('data-unit');
+
+                    newRow.querySelector('input[name="unit_quantity_menu_options"]').value = quantity;
+                    newRow.querySelector('input[name="unit_id_menu_options"]').value = unit;
+
+                    updateSelectOptions();
+                });
+
+                updateSelectOptions();
+            }
+
+            function removeIngredientHandler(button) {
+                const rowToRemove = button.closest('.custom-form-row');
+                rowToRemove.remove();
+                updateSelectOptions();
+            }
+
+            updateSelectOptions();
+        });
+    </script>
+</body>
