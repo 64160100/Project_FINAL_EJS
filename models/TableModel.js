@@ -122,6 +122,7 @@ module.exports = {
                     price: item.price,
                     category: item.menu_category,
                     type: item.menu_type,
+                    status: item.status // Include the status field
                 }));
                 return callback(null, menu);
             }
@@ -190,7 +191,7 @@ module.exports = {
                 acc[key].unit_ids.push(curr.unit_id_menu_options); // เพิ่ม unit_id ลงใน array
                 return acc;
             }, {});
-    
+            
             // แปลง Object กลับเป็น Array
             const finalResults = Object.values(groupedResults);
     
@@ -237,6 +238,197 @@ module.exports = {
     
             callback(null, finalResults);
         });
-    }
+    },
+
+    getZoneAndTableDetails: function (zoneId, tableId, callback) {
+        const query = `
+            SELECT 
+                tbl_zones.zone_name, 
+                tbl_table.id_table 
+            FROM tbl_zones 
+            JOIN tbl_table ON tbl_zones.zone_name = tbl_table.zone_name 
+            WHERE tbl_zones.zone_name = ? AND tbl_table.id_table = ?
+        `;
+        connection.query(query, [zoneId, tableId], (error, results) => {
+            if (error) {
+                return callback(error, null);
+            }
+    
+            const zone = results[0].zone_name;
+            const table = results[0].id_table;
+    
+            callback(null, { zone: zone, table: table });
+        });
+    },
+
+    getZoneAndItemDetails: function (zoneId, itemId, callback) {
+        const query = `
+            SELECT 
+                tbl_zones.zone_name, 
+                tbl_table.id_table, 
+                tbl_table.table_name, 
+                tbl_menu.id_menu, 
+                tbl_menu.name_product, 
+                tbl_menu.price 
+            FROM tbl_zones 
+            JOIN tbl_table ON tbl_zones.zone_name = tbl_table.zone_name 
+            JOIN tbl_menu ON tbl_table.id_table = tbl_menu.id_menu 
+            WHERE tbl_zones.zone_name = ? AND tbl_menu.id_menu = ?
+        `;
+        connection.query(query, [zoneId, itemId], (error, results) => {
+            if (error) {
+                return callback(error, null);
+            }
+    
+            const zone = results[0].zone_name;
+            const table = results[0].table_name;
+            const item = results.map(item => ({
+                id: item.id_menu,
+                name: item.name_product,
+                price: item.price
+            }));
+    
+            callback(null, { zone: zone, table: table, item: item });
+        });
+    },
+
+    getTableById: function (tableId, callback) {
+        connection.query('SELECT * FROM tbl_table WHERE id_table = ?', [tableId], (error, results) => {
+            if (error) {
+                return callback(error, null);
+            }
+    
+            if (results.length === 0) {
+                return callback(null, null);
+            }
+    
+            const table = results.map(table => ({
+                id: table.id_table,
+                name: table.table_name
+            }));
+    
+            return callback(null, table[0]); // Assuming you want to return a single table
+        });
+    },
+
+    updateTable: function (tableId, zoneName, tableData, callback) {
+        connection.query('UPDATE tbl_table SET table_name = ? WHERE id_table = ? AND zone_name = ?', 
+        [tableData.name, tableId, zoneName], (error, results) => {
+            if (error) {
+                return callback(error, null);
+            }
+            callback(null, results);
+        });
+    },
+
+    getZoneNameById: (zoneId, callback) => {
+        const query = 'SELECT zone_name FROM `tbl_zones` WHERE `zone_name` = ?';
+        connection.query(query, [zoneId], (error, results) => {
+            if (error) {
+                return callback(error);
+            }
+            if (results.length > 0) {
+                callback(null, results[0].zone_name);
+            } else {
+                callback(new Error('Zone not found'));
+            }
+        });
+    },
+
+    
+    deleteTableByIdAndZone: (tableId, zoneName, callback) => {
+        const query = 'DELETE FROM `tbl_table` WHERE `id_table` = ? AND `zone_name` = ?';
+        connection.query(query, [tableId, zoneName], (error, results) => {
+            if (error) {
+                console.error('Error deleting table from database:', error);
+                return callback(error);
+            }
+            console.log('Deleted table with ID:', tableId);
+            callback(null, results);
+        });
+    },
+    
+    getLockZone: (zoneId, callback) => {
+        const query = 'SELECT lock_zone FROM `tbl_zones` WHERE `zone_name` = ?';
+        connection.query(query, [zoneId], (error, results) => {
+            if (error) {
+                return callback(error);
+            }
+            if (results.length > 0) {
+                callback(null, results[0].lock_zone);
+            } else {
+                callback(new Error('Zone not found'));
+            }
+        });
+    },
+
+    deleteZone: (zoneId, callback) => {
+        // First, delete the entries from tbl_table
+        const deleteTablesQuery = 'DELETE FROM `tbl_table` WHERE `zone_name` = ?';
+        connection.query(deleteTablesQuery, [zoneId], (error, results) => {
+            if (error) {
+                console.error('Error deleting tables from database:', error);
+                return callback(error);
+            }
+            console.log('Deleted tables for zone with ID:', zoneId);
+    
+            // Then, delete the entry from tbl_zones
+            const deleteZoneQuery = 'DELETE FROM `tbl_zones` WHERE `zone_name` = ?';
+            connection.query(deleteZoneQuery, [zoneId], (error, results) => {
+                if (error) {
+                    console.error('Error deleting zone from database:', error);
+                    return callback(error);
+                }
+                console.log('Deleted zone with ID:', zoneId);
+                callback(null, results);
+            });
+        });
+    },
+
+    findRemainingZone: (callback) => {
+        const query = 'SELECT `zone_name` FROM `tbl_zones` LIMIT 1';
+        connection.query(query, (error, results) => {
+            if (error) {
+                return callback(error);
+            }
+            if (results.length > 0) {
+                callback(null, results[0].zone_name);
+            } else {
+                callback(null, null); // No remaining zones
+            }
+        });
+    },
+
+    updateLockZone: (zoneName, newLockState, callback) => {
+        const query = 'UPDATE tbl_zones SET lock_zone = ? WHERE zone_name = ?';
+        connection.query(query, [newLockState, zoneName], (error, results) => {
+            if (error) {
+                return callback(error);
+            }
+            callback(null);
+        });
+    },
+
+    checkZoneExists: (zoneId, callback) => {
+        const query = 'SELECT COUNT(*) AS count FROM `tbl_zones` WHERE `zone_name` = ?';
+        connection.query(query, [zoneId], (error, results) => {
+            if (error) {
+                return callback(error);
+            }
+            const exists = results[0].count > 0;
+            callback(null, exists);
+        });
+    },
+
+    insertTable: (zoneId, tableId, callback) => {
+        const query = 'INSERT INTO `tbl_table` (`id_table`, `zone_name`) VALUES (?, ?)';
+        connection.query(query, [tableId, zoneId], (error, results) => {
+            if (error) {
+                return callback(error);
+            }
+            callback(null, results);
+        });
+    },
+
 
 };

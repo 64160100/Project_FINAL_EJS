@@ -193,7 +193,7 @@
                 <% menu.forEach(function(menu) { %>
                     <div class="menu-item">
                         <ul class="menu-detail">
-                            <li class="menu-item-inline">
+                            <li class="menu-item-inline" style="background-color: #f0f0f0; padding: 10px; border-radius: 5px;">
                                 <!-- <img src="../img/<%= menu.menu_picture %>" title="" alt=""> -->
                                 <img src="../img/<%= menu.menu_picture %>" title="" alt="" class="small-image">
                                 <span class="product-name"><%= menu.name_product %></span>
@@ -205,19 +205,23 @@
                                 <%= menu.menu_category %>
                             </li>
                             <li>
-                                <%= menu.menu_unit %>
+                                <%= menu.menu_type %>
                             </li>
                             <li>
                                 <%= menu.price %>
                             </li>
                             <li>
-                                <%= menu.menu_type %>
+                                <%= menu.menu_unit %>
                             </li>
                             <li>
                                 <%= menu.remain %>
                             </li>
                             <li>
-                                <%= menu.status %>
+                                <% if (menu.status === 'ON') { %>
+                                    <button class="btn btn-success">ON</button>
+                                <% } else if (menu.status === 'OFF') { %>
+                                    <button class="btn btn-danger">OFF</button>
+                                <% } %>
                             </li>
                             <li class="menu-action">
                                 <button onclick="location.href='/view_menu/<%= menu.id_menu %>'" class="view-button">ดูข้อมูล</button>

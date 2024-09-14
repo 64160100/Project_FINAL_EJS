@@ -13,7 +13,7 @@
     <!-- Styles  -->
     <link rel="shortcut icon" href="img/kxp_fav.png" type="image/x-icon">
     <link rel="stylesheet" href="../css/index.css">
-    <link rel="stylesheet" href="../css/table.css">
+    <link rel="stylesheet" href="../css/table_edit.css">
 </head>
 
 <body>
@@ -165,51 +165,124 @@
 
         <!-- ============= Top Dashboard =============== -->
 
-        <div class="topic"> จัดโต๊ะอาหาร </div>
+        <div class="breadcrumbs">
+            <a href="/dashboard"> หน้าหลัก</a> > <span>จัดโต๊ะอาหาร</span>
+        </div>
+        <div class="topic"><a href="javascript:history.back()" style="text-decoration: none;">
+                <i class='bx bx-left-arrow-alt'></i></a> จัดโต๊ะอาหาร</div>
 
         <!-- ============= Center Dashboard =============== -->
 
         <div class="centered-content">
             <div class="zone-controls">
-                <% zones.forEach(function(zone) { %>
-                    <a href="/view_zone/<%= zone.zone_name %>">
-                        <button class="zone-name-btn" data-zone-id="<%= zone.zone_name %>">โซน: <%= zone.zone_name %></button>
-                    </a>
-                <% }); %>
-                <a href="/add_table" class="add-zone-btn">คลิกเพิ่มโซน</a>
+                <p class="zone-label">โซน : <span class="zone-id">
+                        <%= zoneId %>
+                    </span></p>
+
+                <form action="/delete_zone/<%= zoneId %>" method="POST" class="inline-form"
+                    onsubmit="return confirmDeleteZone()">
+                    <button type="submit" class="btn <%= lockZone === 'Y' ? 'btn-danger' : 'btn-disabled' %>"
+                        id="delete-zone-btn" <%=lockZone==='Y' ? '' : 'disabled' %>>ลบโซน</button>
+                </form>
+
+                <form id="toggle-lock-form" action="/toggle_lock/<%= zoneId %>" method="POST" class="inline-form">
+                    <input type="hidden" name="lockZone" id="lockZoneInput" value="<%= lockZone === 'Y' ? 'N' : 'Y' %>">
+                    <i class='<%= lockZone === "Y" ? "bx bx-lock-open-alt" : "bx bx-lock-alt" %>' id="lock-icon"
+                        onclick="submitToggleLockForm()"></i>
+                </form>
             </div>
-            <% if (tables.length > 0) { %>
+
+            <% if (tables.length> 0) { %>
                 <div class="table-container">
                     <% tables.forEach(function(table) { %>
-                        <a href="/zone/<%= zoneId %>/table/<%= table.id_table %>/order_food" class="table-link">
+                        <form action="/zone/<%= zoneId %>/table/<%= table.id_table %>/edit" method="POST"
+                            class="table-edit-form">
                             <div class="table-box">
-                                <p class="table-id">โต๊ะที่ <%= table.id_table %></p>
-                                <!-- Add more table details as needed -->
-                            </div>
-                        </a>
-                    <% }); %>
+                                <label for="table-id-<%= table.id_table %>">โต๊ะที่</label>
+                                <input type="text" id="table-id-<%= table.id_table %>" name="table_id"
+                                    value="<%= table.id_table %>" readonly>
+                        </form>
+                        <span>
+                            <form action="/delete_table/<%= table.id_table %>" method="post" style="display: inline;"
+                                onsubmit="return confirmDelete()">
+                                <input type="hidden" name="id_table" value="<%= table.id_table %>">
+                                <input type="hidden" name="zoneId" value="<%= zoneId %>">
+                                <button type="submit" class="delete-icon">✖</button>
+                            </form>
+                        </span>
                 </div>
-            <% } else { %>
-                <p>No tables found in this zone.</p>
-            <% } %>
-            <!-- เพิ่มปุ่มที่มุมขวาล่าง -->
-            <a href="/edit_table/<%= zoneId %>" class="edit-zone-btn">แก้ไขโซน</a>
+                <% }); %>
         </div>
+        <% } %>
+
+
+            <div class="new-table-container">
+                <form action="/create_table/<%= zoneId %>" method="POST" class="new-table-form">
+                    <div class="table-box">
+                        <label for="new-table-id">สร้างโต๊ะใหม่</label>
+                        <input type="text" id="new-table-id" name="table_id" placeholder="หมายเลขโต๊ะใหม่">
+                        <% if (errorMessage) { %>
+                            <div class="error-message" style="color: red;">
+                                <%= errorMessage %>
+                            </div>
+                            <% } %>
+                                <button type="submit" class="btn btn-primary">สร้าง</button>
+                </form>
+            </div>
 
     </section>
     <!-- Link JS -->
     <script src="../js/index.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const zoneButtons = document.querySelectorAll('.zone-name-btn');
 
-            zoneButtons.forEach(button => {
-                button.addEventListener('click', function () {
-                    const zoneId = this.getAttribute('data-zone-id');
-                    window.location.href = `/view_zone/${zoneId}`;
-                });
-            });
-        });
+    </section>
+    <!-- Link JS -->
+    <script src="../js/index.js"></script>
+
+    <script>
+        function confirmDelete() {
+            return confirm('ยืนยันการลบโต๊ะอาหาร');
+        }
+    </script>
+
+    <script>
+        function confirmDeleteZone() {
+            return confirm('ยืนยันการลบโซน');
+        }
+
+        function submitToggleLockForm() {
+            const lockIcon = document.getElementById('lock-icon');
+            const lockZoneInput = document.getElementById('lockZoneInput');
+            const form = document.getElementById('toggle-lock-form');
+            const deleteButton = document.getElementById('delete-zone-btn');
+
+            if (lockIcon.classList.contains('bx-lock-open-alt')) {
+                if (confirm('ยืนยันการล็อค')) {
+                    lockZoneInput.value = 'N';
+                    deleteButton.disabled = true;
+                    deleteButton.classList.remove('btn-danger');
+                    deleteButton.classList.add('btn-disabled');
+                } else {
+                    return;
+                }
+            } else {
+                if (confirm('ยืนยันการปลดล็อค')) {
+                    lockZoneInput.value = 'Y';
+                    deleteButton.disabled = false;
+                    deleteButton.classList.remove('btn-disabled');
+                    deleteButton.classList.add('btn-danger');
+                } else {
+                    return;
+                }
+            }
+            form.submit();
+        }
+    </script>
+
+    <script>
+        function resetForm() {
+            const forms = document.querySelectorAll('.table-edit-form');
+            forms.forEach(form => form.reset());
+        }
     </script>
 </body>
 

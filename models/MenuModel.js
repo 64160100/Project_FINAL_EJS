@@ -122,13 +122,49 @@ module.exports = {
         });
     },
 
-    updateMenu: function (data, callback) {
-        const query = 'UPDATE tbl_menu SET ? WHERE id_menu = ?';
-        connection.query(query, [data, data.id_menu], (error, results) => {
+    deleteRelatedMenuOptions: function (menuId, callback) {
+        const query = 'DELETE FROM tbl_menu_options WHERE menu_id = ?';
+        connection.query(query, [menuId], (error, results) => {
             if (error) {
+                console.error('Error deleting related menu options:', error);
                 return callback(error);
             }
-            return callback(null, results);
+            callback(null, results);
+        });
+    },
+
+    updateMenu: function (menu, callback) {
+        const query = `
+            UPDATE tbl_menu SET 
+                name_product = ?, 
+                menu_type = ?, 
+                menu_category = ?, 
+                price = ?, 
+                menu_unit = ?, 
+                status = ?, 
+                menu_picture = ?, 
+                remain = ? 
+            WHERE id_menu = ?
+        `;
+
+        const values = [
+            menu.name_product,
+            menu.menu_type,
+            menu.menu_category,
+            menu.price,
+            menu.menu_unit,
+            menu.status, // Ensure this is "ON" or "OFF"
+            menu.menu_picture,
+            menu.remain,
+            menu.id_menu
+        ];
+
+        connection.query(query, values, (error, results) => {
+            if (error) {
+                console.error('Error updating menu:', error);
+                return callback(error);
+            }
+            callback(null, results);
         });
     },
 

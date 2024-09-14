@@ -17,7 +17,8 @@ app.use(session({
 app.use(flash());
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.set('view engine', 'ejs'); 
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // ===================== Python-Script ===================== //
@@ -33,6 +34,7 @@ app.get('/', (req, res) => {
 app.get('/404', (req, res) => {
     res.status(404).render('404_not_found'); // Adjust the render target to your 404 page template
 });
+
 
 app.get('/dashboard', (req, res) => {
     if (!req.session.user) {
@@ -113,10 +115,19 @@ app.get('/setting_add_menu_unit', require('./routes/menu'));
 app.get('/table', require('./routes/table'));
 app.get('/add_table', require('./routes/table'));
 app.get('/view_zone/:id', require('./routes/table'));
+app.get('/edit_table/:id', require('./routes/table'));
+app.post('/create_table/:id', require('./routes/table'));
 app.post('/create_area', require('./routes/table'));
+
+app.post('/toggle_lock/:id', require('./routes/table'));
+app.post('/delete_table/:id', require('./routes/table'));
+app.post('/delete_zone/:id', require('./routes/table'));
 
 app.get('/order_food', require('./routes/table'));
 app.get('/customize/:id', require('./routes/table'));
+
+app.get('/zone/:zone/table/:table/order_food', require('./routes/table'));
+app.get('/zone/:zone/table/:table/customize/:id', require('./routes/table'));
 
 // ===================== Buying ===================== //
 app.get('/buying', require('./routes/buying'));

@@ -11,8 +11,8 @@
     <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
     <!-- Styles  -->
     <link rel="shortcut icon" href="img/kxp_fav.png" type="image/x-icon">
-    <link rel="stylesheet" href="../css/index.css">
-    <link rel="stylesheet" href="../css/order_food.css">
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/order_food.css">
 </head>
 
 <body>
@@ -146,6 +146,7 @@
     </div>
 
     <!-- ============= Home Section =============== -->
+
     <section class="home">
         <div class="nav">
             <div class="toggle-sidebar">
@@ -154,14 +155,13 @@
             <nav>
                 <div class="nav-content">
                     <div class="profile-details">
-                        <img src="../img/chef.png" alt="" class="profile-image">
+                        <img src="/img/chef.png" alt="" class="profile-image">
                         <span class="user-id">ID1234</span>
                     </div>
                     <a href="/login" class="auth-link">เข้าสู่ระบบ</a>
                 </div>
             </nav>
         </div>
-
         <!-- ============= Top Dashboard =============== -->
 
         <div class="breadcrumbs">
@@ -172,69 +172,352 @@
         <!-- ============= Center Dashboard =============== -->
 
         <div class="centered-content">
-            <% for (let category in groupedMenu) { %>
-                <div class="category">
-                    <h3>
-                        <%= category %>
-                    </h3>
-                    <div class="menu-items">
-                        <% groupedMenu[category].forEach(menuItem => { %>
-                            <form class="menu-item" action="/order" method="POST">
-                                <input type="hidden" name="id" value="<%= menuItem.id %>">
-                                <input type="hidden" name="name" value="<%= menuItem.name %>">
-                                <input type="hidden" name="price" value="<%= menuItem.price %>">
-                                <input type="hidden" name="category" value="<%= menuItem.category %>">
-                                <a href="/customize/<%= menuItem.id %>">
-                                    <div class="image-container">
-                                        <img class="menu-item-image" src="../img/<%= menuItem.picture %>" alt="<%= menuItem.name %>">
-                                    </div>
-                                    <h4>
-                                        <%= menuItem.name %>
-                                    </h4>
-                                    <p><%= menuItem.price %> บาท </p>
-                                </a>
-                            </form>
-                        <% }); %>
-                    </div>
-                </div>
-            <% } %>
-        </div>
-        
-        <div class="basket-container">
-            <div class="basket-sidebar close">
-                <ul class="basket-list">
-                    <li class="basket-header">
-                        <span>รายการสินค้า</span>
-                        <span>หน่วย</span>
-                        <span>ราคาสินค้า</span>
-                    </li>
-                    <% basket.forEach(item => { %>
-                        <li data-id="<%= item.id %>">
-                            <img class="basket-item-image" src="<%= item.picture %>" alt="<%= item.name %>" style="width: 50px; height: 50px;">
-                            <span><%= item.name %></span>
-                            <div class="quantity-controls">
-                                <button class="decrease-quantity">-</button>
-                                <span class="item-quantity"><%= item.quantity %></span>
-                                <button class="increase-quantity">+</button>
+            <% if (!zone_name || !table_id) { %>
+                <form action="/zone/select" method="POST">
+                    <label for="zone">เลือกโซน:</label>
+                    <select name="zone" id="zone">
+                        <% zones.forEach(function(zone) { %>
+                            <option value="<%= zone.zone_name %>">
+                                <%= zone.zone_name %>
+                            </option>
+                            <% }); %>
+                    </select>
+                    <label for="table">เลือกโต๊ะ:</label>
+                    <select name="table" id="table">
+                        <% tables.forEach(function(table) { %>
+                            <option value="<%= table.id_table %>">
+                                <%= table.id_table %>
+                            </option>
+                            <% }); %>
+                    </select>
+                    <button type="submit">ยืนยัน</button>
+                </form>
+                <% } else { %>
+                    <% for (let category in groupedMenu) { %>
+                        <div class="category">
+                            <h3>
+                                <%= category %>
+                            </h3>
+                            <div class="menu-items">
+                                <% groupedMenu[category].forEach(menuItem=> { %>
+                                    <form class="menu-item" action="/order" method="POST">
+                                        <input type="hidden" name="id" value="<%= menuItem.id %>">
+                                        <input type="hidden" name="name" value="<%= menuItem.name %>">
+                                        <input type="hidden" name="price" value="<%= menuItem.price %>">
+                                        <input type="hidden" name="category" value="<%= menuItem.category %>">
+                                        <a
+                                            href="/zone/<%= zone_name %>/table/<%= table_id %>/customize/<%= menuItem.id %>">
+                                            <div class="image-container">
+                                                <img class="menu-item-image" src="/img/<%= menuItem.picture %>"
+                                                    alt="<%= menuItem.name %>">
+                                            </div>
+                                            <h4>
+                                                <%= menuItem.name %>
+                                            </h4>
+                                            <p>
+                                                <%= menuItem.price %> บาท
+                                            </p>
+                                        </a>
+                                    </form>
+                                    <% }); %>
                             </div>
-                            <span class="item-price"><%= (item.price * item.quantity).toFixed(2) %></span>
-                        </li>
-                    <% }); %>
-                </ul>
+                        </div>
+                        <% } %>
+                            <% } %>
+        </div>
+
+        <div class="toggle-basket">
+            <div class="basket">
+                <span class="basket-count">
+                    <%= basket.reduce((acc, item)=> acc + item.quantity, 0) %>
+                </span>
+                <i class='bx bx-basket'></i>
             </div>
-            <div class="toggle-basket">
-                <div class="basket">
-                    <span class="basket-count"><%= basket.reduce((acc, item) => acc + item.quantity, 0) %></span>
-                    <i class='bx bx-basket'></i>
+        </div>
+
+        <div class="basket-sidebar close">
+            <ul class="basket-list">
+                <div class="zone-table-info">
+                    <% if (zone_name && table_id) { %>
+                        <button class="zone-button">โซน: <%= zone_name %></button>
+                        <button class="table-button">โต๊ะ: <%= table_id %></button>
+                        <% } %>
                 </div>
+                <hr class="divider">
+                <div class="header-titles">
+                    <span>รายการสินค้า</span>
+                    <span>หน่วย</span>
+                    <span>ราคาสินค้า</span>
+                </div>
+                <% basket.forEach(item=> { %>
+                    <li data-id="<%= item.id %>">
+                        <img class="basket-item-image" src="<%= item.picture %>" alt="<%= item.name %>"
+                            style="width: 50px; height: 50px;">
+                        <span>
+                            <%= item.name %>
+                        </span>
+                        <div class="quantity-controls">
+                            <button class="decrease-quantity">-</button>
+                            <span class="item-quantity">
+                                <%= item.quantity %>
+                            </span>
+                            <button class="increase-quantity">+</button>
+                        </div>
+                        <span class="item-price">
+                            <%= (item.price * item.quantity).toFixed(2) %>
+                        </span>
+                    </li>
+                    <% }); %>
+            </ul>
+            <hr class="divider">
+
+            <div class="discount-code">
+                <input type="text" class="discount-input" placeholder="ใส่ code ส่วนลด">
+                <button class="apply-discount-button">ใช้ส่วนลด</button>
+            </div>
+
+            <hr class="divider">
+            <div class="total-price-container">
+                <div class="price-row">
+                    <span>ราคารวม:</span>
+                    <span class="total-price">0.00</span>
+                </div>
+                <div class="price-row">
+                    <span>ราคาส่วนลด:</span>
+                    <span class="discount-price">0.00</span>
+                </div>
+                <div class="price-row">
+                    <span>ราคารวมแบบสรุป:</span>
+                    <span class="final-price">0.00</span>
+                </div>
+            </div>
+            <hr class="divider">
+            <div class="sidebar-footer">
+                <button class="save-button">บันทึก</button>
+                <button class="checkout-button">ชำระเงิน</button>
+                <button class="print-qr-button">
+                    <i class='bx bx-qr'></i> ปริ้นคิวอาร์โค้ด
+                </button>
             </div>
         </div>
     </section>
 
+    <script src="/js/index.js"></script>
 
-    <script src="../js/index.js"></script>
     <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const basketToggle = document.querySelector(".toggle-basket");
+            let isDragging = false;
+            let offsetX, offsetY;
 
+            basketToggle.addEventListener("mousedown", (event) => {
+                isDragging = true;
+                offsetX = event.clientX - basketToggle.getBoundingClientRect().left;
+                offsetY = event.clientY - basketToggle.getBoundingClientRect().top;
+                basketToggle.style.position = 'absolute';
+                basketToggle.style.zIndex = 1002; // Ensure it is above other elements
+                document.body.style.userSelect = 'none'; // Prevent text selection while dragging
+            });
+
+            document.addEventListener("mousemove", (event) => {
+                if (isDragging) {
+                    basketToggle.style.left = `${event.clientX - offsetX}px`;
+                    basketToggle.style.top = `${event.clientY - offsetY}px`;
+                }
+            });
+
+            document.addEventListener("mouseup", () => {
+                isDragging = false;
+                document.body.style.userSelect = ''; // Re-enable text selection after dragging
+            });
+
+            // Prevent default behavior for touch devices
+            basketToggle.addEventListener("touchstart", (event) => {
+                isDragging = true;
+                const touch = event.touches[0];
+                offsetX = touch.clientX - basketToggle.getBoundingClientRect().left;
+                offsetY = touch.clientY - basketToggle.getBoundingClientRect().top;
+                basketToggle.style.position = 'absolute';
+                basketToggle.style.zIndex = 1002; // Ensure it is above other elements
+                document.body.style.userSelect = 'none'; // Prevent text selection while dragging
+            });
+
+            document.addEventListener("touchmove", (event) => {
+                if (isDragging) {
+                    const touch = event.touches[0];
+                    basketToggle.style.left = `${touch.clientX - offsetX}px`;
+                    basketToggle.style.top = `${touch.clientY - offsetY}px`;
+                }
+            });
+
+            document.addEventListener("touchend", () => {
+                isDragging = false;
+                document.body.style.userSelect = ''; // Re-enable text selection after dragging
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const basketToggle = document.querySelector(".toggle-basket");
+            const basketSidebar = document.querySelector(".basket-sidebar");
+            const centeredContent = document.querySelector(".centered-content");
+            const orderForms = document.querySelectorAll(".menu-item");
+
+            basketToggle.addEventListener("click", (event) => {
+                event.preventDefault(); // Prevent default anchor behavior
+                toggleBasket();
+            });
+
+            orderForms.forEach(form => {
+                form.addEventListener("submit", (event) => {
+                    event.preventDefault(); // Prevent default form submission
+                    const formData = new FormData(form);
+                    const menuItem = {
+                        id: formData.get("id"),
+                        name: formData.get("name"),
+                        price: parseFloat(formData.get("price")),
+                        category: formData.get("category"),
+                        picture: form.querySelector("img").src,
+                        quantity: 1
+                    };
+                    addItemToBasket(menuItem);
+                });
+            });
+
+            // Load basket items from localStorage
+            loadBasketFromLocalStorage();
+
+            function toggleBasket() {
+                basketSidebar.classList.toggle('open');
+                basketSidebar.classList.toggle('close');
+                centeredContent.classList.toggle('shifted');
+            }
+        });
+
+        function addItemToBasket(item) {
+            const basketList = document.querySelector('.basket-list');
+            let listItem = basketList.querySelector(`li[data-id="${item.id}"]`);
+            if (listItem) {
+                // Item already exists, update its quantity and price
+                const quantityElement = listItem.querySelector('.item-quantity');
+                const priceElement = listItem.querySelector('.item-price');
+                let quantity = parseInt(quantityElement.textContent);
+                quantity += 1;
+                quantityElement.textContent = quantity;
+                priceElement.textContent = (item.price * quantity).toFixed(2);
+            } else {
+                // Item does not exist, add as new list item
+                listItem = document.createElement('li');
+                listItem.dataset.id = item.id;
+                listItem.innerHTML = `
+                    <img src="${item.picture}" alt="${item.name}" style="width: 50px; height: 50px;">
+                    <span>${item.name}</span>
+                    <div class="quantity-controls">
+                        <button class="decrease-quantity">-</button>
+                        <span class="item-quantity">${item.quantity}</span>
+                        <button class="increase-quantity">+</button>
+                    </div>
+                    <span class="item-price">${item.price.toFixed(2)}</span>
+                `;
+                basketList.appendChild(listItem);
+                listItem.querySelector('.increase-quantity').addEventListener('click', () => updateQuantity(item.id, item.price, 1));
+                listItem.querySelector('.decrease-quantity').addEventListener('click', () => updateQuantity(item.id, item.price, -1));
+            }
+            updateTotalPrice();
+            saveBasketToLocalStorage();
+            updateBasketCount();
+        }
+
+        function updateQuantity(itemId, itemPrice, change) {
+            const listItem = document.querySelector(`li[data-id="${itemId}"]`);
+            const quantityElement = listItem.querySelector('.item-quantity');
+            const priceElement = listItem.querySelector('.item-price');
+            let quantity = parseInt(quantityElement.textContent);
+            quantity += change;
+            if (quantity < 1) {
+                removeItemFromBasket(itemId);
+            } else {
+                quantityElement.textContent = quantity;
+                priceElement.textContent = (itemPrice * quantity).toFixed(2);
+            }
+            updateTotalPrice();
+            saveBasketToLocalStorage();
+            updateBasketCount();
+        }
+
+        function removeItemFromBasket(itemId) {
+            const listItem = document.querySelector(`li[data-id="${itemId}"]`);
+            listItem.remove();
+            updateTotalPrice();
+            saveBasketToLocalStorage();
+            updateBasketCount();
+        }
+
+        function updateTotalPrice() {
+            const basketList = document.querySelector('.basket-list');
+            const priceElements = basketList.querySelectorAll('.item-price');
+            let totalPrice = 0;
+            priceElements.forEach(priceElement => {
+                totalPrice += parseFloat(priceElement.textContent);
+            });
+            const totalPriceElement = document.querySelector('.total-price');
+            if (totalPriceElement) {
+                totalPriceElement.textContent = totalPrice.toFixed(2);
+            }
+        }
+
+        function saveBasketToLocalStorage() {
+            const basketList = document.querySelector('.basket-list');
+            const items = [];
+            basketList.querySelectorAll('li').forEach(listItem => {
+                const id = listItem.dataset.id;
+                const name = listItem.querySelector('span').textContent;
+                const imgElement = listItem.querySelector('img');
+                const picture = imgElement ? imgElement.src : '';
+                const quantity = parseInt(listItem.querySelector('.item-quantity').textContent);
+                const price = parseFloat(listItem.querySelector('.item-price').textContent) / quantity;
+                items.push({ id, name, picture, quantity, price });
+            });
+            localStorage.setItem('basketItems', JSON.stringify(items));
+        }
+
+        function loadBasketFromLocalStorage() {
+            const basketList = document.querySelector('.basket-list');
+            const items = JSON.parse(localStorage.getItem('basketItems')) || [];
+            items.forEach(item => {
+                const listItem = document.createElement('li');
+                listItem.dataset.id = item.id;
+                listItem.innerHTML = `
+                    <img src="${item.picture}" alt="${item.name}" style="width: 50px; height: 50px;">
+                    <span>${item.name}</span>
+                    <div class="quantity-controls">
+                        <button class="decrease-quantity">-</button>
+                        <span class="item-quantity">${item.quantity}</span>
+                        <button class="increase-quantity">+</button>
+                    </div>
+                    <span class="item-price">${(item.price * item.quantity).toFixed(2)}</span>
+                `;
+                basketList.appendChild(listItem);
+                listItem.querySelector('.increase-quantity').addEventListener('click', () => updateQuantity(item.id, item.price, 1));
+                listItem.querySelector('.decrease-quantity').addEventListener('click', () => updateQuantity(item.id, item.price, -1));
+            });
+            updateTotalPrice();
+            updateBasketCount();
+        }
+
+        function updateBasketCount() {
+            const basketList = document.querySelector('.basket-list');
+            let itemCount = 0;
+            basketList.querySelectorAll('li').forEach(listItem => {
+                const quantity = parseInt(listItem.querySelector('.item-quantity').textContent);
+                itemCount += quantity;
+            });
+            const basketCountElement = document.querySelector('.basket-count');
+            if (basketCountElement) {
+                basketCountElement.textContent = itemCount;
+            }
+        }
     </script>
 </body>
 

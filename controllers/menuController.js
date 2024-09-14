@@ -288,22 +288,33 @@ module.exports = {
 	menuDelete: function (req, res) {
 		const id = req.params.id;
 		const foodRecipeId = req.body.id_food_recipes; // Assuming id_food_recipes is passed in the request body
-
-		// First, delete related rows in tbl_food_recipes
-		MenuModel.deleteRelatedRecipes(id, foodRecipeId, (error, result) => {
+	
+		console.log('id:', id);
+		console.log('foodRecipeId:', foodRecipeId);
+	
+		// First, delete related rows in tbl_menu_options
+		MenuModel.deleteRelatedMenuOptions(id, (error, result) => {
 			if (error) {
-				console.error('Error deleting related recipes: ', error);
+				console.error('Error deleting related menu options: ', error);
 				return res.status(500).send('Internal Server Error');
 			}
-
-			// Then, delete the row in tbl_menu
-			MenuModel.deleteMenu(id, (error, result) => {
+	
+			// Then, delete related rows in tbl_food_recipes
+			MenuModel.deleteRelatedRecipes(id, foodRecipeId, (error, result) => {
 				if (error) {
-					console.error('Error deleting menu: ', error);
+					console.error('Error deleting related recipes: ', error);
 					return res.status(500).send('Internal Server Error');
-				} else {
-					res.redirect('/menu');
 				}
+	
+				// Finally, delete the row in tbl_menu
+				MenuModel.deleteMenu(id, (error, result) => {
+					if (error) {
+						console.error('Error deleting menu: ', error);
+						return res.status(500).send('Internal Server Error');
+					} else {
+						res.redirect('/menu');
+					}
+				});
 			});
 		});
 	},
@@ -326,7 +337,7 @@ module.exports = {
 				menu_category: req.body.settingCategory,
 				price: req.body.price,
 				menu_unit: req.body.settingUnit,
-				status: req.body.status,
+				status: req.body.status === 'ON' ? 'ON' : 'OFF', // Ensure this is "ON" or "OFF"
 				menu_picture: req.file ? `${req.file.filename}` : null,
 				remain: 0
 			};
@@ -375,7 +386,6 @@ module.exports = {
 						let errorOccurred = false;
 	
 						MenuModel.getMaxIdFoodRecipes((error, maxId) => {
-							console.log('maxId:', maxId);
 							if (error) {
 								console.error('Error getting max id_food_recipes: ', error);
 								return res.status(500).send('Internal Server Error');
@@ -396,8 +406,7 @@ module.exports = {
 	
 								// Find the next available id_food_recipes
 								let nextId = maxId + 1;
-								
-								console.log('nextId:', nextId);
+	
 								// Process each ingredient from the form
 								const ingredientPromises = name_ingredients.map((name_ingredient, index) => {
 									return new Promise((resolve, reject) => {
@@ -412,16 +421,13 @@ module.exports = {
 										if (!id_food_recipes[index]) {
 											nextId++;
 										}
-	
-										console.log('ingredient:', ingredient);
-	
+		
 										// Check if the ingredient already exists
 										MenuModel.getIngredientByMenuIdAndNameIngredient(ingredient.tbl_menu_id, ingredient.name_ingredient, (error, existingIngredient) => {
 											if (error) {
 												console.error('Error fetching ingredient: ', error);
 												return reject(error);
 											} else if (existingIngredient) {
-												console.log('Ingredient exists:', existingIngredient);
 												if (ingredient.unit_quantity === '0') {
 													// Delete the ingredient if the quantity is zero
 													MenuModel.deleteIngredient(existingIngredient.id_food_recipes, (error, result) => {
@@ -434,7 +440,6 @@ module.exports = {
 												} else {
 													// Update the existing ingredient
 													MenuModel.updateIngredient(ingredient, (error, result) => {
-														console.log('Updated ingredient:', ingredient);
 														if (error) {
 															console.error('Error updating ingredient: ', error);
 															return reject(error);
