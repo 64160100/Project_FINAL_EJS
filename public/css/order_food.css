@@ -391,11 +391,10 @@
     background-color: #ffc107; /* Yellow background color */
     color: #000; /* Black text color for better contrast */
     border: none;
-    padding: 10px 20px;
+    padding:  20px;
     cursor: pointer;
     border-radius: 5px;
     font-size: 14px;
-    display: flex;
     align-items: center;
     gap: 8px; /* Space between icon and text */
     transition: background-color 0.3s ease;
@@ -408,3 +407,319 @@
 .print-qr-button i {
     font-size: 18px; /* Adjust icon size as needed */
 }
+
+/* หน่วย */
+.header-titles {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    font-weight: bold;
+    border-bottom: 2px solid #ccc;
+    background-color: #f8f8f8;
+}
+
+.header-titles span {
+    flex: 1;
+    text-align: center;
+}
+
+.header-titles span:nth-child(2) {
+    width: 50px; /* Ensure this matches the width of the item-quantity span */
+    text-align: center;
+}
+
+.menu-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    background-color: #fff;
+    transition: background-color 0.3s;
+}
+
+.menu-list li:hover {
+    background-color: #f1f1f1;
+}
+
+.menu-list li span {
+    flex: 1;
+    text-align: center;
+}
+
+.edit-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px; /* Adjust the width as needed */
+    height: 30px; /* Adjust the height as needed */
+    font-size: 14px; /* Adjust the font size as needed */
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    transition: background-color 0.3s;
+    padding: 0; /* Remove default padding */
+    margin-right: 10px; /* Add space between the button and the product name */
+}
+
+.edit-button i {
+    font-size: 12px; /* Reduce the icon size */
+}
+
+.edit-button:hover {
+    background-color: #0056b3;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px; /* Ensure this matches the width of the header span */
+}
+
+.quantity-controls .item-quantity {
+    text-align: center;
+    font-size: 16px;
+    margin: 0; /* Remove any default margin */
+    padding: 0; /* Remove any default padding */
+    width: 50px; /* Ensure this matches the width of the header span */
+}
+
+.item-price {
+    flex: 1;
+    text-align: right;
+    font-size: 16px;
+}
+
+/* Additional styles to ensure consistent alignment and sizing */
+.menu-list li span.product-name {
+    flex: 2; /* Adjust as needed to give more space to the product name */
+    text-align: left;
+}
+
+/* popup */
+/* Modal container */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+  }
+  
+  /* Modal content */
+  .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+    max-width: 600px; /* Maximum width */
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  /* Close button */
+  .close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close-button:hover,
+  .close-button:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  /* Modal header */
+  .modal-content h1 {
+    margin-top: 0;
+    font-size: 24px;
+    text-align: center;
+  }
+  
+  /* Order details and total amount */
+  #orderDetails,
+  #totalAmount {
+    margin: 20px 0;
+    font-size: 18px;
+  }
+  
+  /* Print button */
+  .print-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    display: block;
+    margin: 0 auto;
+  }
+  
+  .print-button:hover {
+    background-color: #45a049;
+  }
+  
+  /* Fade-in animation */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* ลบ */
+/* Styling for the delete button */
+.delete-button {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-left: 10px;
+  }
+
+  /* ส่วนท้าย */
+  /* Ensure the container takes up the full height of the parent */
+
+.sidebar-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  background-color: #f8f8f8;
+  border-top: 1px solid #ddd;
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+}
+
+.save-button, .checkout-button, .print-qr-button {
+  padding: 10px 20px;
+  margin: 5px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.save-button:hover, .checkout-button:hover, .print-qr-button:hover {
+  background-color: #45a049;
+}
+
+.divider {
+  margin: 20px 0;
+  border: 1px solid #ddd;
+}
+
+/* ปิดสไลด์ */
+.basket-sidebar {
+    /* Your existing styles */
+    transition: transform 0.3s ease;
+  }
+  
+  .basket-sidebar.close {
+    transform: translateX(100%); /* Adjust as needed to hide the sidebar */
+  }
+
+  /* ใหม่ */
+  /* Existing CSS content */
+.basket-sidebar.close {
+    transform: translateX(100%); /* Adjust as needed to hide the sidebar */
+  }
+  
+  /* New CSS for the summary bill modal */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+  
+  .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+  }
+  
+  .close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close-button:hover,
+  .close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  #orderDetails p {
+    margin: 5px 0;
+    font-weight: bold;
+  }
+  
+  #orderDetails table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  #orderDetails th, #orderDetails td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  #orderDetails th {
+    background-color: #f2f2f2;
+  }
+  
+  #totalAmount p {
+    margin: 10px 0;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }

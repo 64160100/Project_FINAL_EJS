@@ -106,7 +106,7 @@
                 <div class="submenu">
                     <a href="/table" class="link submenu-title">โต๊ะอาหาร</a>
                     <a href="/table" class="link">จัดโต๊ะอาหาร</a>
-                    <a href="#" class="link">สั่งเมนู</a>
+                    <a href="/view_bill" class="link">บิลอาหาร</a>
                 </div>
             </li>
 
@@ -173,136 +173,375 @@
 
         <div class="centered-content">
             <% if (!zone_name || !table_id) { %>
-                <form action="/zone/select" method="POST">
-                    <label for="zone">เลือกโซน:</label>
-                    <select name="zone" id="zone">
-                        <% zones.forEach(function(zone) { %>
-                            <option value="<%= zone.zone_name %>">
-                                <%= zone.zone_name %>
-                            </option>
-                            <% }); %>
-                    </select>
-                    <label for="table">เลือกโต๊ะ:</label>
-                    <select name="table" id="table">
-                        <% tables.forEach(function(table) { %>
-                            <option value="<%= table.id_table %>">
-                                <%= table.id_table %>
-                            </option>
-                            <% }); %>
-                    </select>
-                    <button type="submit">ยืนยัน</button>
-                </form>
-                <% } else { %>
-                    <% for (let category in groupedMenu) { %>
-                        <div class="category">
-                            <h3>
-                                <%= category %>
-                            </h3>
-                            <div class="menu-items">
-                                <% groupedMenu[category].forEach(menuItem=> { %>
-                                    <form class="menu-item" action="/order" method="POST">
-                                        <input type="hidden" name="id" value="<%= menuItem.id %>">
-                                        <input type="hidden" name="name" value="<%= menuItem.name %>">
-                                        <input type="hidden" name="price" value="<%= menuItem.price %>">
-                                        <input type="hidden" name="category" value="<%= menuItem.category %>">
-                                        <a
-                                            href="/zone/<%= zone_name %>/table/<%= table_id %>/customize/<%= menuItem.id %>">
-                                            <div class="image-container">
-                                                <img class="menu-item-image" src="/img/<%= menuItem.picture %>"
-                                                    alt="<%= menuItem.name %>">
-                                            </div>
-                                            <h4>
-                                                <%= menuItem.name %>
-                                            </h4>
-                                            <p>
-                                                <%= menuItem.price %> บาท
-                                            </p>
-                                        </a>
-                                    </form>
-                                    <% }); %>
-                            </div>
-                        </div>
-                        <% } %>
-                            <% } %>
-        </div>
-
-        <div class="toggle-basket">
-            <div class="basket">
-                <span class="basket-count">
-                    <%= basket.reduce((acc, item)=> acc + item.quantity, 0) %>
-                </span>
-                <i class='bx bx-basket'></i>
-            </div>
-        </div>
-
-        <div class="basket-sidebar close">
-            <ul class="basket-list">
-                <div class="zone-table-info">
-                    <% if (zone_name && table_id) { %>
-                        <button class="zone-button">โซน: <%= zone_name %></button>
-                        <button class="table-button">โต๊ะ: <%= table_id %></button>
-                        <% } %>
-                </div>
-                <hr class="divider">
-                <div class="header-titles">
-                    <span>รายการสินค้า</span>
-                    <span>หน่วย</span>
-                    <span>ราคาสินค้า</span>
-                </div>
-                <% basket.forEach(item=> { %>
-                    <li data-id="<%= item.id %>">
-                        <img class="basket-item-image" src="<%= item.picture %>" alt="<%= item.name %>"
-                            style="width: 50px; height: 50px;">
-                        <span>
-                            <%= item.name %>
-                        </span>
-                        <div class="quantity-controls">
-                            <button class="decrease-quantity">-</button>
-                            <span class="item-quantity">
-                                <%= item.quantity %>
-                            </span>
-                            <button class="increase-quantity">+</button>
-                        </div>
-                        <span class="item-price">
-                            <%= (item.price * item.quantity).toFixed(2) %>
-                        </span>
-                    </li>
+              <form action="/zone/select" method="POST">
+                <label for="zone">เลือกโซน:</label>
+                <select name="zone" id="zone">
+                  <% zones.forEach(function(zone) { %>
+                    <option value="<%= zone.zone_name %>">
+                      <%= zone.zone_name %>
+                    </option>
+                  <% }); %>
+                </select>
+                <label for="table">เลือกโต๊ะ:</label>
+                <select name="table" id="table">
+                  <% tables.forEach(function(table) { %>
+                    <option value="<%= table.id_table %>">
+                      <%= table.id_table %>
+                    </option>
+                  <% }); %>
+                </select>
+                <button type="submit">ยืนยัน</button>
+              </form>
+            <% } else { %>
+              <% for (let category in groupedMenu) { %>
+                <div class="category">
+                  <h3>
+                    <%= category %>
+                  </h3>
+                  <div class="menu-items">
+                    <% groupedMenu[category].forEach(menuItem => { %>
+                      <form class="menu-item" action="/order" method="POST">
+                        <input type="hidden" name="id" value="<%= menuItem.id %>">
+                        <input type="hidden" name="name" value="<%= menuItem.name %>">
+                        <input type="hidden" name="price" value="<%= menuItem.price %>">
+                        <input type="hidden" name="category" value="<%= menuItem.category %>">
+                        <a href="/zone/<%= zone_name %>/table/<%= table_id %>/customize/<%= menuItem.id %>">
+                          <div class="image-container">
+                            <img class="menu-item-image" src="/img/<%= menuItem.picture %>" alt="<%= menuItem.name %>">
+                          </div>
+                          <h4>
+                            <%= menuItem.name %>
+                          </h4>
+                          <p>
+                            <%= menuItem.price %> บาท
+                          </p>
+                        </a>
+                      </form>
                     <% }); %>
-            </ul>
-            <hr class="divider">
-
-            <div class="discount-code">
-                <input type="text" class="discount-input" placeholder="ใส่ code ส่วนลด">
-                <button class="apply-discount-button">ใช้ส่วนลด</button>
+                  </div>
+                </div>
+              <% } %>
+            <% } %>
+          </div>
+          
+          <div class="toggle-basket">
+            <div class="basket">
+              <span class="basket-count">
+                <%= basket.reduce((acc, item) => acc + item.quantity, 0) %>
+              </span>
+              <i class='bx bx-basket'></i>
             </div>
+          </div>
+          
+          <div class="basket-sidebar close">
+            <ul class="basket-list">
+              <div class="zone-table-info">
+                <% if (zone_name && table_id) { %>
+                  <button class="zone-button">โซน: <%= zone_name %></button>
+                  <button class="table-button">โต๊ะ: <%= table_id %></button>
+                <% } %>
+              </div>
+              <hr class="divider">
+          
+              <div class="header-titles">
+                <span>รายการสินค้า</span>
+                <span>หน่วย</span>
+                <span>ราคาสินค้า</span>
+              </div>
+              <ul class="menu-list">
+                <% menuItems.forEach(item => { %>
+                  <li class="swipe-item" data-id="<%= item.id %>" data-num-list="<%= item.num_list %>" data-id-table="<%= item.id_table %>" data-zone-name="<%= item.zone_name %>" data-status-bill="<%= item.status_bill %>">
+                    <% if (item.status_bill !== 'Y') { %>
+                      <button class="edit-button">
+                        <i class='bx bx-edit'></i>
+                      </button>
+                    <% } %>
+                    <span class="product-name">
+                      <%= item.product_list %>
 
-            <hr class="divider">
-            <div class="total-price-container">
+                      <% const matchingOptions = groupedOptions[item.num_list]; %>
+                      <% if (matchingOptions) { %>
+                        <% matchingOptions.forEach(option => { %>
+                          <div class="checkbox-item">
+                            <label for="<%= option.id_menu_options %>">
+                              + <%= option.name_options %>
+                            </label>
+                          </div>
+                        <% }); %>
+                      <% } %>
+                    </span>
+                    
+                    <div class="quantity-controls">
+                      <span class="item-quantity">
+                        <%= item.num_unit %>
+                      </span>
+                    </div>
+                    <span class="item-price">
+                      <%= item.price_all %>
+                    </span>
+                    <% if (item.status_bill !== 'Y') { %>
+                      <form class="delete-form" action="/zone/<%= item.zone_name %>/table/<%= item.id_table %>/delete_order" method="POST" style="display: none;">
+                        <input type="hidden" name="num_list" value="<%= item.num_list %>">
+                        <button type="submit" class="delete-button">ลบ</button>
+                      </form>
+                    <% } %>
+                  </li>
+                <% }); %>
+              </ul>
+              
+              <hr class="divider">
+              <div class="total-price-container">
                 <div class="price-row">
-                    <span>ราคารวม:</span>
-                    <span class="total-price">0.00</span>
+                  <span>ราคารวม:</span>
+                  <span class="total-price">0.00</span>
                 </div>
                 <div class="price-row">
-                    <span>ราคาส่วนลด:</span>
-                    <span class="discount-price">0.00</span>
+                  <span>ราคาส่วนลด:</span>
+                  <span class="discount-price">0.00</span>
                 </div>
                 <div class="price-row">
-                    <span>ราคารวมแบบสรุป:</span>
-                    <span class="final-price">0.00</span>
+                  <span>ราคารวมแบบสรุป:</span>
+                  <span class="final-price">0.00</span>
                 </div>
-            </div>
-            <hr class="divider">
-            <div class="sidebar-footer">
+              </div>
+              <hr class="divider">
+              <div class="sidebar-footer">
                 <button class="save-button">บันทึก</button>
                 <button class="checkout-button">ชำระเงิน</button>
                 <button class="print-qr-button">
-                    <i class='bx bx-qr'></i> ปริ้นคิวอาร์โค้ด
+                  <i class='bx bx-qr'></i> ปริ้นคิวอาร์โค้ด
                 </button>
-            </div>
-        </div>
+              </div>
+              </ul>
+              </div>
+              
+              <div id="summaryModal" class="modal">
+                <div class="modal-content">
+                  <span class="close-button">&times;</span>
+                  <h1>สรุปบิล</h1>
+                  <div id="orderDetails">รายการอาหารที่สั่ง:</div>
+                  <div id="totalAmount">รวมทั้งหมด:</div>
+                  <form id="save-form" action="/zone/<%= zone_name %>/table/<%= table_id %>/update_order" method="POST">
+                    <input type="hidden" name="num_list" id="num_list">
+                    <input type="hidden" name="status_bill" value="Y">
+                    <input type="hidden" name="id_table" id="table_id" value="<%= table_id %>">
+                    <input type="hidden" name="zone_name" id="zone_name" value="<%= zone_name %>">
+                    <button type="button" class="save-button" onclick="submitSaveForm()">บันทึก</button>
+                  </form>
+                </div>
+              </div>
+
+
     </section>
 
     <script src="/js/index.js"></script>
+
+    <script>
+      function submitSaveForm() {
+        // Collect num_list values from menu items with status_bill as 'N'
+        const numListValues = Array.from(document.querySelectorAll('.menu-list .swipe-item'))
+          .filter(item => item.getAttribute('data-status-bill') === 'N')
+          .map(item => item.getAttribute('data-num-list'));
+    
+        if (numListValues.length === 0) {
+          alert('No items with status_bill as N to submit.');
+          return;
+        }
+    
+        // Set the collected num_list value to the hidden input
+        document.getElementById('num_list').value = numListValues.join(',');
+    
+        // Print the bill
+        printBill();
+    
+        // Submit the form
+        document.getElementById('save-form').submit();
+      }
+    
+      function printBill() {
+        // Collect the data from the bill, but only for items with status_bill as 'N'
+        const orderDetailsHtml = Array.from(document.querySelectorAll('.menu-list .swipe-item'))
+          .filter(item => item.getAttribute('data-status-bill') === 'N')
+          .map(item => `
+            <tr>
+              <td>${item.querySelector('.product-name').innerText}</td>
+              <td>${item.querySelector('.item-quantity').innerText}</td>
+              <td>${item.querySelector('.item-price').innerText}</td>
+            </tr>
+          `).join('');
+    
+        const totalAmountHtml = document.getElementById('totalAmount').innerHTML;
+    
+        // Create a new window for printing
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write('<html><head><title>สรุปบิล</title></head><body>');
+        printWindow.document.write('<h1>สรุปบิล</h1>');
+        printWindow.document.write('<table><thead><tr><th>สินค้า</th><th>หน่วย</th><th>ราคา</th></tr></thead><tbody>');
+        printWindow.document.write(orderDetailsHtml);
+        printWindow.document.write('</tbody></table>');
+        printWindow.document.write(totalAmountHtml);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+      }
+    
+      document.querySelector('.save-button').addEventListener('click', function() {
+        generateSummaryBill();
+      });
+    
+      function generateSummaryBill() {
+        // Step 1: Collect the data from the bill, but only for items with status_bill as 'N'
+        const zoneName = document.querySelector('.zone-button').innerText;
+        const tableId = document.querySelector('.table-button').innerText;
+        const menuItems = Array.from(document.querySelectorAll('.menu-list .swipe-item'))
+          .filter(item => item.getAttribute('data-status-bill') === 'N')
+          .map(item => ({
+            product: item.querySelector('.product-name').innerText,
+            quantity: item.querySelector('.item-quantity').innerText,
+            price: item.querySelector('.item-price').innerText
+          }));
+        const totalPrice = document.querySelector('.total-price').innerText;
+        const discountPrice = document.querySelector('.discount-price').innerText;
+        const finalPrice = document.querySelector('.final-price').innerText;
+    
+        // Step 2: Display a summary page/modal with the collected data
+        let orderDetailsHtml = `
+          <p>${zoneName}</p>
+          <p>${tableId}</p>
+          <table>
+            <thead>
+              <tr>
+                <th>สินค้า</th>
+                <th>หน่วย</th>
+                <th>ราคา</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+        menuItems.forEach(item => {
+          orderDetailsHtml += `
+            <tr>
+              <td>${item.product}</td>
+              <td>${item.quantity}</td>
+              <td>${item.price}</td>
+            </tr>
+          `;
+        });
+        orderDetailsHtml += `
+            </tbody>
+          </table>
+        `;
+        document.getElementById('orderDetails').innerHTML = orderDetailsHtml;
+        document.getElementById('totalAmount').innerHTML = `
+          <p>ราคารวม: ${totalPrice}</p>
+          <p>ราคาส่วนลด: ${discountPrice}</p>
+          <p>ราคารวมแบบสรุป: ${finalPrice}</p>
+        `;
+        document.getElementById('summaryModal').style.display = 'block';
+      }
+    
+      function confirmAndClose() {
+        document.getElementById('summaryModal').style.display = 'none';
+      }
+    
+      // Close the modal when the user clicks on <span> (x)
+      document.querySelector('.close-button').addEventListener('click', function() {
+        document.getElementById('summaryModal').style.display = 'none';
+      });
+    
+      // Close the modal when the user clicks anywhere outside of the modal
+      window.onclick = function(event) {
+        if (event.target == document.getElementById('summaryModal')) {
+          document.getElementById('summaryModal').style.display = 'none';
+        }
+      }
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const saveButton = document.querySelector('.save-button');
+          const basketSidebar = document.querySelector('.basket-sidebar');
+          const centeredContent = document.querySelector('.centered-content');
+          const toggleBasket = document.querySelector('.toggle-basket');
+          const swipeItems = document.querySelectorAll('.swipe-item');
+      
+          // Function to open the sidebar
+          function openSidebar() {
+            basketSidebar.classList.remove('close');
+            basketSidebar.classList.add('open');
+          }
+      
+          // Function to close the sidebar
+          function closeSidebar() {
+            basketSidebar.classList.remove('open');
+            basketSidebar.classList.add('close');
+          }
+      
+          // Event listener for the save button
+          saveButton.addEventListener('click', function() {
+            closeSidebar();
+            centeredContent.classList.add('hidden');
+            centeredContent.classList.remove('shifted'); // Ensure centered-content returns to its original state
+          });
+      
+          // Event listener for the toggle basket button
+          toggleBasket.addEventListener('click', function() {
+            centeredContent.classList.remove('hidden');
+            centeredContent.classList.toggle('shifted'); // Toggle the shifted class
+          });
+      
+          // Function to handle swipe items
+          function handleSwipeItems() {
+            swipeItems.forEach(item => {
+              let pressTimer;
+      
+              item.addEventListener('mousedown', function() {
+                pressTimer = setTimeout(() => {
+                  item.querySelector('.delete-form').style.display = 'inline-block';
+                }, 1000); // 1 second long press
+              });
+      
+              item.addEventListener('mouseup', function() {
+                clearTimeout(pressTimer);
+              });
+      
+              item.addEventListener('mouseleave', function() {
+                clearTimeout(pressTimer);
+              });
+            });
+          }
+      
+          // Call the function to handle swipe items
+          handleSwipeItems();
+      
+          // Example function to open the sidebar (you can call this function when needed)
+          // openSidebar();
+        });
+      </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const swipeItems = document.querySelectorAll('.swipe-item');
+      
+          swipeItems.forEach(item => {
+            let pressTimer;
+      
+            item.addEventListener('mousedown', function() {
+              pressTimer = setTimeout(() => {
+                item.querySelector('.delete-form').style.display = 'inline-block';
+              }, 1000); // 1 second long press
+            });
+      
+            item.addEventListener('mouseup', function() {
+              clearTimeout(pressTimer);
+            });
+      
+            item.addEventListener('mouseleave', function() {
+              clearTimeout(pressTimer);
+            });
+          });
+        });
+      </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
@@ -361,7 +600,6 @@
         document.addEventListener("DOMContentLoaded", () => {
             const basketToggle = document.querySelector(".toggle-basket");
             const basketSidebar = document.querySelector(".basket-sidebar");
-            const centeredContent = document.querySelector(".centered-content");
             const orderForms = document.querySelectorAll(".menu-item");
 
             basketToggle.addEventListener("click", (event) => {
@@ -391,7 +629,6 @@
             function toggleBasket() {
                 basketSidebar.classList.toggle('open');
                 basketSidebar.classList.toggle('close');
-                centeredContent.classList.toggle('shifted');
             }
         });
 

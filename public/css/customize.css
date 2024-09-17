@@ -142,3 +142,38 @@ button[type="submit"]:hover {
 .checkbox-group .checkbox-item input[type="checkbox"] {
     margin-right: 10px; /* เพิ่มระยะห่างระหว่าง checkbox และ label */
 }
+
+/* สถานที่ */
+.special-options, .where-eat {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.special-options label, .where-eat label {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.special-options .underline, .where-eat .underline {
+    border: none;
+    border-bottom: 2px solid #ccc;
+    margin: 5px 0 10px;
+}
+
+.special-options .checkbox-group, .where-eat .radio-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.special-options .checkbox-item, .where-eat .radio-item {
+    margin-bottom: 10px;
+}
+
+.special-options .checkbox-item input[type="checkbox"], .where-eat .radio-item input[type="radio"] {
+    margin-right: 10px;
+}
+
+.special-options .checkbox-item label, .where-eat .radio-item label {
+    font-size: 14px;
+}
+

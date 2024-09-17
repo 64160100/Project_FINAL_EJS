@@ -102,6 +102,8 @@ module.exports = {
                 id_number, date_of_birth, phone_number, email, other
             };
 
+            console.log(formData);
+
             EmployeeModel.checkDuplicates_AddEmployee(employee_id, id_number, phone_number, (error, duplicates) => {
                 if (error) {
                     console.error('Database error:', error);

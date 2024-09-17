@@ -126,8 +126,13 @@ app.post('/delete_zone/:id', require('./routes/table'));
 app.get('/order_food', require('./routes/table'));
 app.get('/customize/:id', require('./routes/table'));
 
+app.get('/view_bill', require('./routes/table'));
+
 app.get('/zone/:zone/table/:table/order_food', require('./routes/table'));
 app.get('/zone/:zone/table/:table/customize/:id', require('./routes/table'));
+app.post('/zone/:zone/table/:table/create_order', require('./routes/table'));
+app.post('/zone/:zone/table/:table/update_order', require('./routes/table'));
+app.post('/zone/:zone/table/:table/delete_order', require('./routes/table'));
 
 // ===================== Buying ===================== //
 app.get('/buying', require('./routes/buying'));

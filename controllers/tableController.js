@@ -168,15 +168,14 @@ module.exports = {
 	zoneOrderFood: (req, res) => {
 		const zoneName = req.params.zone;
 		const tableId = req.params.table;
+	  
 		// Step 1: Query the database for the specific zone and its table
-	
 		TableModel.getZoneAndTableDetails(zoneName, tableId, (error, results) => {
 			if (error) {
-				// Handle error (e.g., render an error page or send an error response)
 				console.error('Error fetching data from database:', error);
 				return res.status(500).send('Error fetching data from database');
 			}
-	
+	  
 			// Step 2: Fetch the menu items
 			TableModel.getOrderFood((error, menu) => {
 				if (error) {
@@ -185,7 +184,7 @@ module.exports = {
 				} else {
 					// Filter menu items to include only those with status "ON"
 					const filteredMenu = menu.filter(item => item.status === 'ON');
-	
+	  
 					// Group menu items by category
 					const groupedMenu = filteredMenu.reduce((acc, item) => {
 						if (!acc[item.category]) {
@@ -194,16 +193,46 @@ module.exports = {
 						acc[item.category].push(item);
 						return acc;
 					}, {});
-	
+	  
 					// Load basket items from session
 					const basket = req.session.basket || [];
-	
-					// Step 3: Render the order_food view with the retrieved data
-					res.render('order_food', {
-						groupedMenu: groupedMenu,
-						basket: basket,
-						zone_name: zoneName,
-						table_id: tableId
+	  
+					// Step 3: Fetch specific columns from list_menu
+					TableModel.getSpecificMenuItems(tableId, zoneName, (error, menuItems) => {
+						if (error) {
+							console.error('Error fetching specific menu items:', error);
+							return res.status(500).send('Error fetching specific menu items');
+						}
+	  
+						// Step 4: Fetch menu options from list_menu_options table
+						TableModel.getListMenuOptions((error, listMenuOptions) => {
+							if (error) {
+								console.error('Error fetching menu options:', error);
+								return res.status(500).send('Error fetching menu options');
+							}
+	  
+							// Group listMenuOptions by num_list
+							const groupedOptions = listMenuOptions.reduce((acc, option) => {
+								if (!acc[option.num_list]) {
+									acc[option.num_list] = [];
+								}
+								acc[option.num_list].push(option);
+								return acc;
+							}, {});
+
+							console.log('groupedOptions:', groupedOptions);
+							console.log('menuItems:', menuItems);
+	  
+							// Step 5: Render the order_food view with the retrieved data
+							res.render('order_food', {
+								groupedMenu: groupedMenu,
+								basket: basket,
+								zone_name: zoneName,
+								table_id: tableId,
+								menuItems: menuItems,
+								groupedOptions: groupedOptions 
+							});
+						});
 					});
 				}
 			});
@@ -215,8 +244,6 @@ module.exports = {
 		const zoneName = req.params.zone;
 		const tableId = req.params.table;
 		const itemId = req.params.id;
-
-		console.log('Customizing item with ID:', itemId);
 
 		TableModel.getMenuItemById(itemId, (error, item) => {
 			if (error) {
@@ -240,10 +267,6 @@ module.exports = {
 						return res.status(500).send("An error occurred");
 					}
 
-					console.group('Menu Options');
-					console.log(menuOptions);
-					console.groupEnd();
-
 					res.render('customize', {
 						item: item,
 						menuOptions: menuOptions,
@@ -256,6 +279,137 @@ module.exports = {
 		});
 	},
 
+	createOrder: (req, res) => {
+		const zoneName = req.params.zone;
+		const tableId = req.params.table;
+		let selectedOptions = req.body.special_options || [];
+		
+		// Ensure selectedOptions is an array
+		if (!Array.isArray(selectedOptions)) {
+			selectedOptions = [selectedOptions];
+		}
+	
+		const nameOptions = selectedOptions.map(id => req.body[`name_options_${id}`]);
+	
+		TableModel.getMaxNumList((error, maxNumList) => {
+			if (error) {
+				console.error('Error fetching max num_list:', error);
+				return res.status(500).send('Error fetching max num_list');
+			}
+	
+			// Calculate the new num_list value
+			const newNumList = maxNumList + 1;
+	
+			const orderData = {
+				num_list: newNumList,
+				menu_id: req.body.id,
+				product_list: req.body.name,
+				num_unit: req.body.quantity,
+				product_price: req.body.price,
+				price_all: req.body.price * req.body.quantity,
+				Where_eat: req.body.where_eat,
+				zone_name: zoneName,
+				id_table: tableId,
+				selected_options: selectedOptions,
+				name_options: nameOptions
+			};
+	
+			TableModel.createOrder(orderData, (error, result) => {
+				if (error) {
+					console.error('Error creating order:', error);
+					return res.status(500).send('Error creating order');
+				}
+	
+				// Fetch the max list_menu_id from list_menu_options table
+				TableModel.getListMenuId((error, maxListMenuId) => {
+					if (error) {
+						console.error('Error fetching max list_menu_id:', error);
+						return res.status(500).send('Error fetching max list_menu_id');
+					}
+	
+					// Increment maxListMenuId for each option
+					let list_menu_id = maxListMenuId;
+	
+					const optionsData = selectedOptions.map((optionId, index) => {
+						list_menu_id++; // Increment maxListMenuId by 1
+						return {
+							list_menu_id: list_menu_id,
+							option_id: optionId,
+							option_name: nameOptions[index],
+							num_list: newNumList,
+							product_list: req.body.name,
+							id_table: tableId,
+							zone_name: zoneName
+						};
+					});
+	
+					// Create special options if there are any
+					if (optionsData.length > 0) {
+						TableModel.createSpecialOption(optionsData, (optionsError, optionsResult) => {
+							if (optionsError) {
+								console.error('Error creating order options:', optionsError);
+								return res.status(500).send('Error creating order options');
+							}
+							res.redirect(`/zone/${zoneName}/table/${tableId}/order_food`);
+						});
+					} else {
+						res.redirect(`/zone/${zoneName}/table/${tableId}/order_food`);
+					}
+				});
+			});
+		});
+	},
+
+	updateOrder: (req, res) => {
+		const zoneName = req.params.zone;
+		const tableId = req.params.table;
+		const orderId = req.body.num_list;
+		const updatedData = req.body;
+	
+		// Validate incoming data
+		if (!orderId || !updatedData) {
+			console.error('Invalid data received');
+			return res.status(400).send('Invalid data received');
+		}
+		// Update the order in the database
+		TableModel.updateOrder(updatedData, (error, results) => {
+			if (error) {
+				console.error('Error updating order:', error);
+				return res.status(500).send('Error updating order');
+			}
+	
+			// Check if status_bill is 'Y' and handle accordingly
+			if (updatedData.status_bill === 'Y') {
+				// Additional logic for handling status_bill can be added here
+			}
+	
+			res.redirect(`/zone/${zoneName}/table/${tableId}/order_food`);
+		});
+	},
+
+	deleteOrder: (req, res) => {
+		const zoneName = req.params.zone;
+		const tableId = req.params.table;
+		const orderId = req.body.num_list;
+	
+		// First, delete the order from the list_menu_options table
+		TableModel.deleteOptionsByOrderId(orderId, (optionsError) => {
+			if (optionsError) {
+				console.error('Error deleting order options:', optionsError);
+				return res.status(500).send('Error deleting order options');
+			}
+	
+			// Then, delete the order from the main orders table
+			TableModel.deleteOrderById(orderId, (orderError) => {
+				if (orderError) {
+					console.error('Error deleting order:', orderError);
+					return res.status(500).send('Error deleting order');
+				}
+				res.redirect(`/zone/${zoneName}/table/${tableId}/order_food`);
+			});
+		});
+	},
+	
 	editTable: (req, res) => {
 		const zoneId = req.params.id;
 		const errorMessage = req.query.errorMessage || null; // Get errorMessage from query parameters if it exists
@@ -438,6 +592,20 @@ module.exports = {
 					// Redirect back to the view_zone/:id page
 					res.redirect(`/view_zone/${zoneId}`);
 				}
+			});
+		});
+	},
+
+	viewBill: (req, res) => {
+		TableModel.getBill((error, results) => {
+			if (error) {
+				console.error('Error fetching bill from database:', error);
+				return res.status(500).send('Error fetching bill from database');
+			}
+
+			res.render('view_bill', {
+				title: 'View Bill',
+				bill: results,
 			});
 		});
 	},

@@ -47,8 +47,8 @@ module.exports = {
             // Prepare the INSERT statement for tbl_user
             const insertUserSql = `
                 INSERT INTO tbl_user 
-                (tbl_employees, tbl_user_permission, username, fullname, password, profile_picture, status) 
-                VALUES (?, NULL, NULL, NULL, NULL, NULL, 'OFF');
+                (tbl_employees, tbl_user_permission, username, password, profile_picture, status) 
+                VALUES (?, NULL, NULL, NULL, NULL, 'OFF');
             `;
     
             // Execute the INSERT statement for tbl_user

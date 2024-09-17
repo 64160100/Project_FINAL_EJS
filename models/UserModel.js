@@ -98,27 +98,31 @@ module.exports = {
     },
 
     updateUser: (employeeId, userData, callback) => {
-    // Assuming userData contains { user_id: 'some_id', username: 'admin', permission: 'xxx', status: 'ON' }
-    const { permission, status, username,} = userData;
-
-    // SQL UPDATE statement to update user details
-    const sqlQuery = `
-        UPDATE tbl_user
-        SET tbl_user_permission = ?, status = ?, username = ?
-        WHERE tbl_employees = ?
-    `;
-
-    // Assuming `connection` is your database connection object
-    connection.query(sqlQuery, [permission, status, username, employeeId ], (error, results) => {
-        if (error) {
-            // Handle error
-            callback(error, null);
-        } else {
-            // Success
-            callback(null, results);
-        }
-    });
-},
+        // Assuming userData contains { user_id: 'some_id', username: 'admin', permission: 'xxx', status: 'ON' }
+        let { permission, status, username } = userData;
+    
+        // Set default values if permission or status is null or undefined
+        permission = permission || 'DefaultPermission'; // Replace 'DefaultPermission' with your default value
+        status = status || 'DefaultStatus'; // Replace 'DefaultStatus' with your default value
+    
+        // SQL UPDATE statement to update user details
+        const sqlQuery = `
+            UPDATE tbl_user
+            SET tbl_user_permission = ?, status = ?, username = ?
+            WHERE tbl_employees = ?
+        `;
+    
+        // Assuming `connection` is your database connection object
+        connection.query(sqlQuery, [permission, status, username, employeeId], (error, results) => {
+            if (error) {
+                // Handle error
+                callback(error, null);
+            } else {
+                // Success
+                callback(null, results);
+            }
+        });
+    },
 
 
 };
