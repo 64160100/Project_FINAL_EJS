@@ -14,6 +14,10 @@ module.exports = {
     },
 
     createBuying: function (id_buying_list, name_product, date_of_receipt, setting_type_id, setting_unit_id, price, unit_quantity, day, hour, minute, second, callback) {
+        if (typeof callback !== 'function') {
+            throw new TypeError('Callback must be a function');
+        }
+
         // Step 1: Check for existing product name
         const checkProductQuery = `
             SELECT w.id_warehouse 
@@ -33,27 +37,30 @@ module.exports = {
                 warehouseId = checkResults[0].id_warehouse;
                 insertIntoWarehouse(warehouseId);
             } else {
-                // Product does not exist, generate a new id_warehouse
-                const newIdQuery = 'SELECT id_warehouse FROM tbl_warehouse ORDER BY id_warehouse DESC LIMIT 1';
+                // Product does not exist, generate a new id_warehouse and tbl_id_warehouse
+                const newIdQuery = 'SELECT id_warehouse, tbl_id_warehouse FROM tbl_warehouse ORDER BY tbl_id_warehouse DESC LIMIT 1';
                 connection.query(newIdQuery, [], (newIdError, newIdResults) => {
                     if (newIdError) {
                         return callback(newIdError);
                     }
+                    let tblIdWarehouse;
                     if (newIdResults.length > 0) {
-                        // Generate next id_warehouse based on the last one
+                        // Generate next id_warehouse and tbl_id_warehouse based on the last one
                         const lastId = newIdResults[0].id_warehouse;
                         const idNumber = parseInt(lastId.substring(1)) + 1; // Assuming id format is "T001"
                         warehouseId = `T${idNumber.toString().padStart(3, '0')}`;
+                        tblIdWarehouse = newIdResults[0].tbl_id_warehouse + 1;
                     } else {
-                        // No entries, start with "T001"
+                        // No entries, start with "T001" and tbl_id_warehouse 1
                         warehouseId = "T001";
+                        tblIdWarehouse = 1;
                     }
-                    insertIntoWarehouse(warehouseId);
+                    insertIntoWarehouse(warehouseId, tblIdWarehouse);
                 });
             }
         });
-    
-        function insertIntoWarehouse(warehouseId) {
+
+        function insertIntoWarehouse(warehouseId, tblIdWarehouse) {
             // Insert into tbl_buying
             const query = 'INSERT INTO tbl_buying (id_buying_list, name_product, date_of_receipt, setting_type_id, setting_unit_id, price, unit_quantity, day, hour, minute, second) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
             const values = [id_buying_list, name_product, date_of_receipt, setting_type_id, setting_unit_id, price, unit_quantity, day, hour, minute, second];
@@ -62,15 +69,28 @@ module.exports = {
                 if (error) {
                     return callback(error);
                 }
-                // Insert into tbl_warehouse with the determined id_warehouse
-                const warehouseQuery = 'INSERT INTO tbl_warehouse (id_warehouse, tbl_buying_id, setting_type_id, unit_quantity_all, unit_quantity_max, setting_unit_id) VALUES (?, ?, ?, ?, ?, ?)';
-                const warehouseValues = [warehouseId, id_buying_list, setting_type_id, unit_quantity, 'null', setting_unit_id]; // Adjust as necessary
-                
-                connection.query(warehouseQuery, warehouseValues, (warehouseError, warehouseResults) => {
-                    if (warehouseError) {
-                        return callback(warehouseError);
+
+                // Check the maximum value of tbl_id_warehouse and increment it
+                const maxIdQuery = 'SELECT MAX(tbl_id_warehouse) AS maxId FROM tbl_warehouse';
+                connection.query(maxIdQuery, [], (maxIdError, maxIdResults) => {
+                    if (maxIdError) {
+                        return callback(maxIdError);
                     }
-                    return callback(null, { buyingResults: results, warehouseResults: warehouseResults });
+                    let newTblIdWarehouse = 1;
+                    if (maxIdResults.length > 0 && maxIdResults[0].maxId !== null) {
+                        newTblIdWarehouse = maxIdResults[0].maxId + 1;
+                    }
+
+                    // Insert into tbl_warehouse with the determined id_warehouse and new tbl_id_warehouse
+                    const warehouseQuery = 'INSERT INTO tbl_warehouse (tbl_id_warehouse, id_warehouse, unit_quantity_all, unit_quantity_max, tbl_buying_id, setting_unit_id, setting_type_id, name_product) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+                    const warehouseValues = [newTblIdWarehouse, warehouseId, unit_quantity, 'null', id_buying_list, setting_unit_id, setting_type_id, name_product]; // Adjust as necessary
+                    
+                    connection.query(warehouseQuery, warehouseValues, (warehouseError, warehouseResults) => {
+                        if (warehouseError) {
+                            return callback(warehouseError);
+                        }
+                        return callback(null, { buyingResults: results, warehouseResults: warehouseResults });
+                    });
                 });
             });
         }
@@ -276,6 +296,16 @@ module.exports = {
             }
             // Return the results through the callback
             callback(null, results);
+        });
+    },
+
+    updateWarehouseQuantity: function (id_warehouse, unit_quantity_all, callback) {
+        const updateQuery = 'UPDATE tbl_warehouse SET unit_quantity_all = ? WHERE id_warehouse = ?';
+        connection.query(updateQuery, [unit_quantity_all, id_warehouse], (updateError, updateResults) => {
+            if (updateError) {
+                return callback(updateError);
+            }
+            callback(null, updateResults);
         });
     },
 

@@ -1,111 +1,467 @@
-updateOrder: (req, res) => {
-		const zoneName = req.params.zone;
-		const tableId = req.params.table;
-		const updatedData = req.body;
-		let fetchError = false;
-		let saveError = false;
-		let menuDataByNumList = {};
-		let fetchCount = 0;
-	
-		// Arrays to store the separated data
-		let numListArray = [];
-		let tblMenuIdArray = [];
-		let numUnitArray = [];
-	
-		// Iterate over num_list and fetch data for each
-		for (let numList of updatedData.num_list) {
-			TableModel.getData(numList, (error, results) => {
-				if (error) {
-					console.error('Error fetching data from database:', error);
-					fetchError = true;
-					return;
-				}
-	
-				// If results is an array, push it into the object
-				if (Array.isArray(results)) {
-					menuDataByNumList[numList] = results;
-	
-					// Separate the data into different arrays
-					results.forEach(result => {
-						numListArray.push(numList);
-						tblMenuIdArray.push(result.tbl_menu_id);
-						numUnitArray.push(result.num_unit);
-					});
-				} else {
-					console.warn('Unexpected data format in results:', results);
-				}
-	
-				fetchCount++;
-				if (fetchCount === updatedData.num_list.length) {
-					proceedWithUpdate();
-				}
-			});
-		}
-	
-		function proceedWithUpdate() {
-			if (fetchError) {
-				return res.status(500).send('Error fetching data');
-			}
-	
-			// Proceed with updating the order
-			TableModel.updateOrder(updatedData, (error, results) => {
-				if (error) {
-					console.error('Error updating order:', error);
-					return res.status(500).send('Error updating order');
-				}
-	
-				if (updatedData.status_bill === 'Y') {
-					// Iterate over each tbl_menu_id and fetch recipes
-					tblMenuIdArray.forEach((tbl_menu_id, index) => {
-						TableModel.getFoodRecipes(tbl_menu_id, (error, recipeResults) => {
-							console.log('Fetching recipes for tbl_menu_id:', tbl_menu_id);
-							if (error) {
-								console.error('Error fetching bill from database:', error);
-								saveError = true;
-								return;
-							}
-	
-							// Filter recipeResults to only include those that match tbl_menu_id
-							const filteredRecipeResults = recipeResults.filter(recipeData => {
-								return recipeData.tbl_menu_id === tbl_menu_id;
-							});
-	
-							// Fetch the current max id_food_comparison and increment it by 1
-							TableModel.getMaxFoodComparisonId((error, maxId) => {
-								if (error) {
-									console.error('Error fetching max id_food_comparison:', error);
-									saveError = true;
-									return;
-								}
-	
-								// Iterate over the recipe data and create multiple entries
-								const foodComparisonDataArray = filteredRecipeResults.map((recipeData, idx) => ({
-									id_food_comparison: maxId + 1 + idx + index * filteredRecipeResults.length,
-									num_list: numListArray[index],
-									tbl_menu_id_menu: tblMenuIdArray[index], // id from getIdmenu
-									num_unit: numUnitArray[index],
-									id_food_recipes: recipeData.id_food_recipes,
-									tbl_menu_id_recipes: recipeData.tbl_menu_id, // Assign tbl_menu_id from recipeData
-									name_ingredient_all: recipeData.name_ingredient,
-									unit_quantity_all: recipeData.unit_quantity * numUnitArray[index], // Multiply unit_quantity by num_unit
-									unit_id_all: recipeData.unit_id,
-									zone_name: zoneName,
-									id_table: tableId,
-								}));
-	
-								TableModel.saveFoodComparison(foodComparisonDataArray, (error, result) => {
-									if (error) {
-										console.error('Error saving food comparison:', error);
-										saveError = true;
-									}
-								});
-							});
-						});
-					});
-				}
-	
-				// Redirect after the update process is completed
-				return res.redirect(`/zone/${zoneName}/table/${tableId}/order_food`);
-			});
-		}
-	},
+createBuying: function (id_buying_list, name_product, date_of_receipt, setting_type_id, setting_unit_id, price, unit_quantity, day, hour, minute, second, callback) {
+        if (typeof callback !== 'function') {
+            throw new TypeError('Callback must be a function');
+        }
+    
+        // Step 1: Check for existing product name
+        const checkProductQuery = `
+            SELECT w.id_warehouse 
+            FROM tbl_warehouse w
+            JOIN tbl_buying b ON w.tbl_buying_id = b.id_buying_list
+            WHERE b.name_product = ?
+            LIMIT 1`;
+        
+        connection.query(checkProductQuery, [name_product], (checkError, checkResults) => {
+            if (checkError) {
+                return callback(checkError);
+            }
+            
+            let warehouseId;
+            if (checkResults.length > 0) {
+                // Product exists, use its id_warehouse
+                warehouseId = checkResults[0].id_warehouse;
+                insertIntoWarehouse(warehouseId);
+            } else {
+                // Product does not exist, generate a new id_warehouse
+                const newIdQuery = 'SELECT id_warehouse FROM tbl_warehouse ORDER BY id_warehouse DESC LIMIT 1';
+                connection.query(newIdQuery, [], (newIdError, newIdResults) => {
+                    if (newIdError) {
+                        return callback(newIdError);
+                    }
+                    if (newIdResults.length > 0) {
+                        // Generate next id_warehouse based on the last one
+                        const lastId = newIdResults[0].id_warehouse;
+                        const idNumber = parseInt(lastId.substring(1)) + 1; // Assuming id format is "T001"
+                        warehouseId = `T${idNumber.toString().padStart(3, '0')}`;
+                    } else {
+                        // No entries, start with "T001"
+                        warehouseId = "T001";
+                    }
+                    insertIntoWarehouse(warehouseId);
+                });
+            }
+        });
+    
+        function insertIntoWarehouse(warehouseId) {
+            // Insert into tbl_buying
+            const query = 'INSERT INTO tbl_buying (id_buying_list, name_product, date_of_receipt, setting_type_id, setting_unit_id, price, unit_quantity, day, hour, minute, second) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+            const values = [id_buying_list, name_product, date_of_receipt, setting_type_id, setting_unit_id, price, unit_quantity, day, hour, minute, second];
+            
+            connection.query(query, values, (error, results) => {
+                if (error) {
+                    return callback(error);
+                }
+    
+                // Check if the warehouse entry already exists
+                const checkWarehouseQuery = 'SELECT unit_quantity_all FROM tbl_warehouse WHERE id_warehouse = ?';
+                connection.query(checkWarehouseQuery, [warehouseId], (checkWarehouseError, checkWarehouseResults) => {
+                    if (checkWarehouseError) {
+                        return callback(checkWarehouseError);
+                    }
+    
+                    if (checkWarehouseResults.length > 0) {
+                        // Warehouse entry exists, update the unit_quantity_all
+                        const existingQuantity = parseFloat(checkWarehouseResults[0].unit_quantity_all) || 0;
+                        const newQuantity = existingQuantity + parseFloat(unit_quantity);
+                        const updateWarehouseQuery = 'UPDATE tbl_warehouse SET unit_quantity_all = ? WHERE id_warehouse = ?';
+                        connection.query(updateWarehouseQuery, [newQuantity, warehouseId], (updateWarehouseError, updateWarehouseResults) => {
+                            if (updateWarehouseError) {
+                                return callback(updateWarehouseError);
+                            }
+                            return callback(null, { buyingResults: results, warehouseResults: updateWarehouseResults });
+                        });
+                    } else {
+                        // Warehouse entry does not exist, insert a new entry
+                        const warehouseQuery = 'INSERT INTO tbl_warehouse (id_warehouse, tbl_buying_id, setting_type_id, unit_quantity_all, unit_quantity_max, setting_unit_id) VALUES (?, ?, ?, ?, ?, ?)';
+                        const warehouseValues = [warehouseId, id_buying_list, setting_type_id, unit_quantity, 'null', setting_unit_id]; // Adjust as necessary
+                        
+                        console.log(warehouseValues);
+
+                        connection.query(warehouseQuery, warehouseValues, (warehouseError, warehouseResults) => {
+                            if (warehouseError) {
+                                return callback(warehouseError);
+                            }
+                            return callback(null, { buyingResults: results, warehouseResults: warehouseResults });
+                        });
+                    }
+                });
+            });
+        }
+    },
+
+    //////////////////////////////////////////////////////////////
+
+        createBuying: function (id_buying_list, name_product, date_of_receipt, setting_type_id, setting_unit_id, price, unit_quantity, day, hour, minute, second, callback) {
+    if (typeof callback !== 'function') {
+        throw new TypeError('Callback must be a function');
+    }
+
+    // Step 1: Check for existing product name
+    const checkProductQuery = `
+        SELECT w.id_warehouse, w.unit_quantity_all 
+        FROM tbl_warehouse w
+        JOIN tbl_buying b ON w.tbl_buying_id = b.id_buying_list
+        WHERE b.name_product = ?
+        LIMIT 1`;
+    
+    connection.query(checkProductQuery, [name_product], (checkError, checkResults) => {
+        if (checkError) {
+            return callback(checkError);
+        }
+        
+        let warehouseId;
+        let existingUnitQuantityAll = 0;
+        if (checkResults.length > 0) {
+            // Product exists, use its id_warehouse and get existing unit_quantity_all
+            warehouseId = checkResults[0].id_warehouse;
+            existingUnitQuantityAll = parseFloat(checkResults[0].unit_quantity_all) || 0;
+            insertIntoWarehouse(warehouseId, existingUnitQuantityAll);
+        } else {
+            // Product does not exist, generate a new id_warehouse and tbl_id_warehouse
+            const newIdQuery = 'SELECT id_warehouse, tbl_id_warehouse FROM tbl_warehouse ORDER BY tbl_id_warehouse DESC LIMIT 1';
+            connection.query(newIdQuery, [], (newIdError, newIdResults) => {
+                if (newIdError) {
+                    return callback(newIdError);
+                }
+                let tblIdWarehouse;
+                if (newIdResults.length > 0) {
+                    // Generate next id_warehouse and tbl_id_warehouse based on the last one
+                    const lastId = newIdResults[0].id_warehouse;
+                    const idNumber = parseInt(lastId.substring(1)) + 1; // Assuming id format is "T001"
+                    warehouseId = `T${idNumber.toString().padStart(3, '0')}`;
+                    tblIdWarehouse = newIdResults[0].tbl_id_warehouse + 1;
+                } else {
+                    // No entries, start with "T001" and tbl_id_warehouse 1
+                    warehouseId = "T001";
+                    tblIdWarehouse = 1;
+                }
+                insertIntoWarehouse(warehouseId, 0, tblIdWarehouse);
+            });
+        }
+    });
+
+    function insertIntoWarehouse(warehouseId, existingUnitQuantityAll, tblIdWarehouse = null) {
+        // Insert into tbl_buying
+        const query = 'INSERT INTO tbl_buying (id_buying_list, name_product, date_of_receipt, setting_type_id, setting_unit_id, price, unit_quantity, day, hour, minute, second) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        const values = [id_buying_list, name_product, date_of_receipt, setting_type_id, setting_unit_id, price, unit_quantity, day, hour, minute, second];
+        
+        connection.query(query, values, (error, buyingResults) => {
+            if (error) {
+                return callback(error);
+            }
+
+            if (tblIdWarehouse === null) {
+                // Check the maximum value of tbl_id_warehouse and increment it
+                const maxIdQuery = 'SELECT MAX(tbl_id_warehouse) AS maxId FROM tbl_warehouse';
+                connection.query(maxIdQuery, [], (maxIdError, maxIdResults) => {
+                    if (maxIdError) {
+                        return callback(maxIdError);
+                    }
+                    tblIdWarehouse = 1;
+                    if (maxIdResults.length > 0 && maxIdResults[0].maxId !== null) {
+                        tblIdWarehouse = maxIdResults[0].maxId + 1;
+                    }
+
+                    insertWarehouseRecord(warehouseId, existingUnitQuantityAll, tblIdWarehouse, buyingResults);
+                });
+            } else {
+                insertWarehouseRecord(warehouseId, existingUnitQuantityAll, tblIdWarehouse, buyingResults);
+            }
+        });
+    }
+
+    function insertWarehouseRecord(warehouseId, existingUnitQuantityAll, tblIdWarehouse, buyingResults) {
+        // Calculate new unit_quantity_all
+        const newUnitQuantityAll = existingUnitQuantityAll + parseFloat(unit_quantity);
+
+        // Insert into tbl_warehouse with the determined id_warehouse and new tbl_id_warehouse
+        const warehouseQuery = 'INSERT INTO tbl_warehouse (tbl_id_warehouse, id_warehouse, unit_quantity_all, unit_quantity_max, tbl_buying_id, setting_unit_id, setting_type_id) VALUES (?, ?, ?, ?, ?, ?, ?)';
+        const warehouseValues = [tblIdWarehouse, warehouseId, newUnitQuantityAll, 'null', id_buying_list, setting_unit_id, setting_type_id]; // Adjust as necessary
+        
+        connection.query(warehouseQuery, warehouseValues, (warehouseError, warehouseResults) => {
+            if (warehouseError) {
+                return callback(warehouseError);
+            }
+
+            // Fetch the updated unit_quantity_all for the same id_warehouse
+            const sumQuery = 'SELECT SUM(unit_quantity_all) AS totalQuantity FROM tbl_warehouse WHERE id_warehouse = ?';
+            connection.query(sumQuery, [warehouseId], (sumError, sumResults) => {
+                if (sumError) {
+                    return callback(sumError);
+                }
+                const totalQuantity = sumResults[0].totalQuantity;
+
+                // Update unit_quantity_all for all records with the same id_warehouse
+                const updateQuery = 'UPDATE tbl_warehouse SET unit_quantity_all = ? WHERE id_warehouse = ?';
+                connection.query(updateQuery, [totalQuantity, warehouseId], (updateError, updateResults) => {
+                    if (updateError) {
+                        return callback(updateError);
+                    }
+
+                    // Return the results along with the aggregated unit_quantity_all
+                    return callback(null, { buyingResults: buyingResults, warehouseResults: warehouseResults, totalQuantity: totalQuantity });
+                });
+            });
+        });
+    }
+},
+
+////////////////////////////////////////////////////////////////////////////////////
+
+<div class="split-container">
+                            <div class="left-section">
+                                <h2>ปริมาณของวัตถุดิบ</h2>
+                                <hr class="underline">
+                                <div class="custom-flex-container">
+                                    <div class="custom-fields-container" id="fieldsContainer">
+                                        <% if (ingredients.length===0) { %>
+                                            <div class="custom-form-row">
+                                                <div class="custom-form-container">
+                                                    <label for="name_ingredient">ชื่อวัตถุดิบ</label>
+                                                    <select id="name_ingredient" name="name_ingredient"
+                                                        class="custom-select" aria-label="ชื่อวัตถุดิบ">
+                                                        <option value="" disabled selected>กรุณาเลือกวัตถุดิบ</option>
+                                                        <% menuFormbuying.forEach(menuItem=> { %>
+                                                            <option value="<%= menuItem.name_product %>"
+                                                                data-quantity="<%= menuItem.unit_quantity_all %>"
+                                                                data-unit="<%= menuItem.setting_unit_id %>">
+                                                                <%= menuItem.name_product %>
+                                                            </option>
+                                                            <% }); %>
+                                                    </select>
+                                                </div>
+                                                <div class="custom-form-container">
+                                                    <label for="quantity">ปริมาณ</label>
+                                                    <input type="number" id="quantity" name="quantity"
+                                                        class="custom-input" aria-label="ปริมาณ">
+                                                </div>
+                                                <div class="custom-form-container">
+                                                    <label for="settingUnit">หน่วยการใช้</label>
+                                                    <input type="text" id="setting_unit_id" name="setting_unit_id"
+                                                        class="custom-input" aria-label="หน่วยการใช้">
+                                                </div>
+                                                <div class="custom-form-container">
+                                                    <button type="button" class="ingredientAction"
+                                                        aria-label="เพิ่มวัตถุดิบ">
+                                                        <i class='bx bx-plus-medical'></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <% } else { %>
+                                                <% ingredients.forEach(item=> { %>
+                                                    <div class="custom-form-row">
+                                                        <div class="custom-form-container">
+                                                            <label for="name_ingredient">ชื่อวัตถุดิบ</label>
+                                                            <select id="name_ingredient" name="name_ingredient"
+                                                                class="custom-select" aria-label="ชื่อวัตถุดิบ">
+                                                                <option value="" disabled <%=!item ||
+                                                                    !item.name_ingredient ? 'selected' : '' %>
+                                                                    >กรุณาเลือกวัตถุดิบ</option>
+                                                                <% menuFormbuying.forEach(menuItem=> { %>
+                                                                    <option value="<%= menuItem.name_product %>"
+                                                                        data-quantity="<%= menuItem.unit_quantity_all %>"
+                                                                        data-unit="<%= menuItem.setting_unit_id %>"
+                                                                        <%=item.name_ingredient===menuItem.name_product
+                                                                        ? 'selected' : '' %>>
+                                                                        <%= menuItem.name_product %>
+                                                                    </option>
+                                                                    <% }); %>
+                                                            </select>
+                                                        </div>
+                                                        <div class="custom-form-container">
+                                                            <label for="quantity">ปริมาณ</label>
+                                                            <input type="number" id="quantity" name="quantity"
+                                                                class="custom-input" value="<%= item.unit_quantity %>"
+                                                                aria-label="ปริมาณ">
+                                                        </div>
+                                                        <div class="custom-form-container">
+                                                            <label for="settingUnit">หน่วยการใช้</label>
+                                                            <input type="text" id="setting_unit_id"
+                                                                name="setting_unit_id" class="custom-input"
+                                                                value="<%= item.unit_id %>" aria-label="หน่วยการใช้">
+                                                        </div>
+                                                        <div class="custom-form-container">
+                                                            <button type="button" class="ingredientAction"
+                                                                aria-label="ลบวัตถุดิบ">
+                                                                <i class='bx bx-minus'></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <% }); %>
+                                                        <div class="custom-form-row">
+                                                            <div class="custom-form-container">
+                                                                <label for="name_ingredient">ชื่อวัตถุดิบ</label>
+                                                                <select id="name_ingredient" name="name_ingredient"
+                                                                    class="custom-select" aria-label="ชื่อวัตถุดิบ">
+                                                                    <option value="" disabled selected>
+                                                                        กรุณาเลือกวัตถุดิบ</option>
+                                                                    <% menuFormbuying.forEach(menuItem=> { %>
+                                                                        <option value="<%= menuItem.name_product %>"
+                                                                            data-quantity="<%= menuItem.unit_quantity_all %>"
+                                                                            data-unit="<%= menuItem.setting_unit_id %>">
+                                                                            <%= menuItem.name_product %>
+                                                                        </option>
+                                                                        <% }); %>
+                                                                </select>
+                                                            </div>
+                                                            <div class="custom-form-container">
+                                                                <label for="quantity">ปริมาณ</label>
+                                                                <input type="number" id="quantity" name="quantity"
+                                                                    class="custom-input" aria-label="ปริมาณ">
+                                                            </div>
+                                                            <div class="custom-form-container">
+                                                                <label for="settingUnit">หน่วยการใช้</label>
+                                                                <input type="text" id="setting_unit_id"
+                                                                    name="setting_unit_id" class="custom-input"
+                                                                    aria-label="หน่วยการใช้">
+                                                            </div>
+                                                            <div class="custom-form-container">
+                                                                <button type="button" class="ingredientAction"
+                                                                    aria-label="เพิ่มวัตถุดิบ">
+                                                                    <i class='bx bx-plus-medical'></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+
+                            และ 
+
+                            <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const fieldsContainer = document.getElementById('fieldsContainer');
+
+            function updateSelectOptions() {
+                const selectedIngredients = Array.from(fieldsContainer.querySelectorAll('select[name="name_ingredient"]'))
+                    .map(select => select.value)
+                    .filter(value => value);
+
+                const allOptions = Array.from(document.querySelectorAll('select[name="name_ingredient"] option'));
+
+                allOptions.forEach(option => {
+                    option.style.display = selectedIngredients.includes(option.value) ? 'none' : '';
+                });
+
+                const availableOptions = allOptions.filter(option => option.style.display !== 'none' && option.value !== '');
+                const addButton = fieldsContainer.querySelector('.ingredientAction i.bx-plus-medical');
+
+                if (availableOptions.length === 0) {
+                    addButton.parentElement.innerHTML = "<i class='bx bx-error' style='font-size: 24px; color: yellow;'></i>";
+                    addButton.parentElement.style.backgroundColor = 'yellow'; // เพิ่มการเปลี่ยนสีพื้นหลังเป็นสีเหลือง
+                    addButton.parentElement.disabled = true;
+                } else {
+                    addButton.parentElement.innerHTML = "<i class='bx bx-plus-medical'></i>";
+                    addButton.parentElement.style.backgroundColor = ''; // รีเซ็ตสีพื้นหลัง
+                    addButton.parentElement.style.color = 'white'; // รีเซ็ตสีไอคอน
+                    addButton.parentElement.disabled = false;
+                }
+            }
+
+            fieldsContainer.addEventListener('change', function (event) {
+                if (event.target.name === 'name_ingredient') {
+                    const selectedOption = event.target.options[event.target.selectedIndex];
+                    const quantity = selectedOption.getAttribute('data-quantity');
+                    const unit = selectedOption.getAttribute('data-unit');
+
+                    const currentRow = event.target.closest('.custom-form-row');
+                    currentRow.querySelector('input[name="quantity"]').value = quantity;
+                    currentRow.querySelector('input[name="setting_unit_id"]').value = unit;
+
+                    updateSelectOptions();
+                }
+            });
+
+            document.addEventListener('click', function (event) {
+                const target = event.target.closest('.ingredientAction');
+                if (target) {
+                    if (target.querySelector('i').classList.contains('bx-plus-medical')) {
+                        addIngredientHandler(target);
+                    } else if (target.querySelector('i').classList.contains('bx-minus')) {
+                        removeIngredientHandler(target);
+                    }
+                }
+            });
+
+            function addIngredientHandler(button) {
+                const currentRow = button.closest('.custom-form-row');
+                const nameIngredientSelect = currentRow.querySelector('select[name="name_ingredient"]');
+                const nameIngredient = nameIngredientSelect.value;
+                const quantity = currentRow.querySelector('input[name="quantity"]').value;
+                const settingUnit = currentRow.querySelector('input[name="setting_unit_id"]').value;
+
+                if (!nameIngredient) {
+                    alert('กรุณาเลือกชื่อวัตถุดิบ');
+                    nameIngredientSelect.focus();
+                    return;
+                }
+
+                if (!quantity) {
+                    alert('กรุณากรอกปริมาณ');
+                    return;
+                }
+
+                if (!settingUnit) {
+                    alert('กรุณาเลือกหน่วยการใช้');
+                    return;
+                }
+
+                button.innerHTML = "<i class='bx bx-minus'></i>";
+                button.setAttribute('aria-label', 'ลบวัตถุดิบ');
+
+                const newRow = document.createElement('div');
+                newRow.className = 'custom-form-row';
+
+                newRow.innerHTML = `
+                <div class="custom-form-container">
+                    <label for="name_ingredient">ชื่อวัตถุดิบ</label>
+                    <select name="name_ingredient" class="custom-select" required aria-label="ชื่อวัตถุดิบ">
+                        <option value="" disabled selected>กรุณาเลือกวัตถุดิบ</option>
+                        <% menuFormbuying.forEach(item => { %>
+                            <option value="<%= item.name_product %>" data-quantity="<%= item.unit_quantity %>" data-unit="<%= item.setting_unit_id %>">
+                                <%= item.name_product %>
+                            </option>
+                        <% }); %>
+                    </select>
+                </div>
+                <div class="custom-form-container">
+                    <label for="quantity">ปริมาณ</label>
+                    <input type="number" name="quantity" class="custom-input" required aria-label="ปริมาณ">
+                </div>
+                <div class="custom-form-container">
+                    <label for="settingUnit">หน่วยการใช้</label>
+                    <input type="text" name="setting_unit_id" class="custom-input" required aria-label="หน่วยการใช้">
+                </div>
+                <div class="custom-form-container">
+                    <button type="button" class="ingredientAction" aria-label="เพิ่มวัตถุดิบ">
+                        <i class='bx bx-plus-medical'></i>
+                    </button>
+                </div>
+            `;
+
+                fieldsContainer.appendChild(newRow);
+
+                newRow.querySelector('select[name="name_ingredient"]').addEventListener('change', function () {
+                    const selectedOption = this.options[this.selectedIndex];
+                    const quantity = selectedOption.getAttribute('data-quantity');
+                    const unit = selectedOption.getAttribute('data-unit');
+
+                    newRow.querySelector('input[name="quantity"]').value = quantity;
+                    newRow.querySelector('input[name="setting_unit_id"]').value = unit;
+
+                    updateSelectOptions();
+                });
+
+                updateSelectOptions();
+            }
+
+            function removeIngredientHandler(button) {
+                const rowToRemove = button.closest('.custom-form-row');
+                rowToRemove.remove();
+                updateSelectOptions();
+            }
+
+            updateSelectOptions();
+        });
+    </script>

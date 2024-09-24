@@ -195,7 +195,7 @@
                                 <div class="form-row">
                                     <div class="form-container">
                                         <label for="id_menu">รหัสสินค้า</label>
-                                        <input type="text" id="id_menu" name="id_menu" required aria-label="รหัสสินค้า">
+                                        <input type="text" id="id_menu" name="id_menu" value="<%= newProductCode %>" required aria-label="รหัสสินค้า" readonly>
                                     </div>
                                     <div class="form-container">
                                         <label for="settingType">ประเภทสินค้า</label>
@@ -239,8 +239,8 @@
                                         <select id="status" name="status" class="custom-select" required
                                             aria-label="สถานะ">
                                             <option value="" disabled selected>เลือกสถานะ</option>
-                                            <option value="1">เปิดใช้งาน</option>
-                                            <option value="0">ปิดใช้งาน</option>
+                                            <option value="ON">เปิดใช้งาน</option>
+                                            <option value="OFF">ปิดใช้งาน</option>
                                         </select>
                                     </div>
                                 </div>
@@ -274,27 +274,22 @@
                                         <div class="custom-form-row">
                                             <div class="custom-form-container">
                                                 <label for="name_ingredient">ชื่อวัตถุดิบ</label>
-                                                <select id="name_ingredient" name="name_ingredient"
-                                                    class="custom-select" required aria-label="ชื่อวัตถุดิบ">
+                                                <select id="name_ingredient" name="name_ingredient" class="custom-select" required aria-label="ชื่อวัตถุดิบ">
                                                     <option value="" disabled selected>กรุณาเลือกวัตถุดิบ</option>
-                                                    <% menuFormbuying.forEach(item=> { %>
-                                                        <option value="<%= item.name_product %>"
-                                                            data-quantity="<%= item.unit_quantity %>"
-                                                            data-unit="<%= item.setting_unit_id %>">
+                                                    <% menuFormbuying.forEach(item => { %>
+                                                        <option value="<%= item.name_product %>" data-quantity="<%= item.unit_quantity_all %>" data-unit="<%= item.setting_unit_id %>">
                                                             <%= item.name_product %>
                                                         </option>
-                                                        <% }); %>
+                                                    <% }); %>
                                                 </select>
                                             </div>
                                             <div class="custom-form-container">
                                                 <label for="quantity">ปริมาณ</label>
-                                                <input type="number" id="quantity" name="quantity" required
-                                                    aria-label="ปริมาณ">
+                                                <input type="number" id="quantity" name="quantity" required aria-label="ปริมาณ">
                                             </div>
                                             <div class="custom-form-container">
                                                 <label for="settingUnit">หน่วยการใช้</label>
-                                                <input type="text" id="setting_unit_id" name="setting_unit_id" required
-                                                    aria-label="หน่วยการใช้">
+                                                <input type="text" id="setting_unit_id" name="setting_unit_id" required aria-label="หน่วยการใช้">
                                             </div>
                                             <div class="custom-form-container">
                                                 <button type="button" class="addIngredient" aria-label="เพิ่มวัตถุดิบ">
@@ -319,19 +314,48 @@
     <script src="../js/menu_add_image.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const nameIngredientSelect = document.getElementById('name_ingredient');
-            const quantityInput = document.getElementById('quantity');
-            const settingUnitInput = document.getElementById('setting_unit_id');
-
-            nameIngredientSelect.addEventListener('change', function () {
-                const selectedOption = this.options[this.selectedIndex];
-                const quantity = selectedOption.getAttribute('data-quantity');
-                const unit = selectedOption.getAttribute('data-unit');
-
-                quantityInput.value = quantity;
-                settingUnitInput.value = unit;
+            const fieldsContainer = document.getElementById('fieldsContainer');
+    
+            function updateSelectOptions() {
+                const selectedIngredients = Array.from(fieldsContainer.querySelectorAll('select[name="name_ingredient"]'))
+                    .map(select => select.value)
+                    .filter(value => value);
+    
+                const allOptions = Array.from(document.querySelectorAll('select[name="name_ingredient"] option'));
+    
+                allOptions.forEach(option => {
+                    option.style.display = selectedIngredients.includes(option.value) ? 'none' : '';
+                });
+    
+                const availableOptions = allOptions.filter(option => option.style.display !== 'none' && option.value !== '');
+                const addButton = fieldsContainer.querySelector('.addIngredient i.bx-plus-medical');
+    
+                if (availableOptions.length === 0) {
+                    addButton.parentElement.innerHTML = "<i class='bx bx-error' style='font-size: 24px; color: yellow;'></i>";
+                    addButton.parentElement.style.backgroundColor = 'yellow'; // Change background color to yellow
+                    addButton.parentElement.disabled = true;
+                } else {
+                    addButton.parentElement.innerHTML = "<i class='bx bx-plus-medical'></i>";
+                    addButton.parentElement.style.backgroundColor = ''; // Reset background color
+                    addButton.parentElement.style.color = 'white'; // Reset icon color
+                    addButton.parentElement.disabled = false;
+                }
+            }
+    
+            fieldsContainer.addEventListener('change', function (event) {
+                if (event.target.name === 'name_ingredient') {
+                    const selectedOption = event.target.options[event.target.selectedIndex];
+                    const quantity = selectedOption.getAttribute('data-quantity');
+                    const unit = selectedOption.getAttribute('data-unit');
+    
+                    const currentRow = event.target.closest('.custom-form-row');
+                    currentRow.querySelector('input[name="quantity"]').value = quantity;
+                    currentRow.querySelector('input[name="setting_unit_id"]').value = unit;
+    
+                    updateSelectOptions();
+                }
             });
-
+    
             document.addEventListener('click', function (event) {
                 const target = event.target.closest('.addIngredient, .removeIngredient');
                 if (target) {
@@ -342,84 +366,91 @@
                     }
                 }
             });
-
+    
             function addIngredientHandler(button) {
                 const currentRow = button.closest('.custom-form-row');
                 const nameIngredientSelect = currentRow.querySelector('select[name="name_ingredient"]');
                 const nameIngredient = nameIngredientSelect.value;
                 const quantity = currentRow.querySelector('input[name="quantity"]').value;
                 const settingUnit = currentRow.querySelector('input[name="setting_unit_id"]').value;
-
+    
                 if (!nameIngredient) {
                     alert('กรุณาเลือกชื่อวัตถุดิบ');
                     nameIngredientSelect.focus();
                     return;
                 }
-
+    
                 if (!quantity) {
                     alert('กรุณากรอกปริมาณ');
                     return;
                 }
-
+    
                 if (!settingUnit) {
                     alert('กรุณาเลือกหน่วยการใช้');
                     return;
                 }
-
+    
                 // Change the icon of the current button to a delete icon
                 button.innerHTML = "<i class='bx bx-minus'></i>";
                 button.classList.replace('addIngredient', 'removeIngredient');
-
+    
                 // Create a new form row
                 const newRow = document.createElement('div');
                 newRow.className = 'custom-form-row';
-
+    
                 // Create new input fields
                 newRow.innerHTML = `
-                <div class="custom-form-container">
-                    <label for="name_ingredient">ชื่อวัตถุดิบ</label>
-                    <select name="name_ingredient" required aria-label="ชื่อวัตถุดิบ">
-                        <option value="" disabled selected>กรุณาเลือกวัตถุดิบ</option>
-                        <% menuFormbuying.forEach(item => { %>
-                            <option value="<%= item.name_product %>" data-quantity="<%= item.unit_quantity %>" data-unit="<%= item.setting_unit_id %>">
-                                <%= item.name_product %>
-                            </option>
-                        <% }); %>
-                    </select>
-                </div>
-                <div class="custom-form-container">
-                    <label for="quantity">ปริมาณ</label>
-                    <input type="number" name="quantity" required aria-label="ปริมาณ">
-                </div>
-                <div class="custom-form-container">
-                    <label for="settingUnit">หน่วยการใช้</label>
-                    <input type="text" name="setting_unit_id" required aria-label="หน่วยการใช้">
-                </div>
-                <div class="custom-form-container">
-                    <button type="button" class="addIngredient" aria-label="เพิ่มวัตถุดิบ">
-                        <i class='bx bx-plus-medical'></i>
-                    </button>
-                </div>
-            `;
-
+                    <div class="custom-form-container">
+                        <label for="name_ingredient">ชื่อวัตถุดิบ</label>
+                        <select name="name_ingredient" class="custom-select" required aria-label="ชื่อวัตถุดิบ">
+                            <option value="" disabled selected>กรุณาเลือกวัตถุดิบ</option>
+                            <% menuFormbuying.forEach(item => { %>
+                                <option value="<%= item.name_product %>" data-quantity="<%= item.unit_quantity_all %>" data-unit="<%= item.setting_unit_id %>">
+                                    <%= item.name_product %>
+                                </option>
+                            <% }); %>
+                        </select>
+                    </div>
+                    <div class="custom-form-container">
+                        <label for="quantity">ปริมาณ</label>
+                        <input type="number" name="quantity" class="custom-input" required aria-label="ปริมาณ">
+                    </div>
+                    <div class="custom-form-container">
+                        <label for="settingUnit">หน่วยการใช้</label>
+                        <input type="text" name="setting_unit_id" class="custom-input" required aria-label="หน่วยการใช้">
+                    </div>
+                    <div class="custom-form-container">
+                        <button type="button" class="addIngredient" aria-label="เพิ่มวัตถุดิบ">
+                            <i class='bx bx-plus-medical'></i>
+                        </button>
+                    </div>
+                `;
+    
                 // Append the new row to the fields container
-                document.getElementById('fieldsContainer').appendChild(newRow);
-
+                fieldsContainer.appendChild(newRow);
+    
                 // Add event listener to the new name_ingredient select element
                 newRow.querySelector('select[name="name_ingredient"]').addEventListener('change', function () {
                     const selectedOption = this.options[this.selectedIndex];
                     const quantity = selectedOption.getAttribute('data-quantity');
                     const unit = selectedOption.getAttribute('data-unit');
-
+    
                     newRow.querySelector('input[name="quantity"]').value = quantity;
                     newRow.querySelector('input[name="setting_unit_id"]').value = unit;
+    
+                    updateSelectOptions();
                 });
+    
+                updateSelectOptions();
             }
-
+    
             function removeIngredientHandler(button) {
                 const rowToRemove = button.closest('.custom-form-row');
                 rowToRemove.remove();
+                updateSelectOptions();
             }
+    
+            updateSelectOptions();
         });
     </script>
 

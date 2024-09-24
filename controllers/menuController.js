@@ -14,61 +14,175 @@ var upload = multer({ storage: storage });
 
 module.exports = {
 
-	menuView: function (req, res) {
-		MenuModel.getMenu((error, menu) => {
-			if (error) {
-				console.error('Error fetching manu: ', error);
-				res.status(500).send('Internal Server Error');
-			} else {
-				res.render('menu', { menu: menu });
-			}
-		});
-	},
+    menuView: function (req, res) {
+        MenuModel.getMenu((error, menu) => {
+            if (error) {
+                console.error('Error fetching menu: ', error);
+                res.status(500).send('Internal Server Error');
+            } else {
+                // Fetch food recipes and warehouse data for comparison
+                MenuModel.getFoodRecipesMenu((error, foodRecipes) => {
+                    console.log('foodRecipes:', foodRecipes);
+                    if (error) {
+                        console.error('Error fetching food recipes: ', error);
+                        res.status(500).send('Internal Server Error');
+                    } else {
+                        MenuModel.getWarehouse((error, warehouse) => {
+                            console.log('warehouse:', warehouse);
+                            if (error) {
+                                console.error('Error fetching warehouse: ', error);
+                                res.status(500).send('Internal Server Error');
+                            } else {
+                                // Aggregate results by id_warehouse
+                                const aggregatedResults = warehouse.reduce((acc, current) => {
+                                    // Ensure unit_quantity_all is treated as a number for summation
+                                    current.unit_quantity_all = parseFloat(current.unit_quantity_all) || 0;
+
+                                    // If the id_warehouse already exists, sum up the unit_quantity_all and append tbl_buying_id
+                                    if (acc[current.id_warehouse]) {
+                                        acc[current.id_warehouse].unit_quantity_all += current.unit_quantity_all;
+                                        acc[current.id_warehouse].tbl_buying_ids.push(current.tbl_buying_id);
+                                    } else {
+                                        // Otherwise, add the entry to the accumulator
+                                        acc[current.id_warehouse] = {
+                                            ...current,
+                                            tbl_buying_ids: [current.tbl_buying_id] // Initialize tbl_buying_ids array
+                                        };
+                                    }
+                                    return acc;
+                                }, {});
+
+                                // Convert the aggregated results back to an array
+                                const aggregatedArray = Object.values(aggregatedResults);
+                                console.log(aggregatedArray);
+
+                                // Aggregate warehouse quantities by name_product
+                                const aggregatedWarehouse = aggregatedArray.reduce((acc, item) => {
+                                    if (!acc[item.name_product]) {
+                                        acc[item.name_product] = 0;
+                                    }
+                                    acc[item.name_product] += item.unit_quantity_all;
+                                    return acc;
+                                }, {});
+
+                                // Calculate the number of menus that can be created
+                                const menuCounts = menu.map(menuItem => {
+                                    console.log('menuItem:', menuItem);
+                                    const ingredients = foodRecipes.filter(recipe => recipe.tbl_menu_id === menuItem.id_menu);
+                                    const minMenus = ingredients.reduce((min, ingredient) => {
+                                        const totalQuantity = aggregatedWarehouse[ingredient.name_ingredient] || 0;
+                                        const possibleMenus = Math.floor(totalQuantity / ingredient.unit_quantity);
+                                        return Math.min(min, possibleMenus);
+                                    }, Infinity);
+
+                                    // If minMenus is Infinity, set it to 0
+                                    const remainMenus = minMenus === Infinity ? 0 : minMenus;
+
+                                    return {
+                                        ...menuItem,
+                                        remain: remainMenus
+                                    };
+                                });
+
+                                console.log('menuCounts:', menuCounts);
+                                res.render('menu', { menu: menuCounts });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    },
 
 	menuAdd: function (req, res) {
-		MenuModel.getMenu((error, menu) => {
-			if (error) {
-				console.error('Error fetching menu: ', error);
-				res.status(500).send('Internal Server Error');
-			} else {
-				MenuModel.viewSettingType((error, settingType) => {
-					if (error) {
-						console.error('Error fetching setting type: ', error);
-						res.status(500).send('Internal Server Error');
-					} else {
-						MenuModel.viewSettingUnit((error, settingUnit) => {
-							if (error) {
-								console.error('Error fetching setting unit: ', error);
-								res.status(500).send('Internal Server Error');
-							} else {
-								MenuModel.viewSettingCategory((error, settingCategory) => {
-									if (error) {
-										console.error('Error fetching setting category: ', error);
-										res.status(500).send('Internal Server Error');
-									} else {
-										MenuModel.getMenuFormbuying((error, menuFormbuying) => {
-											if (error) {
-												console.error('Error fetching menu form buying: ', error);
-												res.status(500).send('Internal Server Error');
-											} else {
-												res.render('add_menu', {
-													menu: menu,
-													settingType: settingType,
-													settingUnit: settingUnit,
-													settingCategory: settingCategory,
-													menuFormbuying: menuFormbuying
-												});
-											}
-										});
-									}
-								});
-							}
-						});
-					}
-				});
-			}
-		});
-	},
+        MenuModel.getMenu((error, menu) => {
+            if (error) {
+                console.error('Error fetching menu: ', error);
+                res.status(500).send('Internal Server Error');
+            } else {
+                MenuModel.viewSettingType((error, settingType) => {
+                    if (error) {
+                        console.error('Error fetching setting type: ', error);
+                        res.status(500).send('Internal Server Error');
+                    } else {
+                        MenuModel.viewSettingUnit((error, settingUnit) => {
+                            if (error) {
+                                console.error('Error fetching setting unit: ', error);
+                                res.status(500).send('Internal Server Error');
+                            } else {
+                                MenuModel.viewSettingCategory((error, settingCategory) => {
+                                    if (error) {
+                                        console.error('Error fetching setting category: ', error);
+                                        res.status(500).send('Internal Server Error');
+                                    } else {
+                                        MenuModel.getMenuFormbuying((error, menuFormbuying) => {
+                                            if (error) {
+                                                console.error('Error fetching menu form buying: ', error);
+                                                res.status(500).send('Internal Server Error');
+                                            } else {
+                                                // Aggregate results by id_warehouse
+                                                const aggregatedResults = menuFormbuying.reduce((acc, current) => {
+                                                    // Ensure unit_quantity_all is treated as a number for summation
+                                                    current.unit_quantity_all = parseFloat(current.unit_quantity_all) || 0;
+
+                                                    // If the id_warehouse already exists, sum up the unit_quantity_all
+                                                    if (acc[current.id_warehouse]) {
+                                                        acc[current.id_warehouse].unit_quantity_all += current.unit_quantity_all;
+                                                    } else {
+                                                        // Otherwise, add the entry to the accumulator
+                                                        acc[current.id_warehouse] = {
+                                                            ...current,
+                                                            unit_quantity_all: current.unit_quantity_all // Initialize unit_quantity_all
+                                                        };
+                                                    }
+                                                    return acc;
+                                                }, {});
+
+                                                // Convert the aggregated results back to an array
+                                                const aggregatedArray = Object.values(aggregatedResults);
+
+                                                // Generate the product code
+                                                const generateProductCode = () => {
+                                                    // Fetch the existing product codes from the menu
+                                                    const existingCodes = menu.map(item => item.id_menu);
+
+                                                    // Find the highest existing code and increment it
+                                                    let maxCode = 0;
+                                                    existingCodes.forEach(code => {
+                                                        const numericPart = parseInt(code.substring(1), 10);
+                                                        if (numericPart > maxCode) {
+                                                            maxCode = numericPart;
+                                                        }
+                                                    });
+
+                                                    // Generate the new code
+                                                    const newCode = 'R' + String(maxCode + 1).padStart(3, '0');
+                                                    return newCode;
+                                                };
+
+                                                const newProductCode = generateProductCode();
+
+                                                console.log('menuFormbuying:', aggregatedArray);
+
+                                                res.render('add_menu', {
+                                                    menu: menu,
+                                                    settingType: settingType,
+                                                    settingUnit: settingUnit,
+                                                    settingCategory: settingCategory,
+                                                    menuFormbuying: aggregatedArray,
+                                                    newProductCode: newProductCode // Pass the new product code to the view
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    },
 
 	menuViewId: function (req, res) {
 		const menuId = req.params.id;
@@ -112,89 +226,111 @@ module.exports = {
 	},
 
 	menuEdit: function (req, res) {
-		const id = req.params.id;
-		MenuModel.getMenuById(id, (error, menu) => {
-			if (error) {
-				console.error('Error fetching menu: ', error);
-				res.status(500).send('Internal Server Error');
-				const hasAdditionalCategories = menu.additionalCategories && menu.additionalCategories.length > 0;
-			} else {
-				MenuModel.viewSettingType((error, settingType) => {
-					if (error) {
-						console.error('Error fetching setting type: ', error);
-						res.status(500).send('Internal Server Error');
-					} else {
-						MenuModel.viewSettingUnit((error, settingUnit) => {
-							if (error) {
-								console.error('Error fetching setting unit: ', error);
-								res.status(500).send('Internal Server Error');
-							} else {
-								MenuModel.viewSettingCategory((error, settingCategory) => {
-									if (error) {
-										console.error('Error fetching setting category: ', error);
-										res.status(500).send('Internal Server Error');
-									} else {
-										MenuModel.getFoodRecipes(id, (error, ingredients) => {
-											if (error) {
-												console.error('Error fetching ingredients: ', error);
-												res.status(500).send('Internal Server Error');
-											} else {
-												MenuModel.getMenuOptions(id, (err, menuOptions) => {
-													if (err) {
-														console.error('Error fetching menu options: ', err);
-														res.status(500).send('Internal Server Error');
-													} else {
-														MenuModel.getMenuFormbuying((err, menuFormbuying) => {
-															if (err) {
-																console.error('Error fetching menu form buying: ', err);
-																res.status(500).send('Internal Server Error');
-															} else {
-																if (!menu) {
-																	console.error('Menu is null or undefined');
-																	res.status(404).send('Menu not found');
-																} else {
-																	// Ensure menu.ingredients is an array
-																	menu.ingredients = menu.ingredients || [];
-																	menu.menuOptions = menuOptions || [];
+        const id = req.params.id;
+        MenuModel.getMenuById(id, (error, menu) => {
+            if (error) {
+                console.error('Error fetching menu: ', error);
+                res.status(500).send('Internal Server Error');
+            } else {
+                MenuModel.viewSettingType((error, settingType) => {
+                    if (error) {
+                        console.error('Error fetching setting type: ', error);
+                        res.status(500).send('Internal Server Error');
+                    } else {
+                        MenuModel.viewSettingUnit((error, settingUnit) => {
+                            if (error) {
+                                console.error('Error fetching setting unit: ', error);
+                                res.status(500).send('Internal Server Error');
+                            } else {
+                                MenuModel.viewSettingCategory((error, settingCategory) => {
+                                    if (error) {
+                                        console.error('Error fetching setting category: ', error);
+                                        res.status(500).send('Internal Server Error');
+                                    } else {
+                                        MenuModel.getFoodRecipes(id, (error, ingredients) => {
+                                            if (error) {
+                                                console.error('Error fetching ingredients: ', error);
+                                                res.status(500).send('Internal Server Error');
+                                            } else {
+                                                MenuModel.getMenuOptions(id, (err, menuOptions) => {
+                                                    if (err) {
+                                                        console.error('Error fetching menu options: ', err);
+                                                        res.status(500).send('Internal Server Error');
+                                                    } else {
+                                                        MenuModel.getMenuFormbuying((err, menuFormbuying) => {
+                                                            if (err) {
+                                                                console.error('Error fetching menu form buying: ', err);
+                                                                res.status(500).send('Internal Server Error');
+                                                            } else {
+                                                                // Aggregate results by id_warehouse
+                                                                const aggregatedResults = menuFormbuying.reduce((acc, current) => {
+                                                                    // Ensure unit_quantity_all is treated as a number for summation
+                                                                    current.unit_quantity_all = parseFloat(current.unit_quantity_all) || 0;
 
-																	// Group menu options by name_options
-																	const groupedMenuOptions = menu.menuOptions.reduce((acc, option) => {
-																		if (!acc[option.name_options]) {
-																			acc[option.name_options] = [];
-																		}
-																		acc[option.name_options].push(option);
-																		return acc;
-																	}, {});
+                                                                    // If the id_warehouse already exists, sum up the unit_quantity_all
+                                                                    if (acc[current.id_warehouse]) {
+                                                                        acc[current.id_warehouse].unit_quantity_all += current.unit_quantity_all;
+                                                                    } else {
+                                                                        // Otherwise, add the entry to the accumulator
+                                                                        acc[current.id_warehouse] = {
+                                                                            ...current,
+                                                                            unit_quantity_all: current.unit_quantity_all // Initialize unit_quantity_all
+                                                                        };
+                                                                    }
+                                                                    return acc;
+                                                                }, {});
 
-																	// Fetch the existing image path from the menu object
-																	const existingImagePath = menu.imagePath || '';
+                                                                // Convert the aggregated results back to an array
+                                                                const aggregatedArray = Object.values(aggregatedResults);
 
-																	res.render('edit_menu', {
-																		menu: menu,
-																		settingType: settingType,
-																		settingUnit: settingUnit,
-																		settingCategory: settingCategory,
-																		ingredients: ingredients,
-																		groupedMenuOptions: groupedMenuOptions,
-																		menuFormbuying: menuFormbuying,
-																		existingImagePath: existingImagePath // Send the existing image path to the view
-																	});
-																}
-															}
-														});
-													}
-												});
-											}
-										});
-									}
-								});
-							}
-						});
-					}
-				});
-			}
-		});
-	},
+                                                                if (!menu) {
+                                                                    console.error('Menu is null or undefined');
+                                                                    res.status(404).send('Menu not found');
+                                                                } else {
+                                                                    // Ensure menu.ingredients is an array
+                                                                    menu.ingredients = menu.ingredients || [];
+                                                                    menu.menuOptions = menuOptions || [];
+
+                                                                    // Group menu options by name_options
+                                                                    const groupedMenuOptions = menu.menuOptions.reduce((acc, option) => {
+                                                                        if (!acc[option.name_options]) {
+                                                                            acc[option.name_options] = [];
+                                                                        }
+                                                                        acc[option.name_options].push(option);
+                                                                        return acc;
+                                                                    }, {});
+
+                                                                    // Fetch the existing image path from the menu object
+                                                                    const existingImagePath = menu.imagePath || '';
+
+                                                                    console.log('menu:', aggregatedArray);
+
+                                                                    res.render('edit_menu', {
+                                                                        menu: menu,
+                                                                        settingType: settingType,
+                                                                        settingUnit: settingUnit,
+                                                                        settingCategory: settingCategory,
+                                                                        ingredients: ingredients,
+                                                                        groupedMenuOptions: groupedMenuOptions,
+                                                                        menuFormbuying: aggregatedArray,
+                                                                        existingImagePath: existingImagePath // Send the existing image path to the view
+                                                                    });
+                                                                }
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    },
 
 	menuCreate: function (req, res) {
 		upload.single('menu_image')(req, res, (err) => {

@@ -85,7 +85,6 @@ app.get('/add_menu', require('./routes/menu'));
 app.get('/view_menu/:id', require('./routes/menu'));
 app.get('/edit_menu/:id', require('./routes/menu'));
 app.post('/update_menu/:id', require('./routes/menu'));
-
 app.post('/create_menu', require('./routes/menu'));
 app.post('/delete_menu/:id', require('./routes/menu'));
 

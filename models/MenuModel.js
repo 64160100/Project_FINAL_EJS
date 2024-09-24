@@ -11,6 +11,40 @@ module.exports = {
         });
     },
 
+    getFoodRecipesMenu: function (callback) {
+        connection.query('SELECT * FROM tbl_food_recipes', (error, results) => {
+            if (error) {
+                return callback(error);
+            }
+            // Ensure that all values are strings before escaping
+            const sanitizedResults = results.map(row => {
+                return {
+                    ...row,
+                    name_ingredient: String(row.name_ingredient),
+                    unit_quantity: parseFloat(row.unit_quantity) // Ensure unit_quantity is a number
+                };
+            });
+            callback(null, sanitizedResults);
+        });
+    },
+
+    getWarehouse: function (callback) {
+        connection.query('SELECT * FROM tbl_warehouse', (error, results) => {
+            if (error) {
+                return callback(error, null);
+            }
+            // Ensure that all values are strings before escaping
+            const sanitizedResults = results.map(row => {
+                return {
+                    ...row,
+                    name_product: String(row.name_product),
+                    unit_quantity_all: parseFloat(row.unit_quantity_all) // Ensure unit_quantity_all is a number
+                };
+            });
+            return callback(null, sanitizedResults);
+        });
+    },
+
     getMenuById: function (menuId, callback) {
         const sql = 'SELECT * FROM tbl_menu WHERE id_menu = ?';
         connection.query(sql, [menuId], (error, results) => {
@@ -48,7 +82,7 @@ module.exports = {
     },
 
     getMenuFormbuying: function (callback) {
-        connection.query('SELECT * FROM tbl_buying', (error, results) => {
+        connection.query('SELECT * FROM tbl_warehouse', (error, results) => {
             if (error) {
                 return callback(error, null);
             }

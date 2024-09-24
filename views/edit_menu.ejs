@@ -311,7 +311,7 @@
                                                         <option value="" disabled selected>กรุณาเลือกวัตถุดิบ</option>
                                                         <% menuFormbuying.forEach(menuItem=> { %>
                                                             <option value="<%= menuItem.name_product %>"
-                                                                data-quantity="<%= menuItem.unit_quantity %>"
+                                                                data-quantity="<%= menuItem.unit_quantity_all %>"
                                                                 data-unit="<%= menuItem.setting_unit_id %>">
                                                                 <%= menuItem.name_product %>
                                                             </option>
@@ -347,7 +347,7 @@
                                                                     >กรุณาเลือกวัตถุดิบ</option>
                                                                 <% menuFormbuying.forEach(menuItem=> { %>
                                                                     <option value="<%= menuItem.name_product %>"
-                                                                        data-quantity="<%= menuItem.unit_quantity %>"
+                                                                        data-quantity="<%= menuItem.unit_quantity_all %>"
                                                                         data-unit="<%= menuItem.setting_unit_id %>"
                                                                         <%=item.name_ingredient===menuItem.name_product
                                                                         ? 'selected' : '' %>>
@@ -385,7 +385,7 @@
                                                                         กรุณาเลือกวัตถุดิบ</option>
                                                                     <% menuFormbuying.forEach(menuItem=> { %>
                                                                         <option value="<%= menuItem.name_product %>"
-                                                                            data-quantity="<%= menuItem.unit_quantity %>"
+                                                                            data-quantity="<%= menuItem.unit_quantity_all %>"
                                                                             data-unit="<%= menuItem.setting_unit_id %>">
                                                                             <%= menuItem.name_product %>
                                                                         </option>
