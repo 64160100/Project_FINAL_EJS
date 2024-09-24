@@ -180,7 +180,7 @@
                     <% if (error) { %>
                         <div class="form-group">
                             <label for="id_buying_list">รหัสสินค้า</label>
-                            <input type="text" id="id_buying_list" name="id_buying_list" required>
+                            <input type="text" id="id_buying_list" name="id_buying_list" value="<%= id_buying_list %>" readonly required>
                             <% if (error.id_buying_list) { %>
                                 <p style="color: red;">
                                     <%= error.id_buying_list %> มีอยู่แล้ว

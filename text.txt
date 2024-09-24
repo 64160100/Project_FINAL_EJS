@@ -1,0 +1,111 @@
+updateOrder: (req, res) => {
+		const zoneName = req.params.zone;
+		const tableId = req.params.table;
+		const updatedData = req.body;
+		let fetchError = false;
+		let saveError = false;
+		let menuDataByNumList = {};
+		let fetchCount = 0;
+	
+		// Arrays to store the separated data
+		let numListArray = [];
+		let tblMenuIdArray = [];
+		let numUnitArray = [];
+	
+		// Iterate over num_list and fetch data for each
+		for (let numList of updatedData.num_list) {
+			TableModel.getData(numList, (error, results) => {
+				if (error) {
+					console.error('Error fetching data from database:', error);
+					fetchError = true;
+					return;
+				}
+	
+				// If results is an array, push it into the object
+				if (Array.isArray(results)) {
+					menuDataByNumList[numList] = results;
+	
+					// Separate the data into different arrays
+					results.forEach(result => {
+						numListArray.push(numList);
+						tblMenuIdArray.push(result.tbl_menu_id);
+						numUnitArray.push(result.num_unit);
+					});
+				} else {
+					console.warn('Unexpected data format in results:', results);
+				}
+	
+				fetchCount++;
+				if (fetchCount === updatedData.num_list.length) {
+					proceedWithUpdate();
+				}
+			});
+		}
+	
+		function proceedWithUpdate() {
+			if (fetchError) {
+				return res.status(500).send('Error fetching data');
+			}
+	
+			// Proceed with updating the order
+			TableModel.updateOrder(updatedData, (error, results) => {
+				if (error) {
+					console.error('Error updating order:', error);
+					return res.status(500).send('Error updating order');
+				}
+	
+				if (updatedData.status_bill === 'Y') {
+					// Iterate over each tbl_menu_id and fetch recipes
+					tblMenuIdArray.forEach((tbl_menu_id, index) => {
+						TableModel.getFoodRecipes(tbl_menu_id, (error, recipeResults) => {
+							console.log('Fetching recipes for tbl_menu_id:', tbl_menu_id);
+							if (error) {
+								console.error('Error fetching bill from database:', error);
+								saveError = true;
+								return;
+							}
+	
+							// Filter recipeResults to only include those that match tbl_menu_id
+							const filteredRecipeResults = recipeResults.filter(recipeData => {
+								return recipeData.tbl_menu_id === tbl_menu_id;
+							});
+	
+							// Fetch the current max id_food_comparison and increment it by 1
+							TableModel.getMaxFoodComparisonId((error, maxId) => {
+								if (error) {
+									console.error('Error fetching max id_food_comparison:', error);
+									saveError = true;
+									return;
+								}
+	
+								// Iterate over the recipe data and create multiple entries
+								const foodComparisonDataArray = filteredRecipeResults.map((recipeData, idx) => ({
+									id_food_comparison: maxId + 1 + idx + index * filteredRecipeResults.length,
+									num_list: numListArray[index],
+									tbl_menu_id_menu: tblMenuIdArray[index], // id from getIdmenu
+									num_unit: numUnitArray[index],
+									id_food_recipes: recipeData.id_food_recipes,
+									tbl_menu_id_recipes: recipeData.tbl_menu_id, // Assign tbl_menu_id from recipeData
+									name_ingredient_all: recipeData.name_ingredient,
+									unit_quantity_all: recipeData.unit_quantity * numUnitArray[index], // Multiply unit_quantity by num_unit
+									unit_id_all: recipeData.unit_id,
+									zone_name: zoneName,
+									id_table: tableId,
+								}));
+	
+								TableModel.saveFoodComparison(foodComparisonDataArray, (error, result) => {
+									if (error) {
+										console.error('Error saving food comparison:', error);
+										saveError = true;
+									}
+								});
+							});
+						});
+					});
+				}
+	
+				// Redirect after the update process is completed
+				return res.redirect(`/zone/${zoneName}/table/${tableId}/order_food`);
+			});
+		}
+	},

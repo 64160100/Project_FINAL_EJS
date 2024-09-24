@@ -12,7 +12,7 @@
     <!-- Styles  -->
     <link rel="shortcut icon" href="img/kxp_fav.png" type="image/x-icon">
     <link rel="stylesheet" href="/css/index.css">
-    <link rel="stylesheet" href="/css/order_food.css">
+    <link rel="stylesheet" href="/css/bill_view.css">
 </head>
 
 <body>
@@ -106,7 +106,7 @@
                 <div class="submenu">
                     <a href="/table" class="link submenu-title">โต๊ะอาหาร</a>
                     <a href="/table" class="link">จัดโต๊ะอาหาร</a>
-                    <a href="/bill" class="link">บิลอาหาร</a>
+                    <a href="/view_bill" class="link">บิลอาหาร</a>
                 </div>
             </li>
 
@@ -172,10 +172,60 @@
         <!-- ============= Center Dashboard =============== -->
 
         <div class="centered-content">
+            <div class="bill-container">
+                <div class="bill-group add-bill" onclick="handleAddBill('<%= firstZoneName %>')">
+                    <div class="add-bill-text">
+                        <h2>เพิ่มบิล</h2>
+                    </div>
+                    <div class="add-bill-icon">
+                        <i class='bx bx-plus'></i>
+                    </div>
+                </div>
+                <% bill.forEach(group => { %>
+                    <div class="bill-group">
+                        <div class="bill-section">
+                            <h2><%= group.zone_name %> - <%= group.id_table %></h2>
+                        </div>
+                        <div class="bill-section">
+                            <p><i class='bx bx-purchase-tag-alt'> ราคารวม :</i> <%= group.total_price %></p>
+                            <p><i class='bx bx-food-menu'> จำนวนเมนู :</i> <%= group.total_items %></p>
+                        </div>
+                        <div class="bill-section">
+                            <button onclick="handlePayment('<%= group.id_table %>')">ชำระเงิน</button>
+                            <button onclick="handleViewBill('<%= group.zone_name %>', '<%= group.id_table %>')">ดูบิล</button>
+
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
         </div>
     </section>
 
     <script src="/js/index.js"></script>
+    <script>
+        function handleAddBill(firstZoneName) {
+            // Redirect to the specified URL with firstZoneName
+            window.location.href = `/view_zone/${firstZoneName}`;
+        }
+
+        function handleClick(tableId, zoneName) {
+            // Replace '/your-url' with the actual URL you want to send the data to
+            const url = `/your-url?tableId=${tableId}&zoneName=${zoneName}`;
+            window.location = url;
+        }
+
+        function handlePayment(tableId) {
+            // Redirect to the payment URL
+            window.location.href = `/payment?tableId=${tableId}`;
+        }
+
+        function handleViewBill(zoneName, tableId) {
+        // Construct the URL dynamically
+        const url = `/zone/${zoneName}/table/${tableId}/order_food`;
+        // Redirect to the constructed URL
+        window.location.href = url;
+    }
+    </script>
 </body>
 
 </html>

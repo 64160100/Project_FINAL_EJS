@@ -537,8 +537,23 @@ module.exports = {
         });
     },
 
+    getData: (num_list, callback) => {
+        const query = `
+            SELECT num_list, tbl_menu_id, num_unit 
+            FROM list_menu 
+            WHERE num_list = ?
+        `;
+        
+        connection.query(query, [num_list], (error, results) => {
+            if (error) {
+                console.error('Error executing query:', error);
+                return callback(error, null);
+            }             
+            callback(null, results);
+        });
+    },
+
     updateOrder: (orderData, callback) => {
-        console.log(orderData);
         if (typeof callback !== 'function') {
             throw new TypeError('Callback must be a function');
         }
@@ -559,8 +574,6 @@ module.exports = {
             orderData.zone_name
         ];
 
-        console.log(values);
-
         connection.query(query, values, (error, results) => {
             if (error) {
                 return callback(error, null);
@@ -571,6 +584,16 @@ module.exports = {
 
     deleteOptionsByOrderId: (orderId, callback) => {
         const query = 'DELETE FROM list_menu_options WHERE num_list = ?';
+        connection.query(query, [orderId], (error, results) => {
+            if (error) {
+                return callback(error);
+            }
+            callback(null, results);
+        });
+    },
+
+    deleteFoodComparisonByOrderId: (orderId, callback) => {
+        const query = 'DELETE FROM tbl_food_comparison WHERE num_list = ?';
         connection.query(query, [orderId], (error, results) => {
             if (error) {
                 return callback(error);
@@ -590,7 +613,22 @@ module.exports = {
     },
 
     getBill: (callback) => {
-        const query = 'SELECT * FROM check_bill';
+        const sqlQuery = `
+            SELECT num_list, tbl_menu_id, product_list, num_unit, product_price, price_all, Where_eat, status_bill, id_table, zone_name
+            FROM list_menu
+            WHERE status_bill = 'Y';
+        `;
+        connection.query(sqlQuery, (error, results) => {
+            if (error) {
+                return callback(error, null);
+            }
+            console.log(results);
+            callback(null, results);
+        });
+    },
+
+    getZones: (callback) => {
+        const query = 'SELECT * FROM tbl_zones';
         connection.query(query, (error, results) => {
             if (error) {
                 return callback(error, null);
@@ -598,4 +636,69 @@ module.exports = {
             callback(null, results);
         });
     },
+
+
+
+    getFoodRecipes: (tbl_menu_id, callback) => {
+        console.log('tbl_menu_id:', tbl_menu_id);
+        const query = 'SELECT id_food_recipes, tbl_menu_id, name_ingredient, unit_quantity, unit_id FROM tbl_food_recipes WHERE tbl_menu_id = ?';
+        connection.query(query, [tbl_menu_id], (error, results) => {
+            if (error) {
+                return callback(error, null);
+            }
+            callback(null, results);
+        });
+    },
+    
+    getFoodComparisonByMenuId: (menuId, callback) => {
+        const query = 'SELECT * FROM tbl_food_comparison WHERE id_food_comparison = ?';
+        connection.query(query, [menuId], (error, results) => {
+            if (error) {
+                return callback(error, null);
+            }
+            callback(null, results);
+        });
+    },
+
+    getMaxFoodComparisonId: (callback) => {
+        const query = 'SELECT MAX(id_food_comparison) AS maxFoodComparisonId FROM tbl_food_comparison';
+        connection.query(query, (error, results) => {
+            if (error) {
+                return callback(error, null);
+            }
+            const maxFoodComparisonId = results[0].maxFoodComparisonId || 0;
+            callback(null, maxFoodComparisonId);
+        });
+    },
+
+    saveFoodComparison: (foodComparisonDataArray, callback) => {
+        const query = `
+            INSERT INTO tbl_food_comparison 
+            (id_food_comparison, num_list, tbl_menu_id_menu, num_unit, id_food_recipes, tbl_menu_id_recipes, name_ingredient_all, unit_quantity_all, unit_id_all, id_table, zone_name) 
+            VALUES ?
+        `;
+    
+        const values = foodComparisonDataArray.map(data => [
+            data.id_food_comparison,
+            data.num_list,
+            data.tbl_menu_id_menu,
+            data.num_unit,
+            data.id_food_recipes,
+            data.tbl_menu_id_recipes,
+            data.name_ingredient_all,
+            data.unit_quantity_all,
+            data.unit_id_all,
+            data.id_table,
+            data.zone_name
+        ]);
+    
+        connection.query(query, [values], (error, results) => {
+            if (error) {
+                console.error('Error executing query:', error);
+                return callback(error, null);
+            }
+            callback(null, results);
+        });
+    },
+
 };

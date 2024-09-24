@@ -55,7 +55,7 @@ module.exports = {
         if (!req.session.user) {
             return res.redirect('/login');
         }
-        
+
         const permissions = req.session.permissions;
 
         if (!permissions || permissions.employee.employee_read !== 'Y') {

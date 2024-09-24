@@ -228,10 +228,10 @@
                             <li class="buying-action ">
                                 <button onclick="location.href='/view_buying/<%= buying.id_buying_list %>'"
                                     class="view-button">ดูข้อมูล</button>
-                                <form action="/delete_buying/<%= buying.id_buying_list %>" method="post"
-                                    style="display: inline;">
-                                    <button type="submit" class="delete-button">ลบ</button>
-                                </form>
+                                    <form action="/delete_buying/<%= buying.id_buying_list %>" method="post" style="display: inline;">
+                                        <input type="hidden" name="unit_quantity" value="<%= buying.unit_quantity %>">
+                                        <button type="submit" class="delete-button">ลบ</button>
+                                    </form>
                             </li>
                         </ul>
                     </div>

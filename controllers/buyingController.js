@@ -33,25 +33,44 @@ module.exports = {
 	},
 
 	addBuyingView: (req, res) => {
-		// Assuming SettingModel has methods to fetch setting types and units
+		// Fetch setting types
 		BuyingModel.viewSettingType((err, settingTypes) => {
 			if (err) {
 				console.error("Error fetching setting types:", err);
 				return res.status(500).send("Error fetching setting types");
 			}
-
+	
+			// Fetch setting units
 			BuyingModel.viewSettingUnit((err, settingUnits) => {
 				if (err) {
 					console.error("Error fetching setting units:", err);
 					return res.status(500).send("Error fetching setting units");
 				}
-				res.render('add_buying', {
-					title: 'Add Buying',
-					settingTypes: settingTypes,
-					settingUnits: settingUnits,
-					selectedSettingType: null,
-					selectedSettingUnit: null,
-					error: req.flash('error'),
+	
+				// Fetch the last product code
+				BuyingModel.getLastProductCode((err, lastCode) => {
+					if (err) {
+						console.error("Error fetching last product code:", err);
+						return res.status(500).send("Error fetching last product code");
+					}
+	
+					// Generate the next product code
+					let nextCode = 'J001'; // Default code if no previous code is found
+					if (lastCode && lastCode.length > 0 && lastCode[0].id_buying_list) {
+						const codeNumber = parseInt(lastCode[0].id_buying_list.substring(1)) + 1;
+						nextCode = 'J' + codeNumber.toString().padStart(3, '0');
+					}
+
+					// Render the view with the fetched data and generated code
+					res.render('add_buying', {
+						title: 'Add Buying',
+						settingTypes: settingTypes,
+						settingUnits: settingUnits,
+						selectedSettingType: null,
+						selectedSettingUnit: null,
+						error: req.flash('error'),
+						id_buying_list: nextCode // Pass the generated code to the template
+					});
 				});
 			});
 		});
@@ -60,7 +79,6 @@ module.exports = {
 	createBuying: (req, res) => {
 		const { id_buying_list, name_product, date_of_receipt, setting_type_id, setting_unit_id, price, unit_quantity } = req.body;
 		let { time } = req.body;
-		console.log(req.body);
 		let [day, hour, minute, second] = [0, 0, 0, 0];
 	
 		if (time) {
@@ -190,12 +208,16 @@ module.exports = {
 
 	deleteBuying: (req, res) => {
 		const id_buying_list = req.params.id;
-		BuyingModel.deleteBuying(id_buying_list, (error, results) => {
-			if (error) {
-				console.log(error);
-			} else {
-				res.redirect('/buying');
+		const unit_quantity = req.body.unit_quantity; // Get unit_quantity from the request body
+		const id_warehouse = req.body.id_warehouse; // Get id_warehouse from the request body
+	
+		BuyingModel.deleteBuying(id_buying_list, id_warehouse, unit_quantity, (deleteError, deleteResults) => {
+			if (deleteError) {
+				console.log(deleteError);
+				return res.status(500).send('Error deleting buying entry');
 			}
+	
+			res.redirect('/buying');
 		});
 	},
 
@@ -290,12 +312,16 @@ module.exports = {
 			} else {
 				// Aggregate results by id_warehouse
 				const aggregatedResults = results.reduce((acc, current) => {
-					// If the id_warehouse already exists, sum up the unit_quantity_all
+					// If the id_warehouse already exists, sum up the unit_quantity_all and append tbl_buying_id
 					if (acc[current.id_warehouse]) {
 						acc[current.id_warehouse].unit_quantity_all += current.unit_quantity_all;
+						acc[current.id_warehouse].tbl_buying_ids.push(current.tbl_buying_id);
 					} else {
 						// Otherwise, add the entry to the accumulator
-						acc[current.id_warehouse] = current;
+						acc[current.id_warehouse] = {
+							...current,
+							tbl_buying_ids: [current.tbl_buying_id] // Initialize tbl_buying_ids array
+						};
 						// Ensure unit_quantity_all is treated as a number for summation
 						acc[current.id_warehouse].unit_quantity_all = current.unit_quantity_all;
 					}
@@ -305,7 +331,6 @@ module.exports = {
 				// Convert the aggregated results back to an array
 				const aggregatedArray = Object.values(aggregatedResults);
 	
-				console.log(aggregatedArray);
 				res.render('warehouse', { results: aggregatedArray });
 			}
 		});

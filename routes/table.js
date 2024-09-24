@@ -14,15 +14,13 @@ router.post('/toggle_lock/:id', table.toggleLockZone);
 router.post('/delete_table/:id', table.deleteTable);
 router.post('/delete_zone/:id', table.deleteZone);
 
-router.get('/order_food', table.orderFood);
-router.get('/customize/:id', table.customize);
-
 router.get('/view_bill', table.viewBill);
-
 
 router.get('/zone/:zone/table/:table/order_food', table.zoneOrderFood);
 router.get('/zone/:zone/table/:table/customize/:id', table.zoneCustomize);
+router.get('/zone/:zone/table/:table/view_checkbill', table.zoneViewCheckBill);
 router.post('/zone/:zone/table/:table/create_order', table.createOrder);
 router.post('/zone/:zone/table/:table/update_order', table.updateOrder);
 router.post('/zone/:zone/table/:table/delete_order', table.deleteOrder);
+
 module.exports = router;

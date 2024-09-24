@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS</title>
+
+    <!-- Box Icons  -->
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Styles  -->
+    <link rel="shortcut icon" href="img/kxp_fav.png" type="image/x-icon">
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/checkbill_view.css">
+</head>
+
+<body>
+    <div class="sidebar close">
+        <!-- ========== Logo ============  -->
+        <a href="#" class="logo-box">
+            <i class='bx bxs-cat'></i>
+            <div class="logo-name">POS</div>
+        </a>
+
+        <!-- ========== List ============  -->
+
+        <ul class="sidebar-list">
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <li>
+                <div class="title">
+                    <a href="/" class="link">
+                        <i class='bx bx-home'></i>
+                        <span class="name">หน้าหลัก</span>
+                    </a>
+                    <!-- <i class='bx bxs-chevron-down'></i> -->
+                </div>
+                <div class="submenu">
+                    <a href="/" class="link submenu-title">หน้าหลัก</a>
+                    <!-- submenu links here  -->
+                </div>
+            </li>
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <li>
+                <div class="title">
+                    <a href="/dashboard" class="link">
+                        <i class='bx bx-grid-alt'></i>
+                        <span class="name">แดชบอร์ด</span>
+                    </a>
+                    <!-- <i class='bx bxs-chevron-down'></i> -->
+                </div>
+                <div class="submenu">
+                    <a href="/dashboard" class="link submenu-title">แดชบอร์ด</a>
+                    <!-- submenu links here  -->
+                </div>
+            </li>
+
+
+
+            <!-- -------- Dropdown List Item ------- -->
+            <li class="dropdown">
+                <div class="title">
+                    <a href="/employee" class="link">
+                        <i class='bx bx-collection'></i>
+                        <span class="name">ข้อมูลพนักงาน</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="/employee" class="link submenu-title">ข้อมูลพนักงาน</a>
+                    <a href="/employee" class="link">พนักงาน</a>
+                    <a href="/user" class="link">ผู้ใช้งาน</a>
+                    <a href="/permission" class="link">สิทธิ์ผู้ใช้งาน</a>
+                </div>
+            </li>
+
+            <!-- -------- Dropdown List Item ------- -->
+            <li class="dropdown">
+                <div class="title">
+                    <a href="/menu" class="link">
+                        <i class='bx bxs-food-menu'></i>
+                        <span class="name">เมนูอาหารและบริการ</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="/menu" class="link submenu-title">เมนูอาหารและบริการ</a>
+                    <a href="/menu" class="link">เมนูอาหาร</a>
+                    <a href="#" class="link">ตั้งค่าหมวดหมู่</a>
+                    <a href="#" class="link">ตั้งค่าหน่วยสินค้า</a>
+                    <a href="#" class="link">ตั้งค่าประเภท</a>
+                </div>
+            </li>
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <li class="dropdown">
+                <div class="title">
+                    <a href="table" class="link">
+                        <i class='bx bx-table'></i>
+                        <span class="name">โต๊ะอาหาร</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="/table" class="link submenu-title">โต๊ะอาหาร</a>
+                    <a href="/table" class="link">จัดโต๊ะอาหาร</a>
+                    <a href="/view_bill" class="link">บิลอาหาร</a>
+                </div>
+            </li>
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <li class="dropdown">
+                <div class="title">
+                    <a href="/buying" class="link">
+                        <i class='bx bx-cart-download'></i>
+                        <span class="name">รายการจัดซื้อและคงคลัง</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="/buying" class="link submenu-title">รายการจัดซื้อและคงคลัง</a>
+                    <a href="/buying" class="link">รายการจัดซื้อ</a>
+                    <a href="#" class="link">คงคลัง</a>
+                    <a href="#" class="link">ตั้งค่าประเภท</a>
+                    <a href="#" class="link">ตั้งค่าปริมาณ</a>
+                </div>
+            </li>
+
+            <!-- -------- Non Dropdown List Item ------- -->
+            <li>
+                <div class="title">
+                    <a href="/promotion" class="link">
+                        <i class='bx bxs-dollar-circle'></i>
+                        <span class="name">โปรโมชั่น</span>
+                    </a>
+                    <!-- <i class='bx bxs-chevron-down'></i> -->
+                </div>
+                <div class="submenu">
+                    <a href="/promotion" class="link submenu-title">โปรโมชั่น</a>
+                    <!-- submenu links here  -->
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- ============= Home Section =============== -->
+    <section class="home">
+        <div class="nav">
+            <div class="toggle-sidebar">
+                <i class='bx bx-menu'></i>
+            </div>
+            <nav>
+                <div class="nav-content">
+                    <div class="profile-details">
+                        <img src="../img/chef.png" alt="" class="profile-image">
+                        <span class="user-id">ID1234</span>
+                    </div>
+                    <a href="/login" class="auth-link">เข้าสู่ระบบ</a>
+                </div>
+            </nav>
+        </div>
+
+        <!-- ============= Top Dashboard =============== -->
+
+        <div class="breadcrumbs">
+          <a href="/dashboard">หน้าหลัก</a> > 
+          <a href="/zone/<%= zone_name %>/table/<%= table_id %>/order_food">สั่งเมนูอาหาร</a> > 
+          <span>เช็คบิล</span>
+      </div>
+      <div class="topic"><a href="javascript:history.back()" style="text-decoration: none;">
+              <i class='bx bx-left-arrow-alt'></i></a> เช็คบิล </div>
+
+        <!-- ============= Center Dashboard =============== -->
+        <div class="centered-content">
+          <div class="top-left-container">
+              <h1>เลือกวิธีการชำระเงิน</h1>
+              <hr class="underline">
+          </div>
+          <div class="payment-methods">
+              <button id="cashPaymentButton" class="payment-button">ชำระเงินสด</button>
+              <button id="qrPaymentButton" class="payment-button">ชำระเงินแบบสแกนคิวอาร์โค้ด</button>
+          </div>
+      
+          <!-- Cash Payment Modal -->
+          <div id="cashPaymentModal" class="modal">
+              <div class="modal-content">
+                  <span class="close-button">&times;</span>
+                  <h1>ชำระเงินสด</h1>
+                  <p>กรุณายืนยันการชำระเงินสด</p>
+                  <button id="confirmCashPayment" class="confirm-button">ยืนยัน</button>
+              </div>
+          </div>
+      
+          <!-- QR Code Payment Modal -->
+          <div id="qrPaymentModal" class="modal">
+              <div class="modal-content">
+                  <span class="close-button">&times;</span>
+                  <h1>ชำระเงินแบบสแกนคิวอาร์โค้ด</h1>
+                  <p>กรุณาสแกนคิวอาร์โค้ดเพื่อชำระเงิน</p>
+                  <img src="/path/to/qr-code.png" alt="QR Code" class="qr-code">
+              </div>
+          </div>
+      </div>
+      
+          <!-- QR Code Payment Modal -->
+          <div id="qrPaymentModal" class="modal">
+              <div class="modal-content">
+                  <span class="close-button">&times;</span>
+                  <h1>ชำระเงินแบบสแกนคิวอาร์โค้ด</h1>
+                  <p>กรุณาสแกนคิวอาร์โค้ดเพื่อชำระเงิน</p>
+                  <img src="/path/to/qr-code.png" alt="QR Code" class="qr-code">
+              </div>
+          </div>
+      </div>
+          
+        <div class="toggle-basket">
+          <div class="basket">
+            <span class="basket-count">
+              <%= basket.reduce((acc, item) => acc + item.quantity, 0) %>
+            </span>
+            <i class='bx bx-basket'></i>
+          </div>
+        </div>
+          
+        <div class="basket-sidebar close">
+          <ul class="basket-list">
+            <div class="zone-table-info">
+              <% if (zone_name && table_id) { %>
+                <button class="zone-button">โซน: <%= zone_name %></button>
+                <button class="table-button">โต๊ะ: <%= table_id %></button>
+              <% } %>
+            </div>
+            <hr class="divider">
+          
+            <div class="header-titles">
+              <span>รายการสินค้า</span>
+              <span>หน่วย</span>
+              <span>ราคาสินค้า</span>
+            </div>
+            <ul class="menu-list">
+              <% menuItems.forEach(item => { %>
+                <li class="swipe-item" data-id="<%= item.id %>" data-num-list="<%= item.num_list %>" data-id-table="<%= item.id_table %>" data-zone-name="<%= item.zone_name %>" data-status-bill="<%= item.status_bill %>">
+                  <% if (item.status_bill !== 'Y') { %>
+                    <button class="edit-button">
+                      <i class='bx bx-edit'></i>
+                    </button>
+                  <% } %>
+                  <span class="product-name">
+                    <%= item.product_list %>
+        
+                    <% const matchingOptions = groupedOptions[item.num_list]; %>
+                    <% if (matchingOptions) { %>
+                      <% matchingOptions.forEach(option => { %>
+                        <div class="checkbox-item">
+                          <label for="<%= option.id_menu_options %>">
+                            + <%= option.name_options %>
+                          </label>
+                        </div>
+                      <% }); %>
+                    <% } %>
+                  </span>
+                  
+                  <div class="quantity-controls">
+                    <span class="item-quantity">
+                      <%= item.num_unit %>
+                    </span>
+                  </div>
+                  <span class="item-price">
+                    <%= item.price_all %>
+                  </span>
+                  <% if (item.status_bill !== 'Y') { %>
+                    <form class="delete-form" action="/zone/<%= item.zone_name %>/table/<%= item.id_table %>/delete_order" method="POST" style="display: none;">
+                      <input type="hidden" name="num_list" value="<%= item.num_list %>">
+                      <button type="submit" class="delete-button">ลบ</button>
+                    </form>
+                  <% } %>
+                </li>
+              <% }); %>
+            </ul>
+            
+            <hr class="divider">
+            <div class="total-price-container">
+              <div class="price-row">
+                <span>ราคารวม:</span>
+                <span class="total-price">0.00</span>
+              </div>
+              <div class="price-row">
+                <span>ราคาส่วนลด:</span>
+                <span class="discount-price">0.00</span>
+              </div>
+              <div class="price-row">
+                <span>ราคารวมแบบสรุป:</span>
+                <span class="final-price">0.00</span>
+              </div>
+            </div>
+            <hr class="divider">
+            <div class="sidebar-footer">
+              <button class="save-button">บันทึก</button>
+              <button class="checkout-button" onclick="window.location.href='/zone/<%= zone_name %>/table/<%= table_id %>/view_checkbill'">ชำระเงิน</button>
+              <button class="print-qr-button">
+                <i class='bx bx-qr'></i> ปริ้นคิวอาร์โค้ด
+              </button>
+            </div>
+          </ul>
+        </div>
+          
+        <div id="summaryModal" class="modal">
+          <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h1>สรุปบิล</h1>
+            <div id="orderDetails">รายการอาหารที่สั่ง:</div>
+            <div id="totalAmount">รวมทั้งหมด:</div>
+            <form id="save-form" action="/zone/<%= zone_name %>/table/<%= table_id %>/update_order" method="POST">
+              <input type="hidden" name="num_list" id="num_list">
+              <input type="hidden" name="status_bill" value="Y">
+              <input type="hidden" name="id_table" id="table_id" value="<%= table_id %>">
+              <input type="hidden" name="zone_name" id="zone_name" value="<%= zone_name %>">
+              <button type="button" class="save-button" onclick="submitSaveForm()">บันทึก</button>
+            </form>
+          </div>
+        </div>
+    </section>
+    <script src="/js/index.js"></script>
+
+    <script>
+      // Get the modals
+      const cashPaymentModal = document.getElementById('cashPaymentModal');
+      const qrPaymentModal = document.getElementById('qrPaymentModal');
+  
+      // Get the buttons that open the modals
+      const cashPaymentButton = document.getElementById('cashPaymentButton');
+      const qrPaymentButton = document.getElementById('qrPaymentButton');
+  
+      // Get the <span> elements that close the modals
+      const closeButtons = document.querySelectorAll('.close-button');
+  
+      // When the user clicks the button, open the respective modal
+      cashPaymentButton.onclick = function() {
+          cashPaymentModal.style.display = 'block';
+      }
+  
+      qrPaymentButton.onclick = function() {
+          qrPaymentModal.style.display = 'block';
+      }
+  
+      // When the user clicks on <span> (x), close the modal
+      closeButtons.forEach(button => {
+          button.onclick = function() {
+              cashPaymentModal.style.display = 'none';
+              qrPaymentModal.style.display = 'none';
+          }
+      });
+  
+      // When the user clicks anywhere outside of the modal, close it
+      window.onclick = function(event) {
+          if (event.target == cashPaymentModal) {
+              cashPaymentModal.style.display = 'none';
+          }
+          if (event.target == qrPaymentModal) {
+              qrPaymentModal.style.display = 'none';
+          }
+      }
+  
+      // Handle cash payment confirmation
+      document.getElementById('confirmCashPayment').onclick = function() {
+          alert('ชำระเงินสดเรียบร้อยแล้ว');
+          cashPaymentModal.style.display = 'none';
+      }
+  </script>
+
+
+    <script>
+        function submitSaveForm() {
+          // Collect num_list values from menu items with status_bill as 'N'
+          const numListValues = Array.from(document.querySelectorAll('.menu-list .swipe-item'))
+            .filter(item => item.getAttribute('data-status-bill') === 'N')
+            .map(item => item.getAttribute('data-num-list'));
+      
+          if (numListValues.length === 0) {
+            alert('No items with status_bill as N to submit.');
+            return;
+          }
+      
+          // Set the collected num_list value to the hidden input
+          document.getElementById('num_list').value = numListValues.join(',');
+      
+          // Print the bill
+          printBill();
+      
+          // Submit the form
+          document.getElementById('save-form').submit();
+        }
+      
+        function printBill() {
+          // Collect the data from the bill, but only for items with status_bill as 'N'
+          const orderDetailsHtml = Array.from(document.querySelectorAll('.menu-list .swipe-item'))
+            .filter(item => item.getAttribute('data-status-bill') === 'N')
+            .map(item => `
+              <tr>
+                <td>${item.querySelector('.product-name').innerText}</td>
+                <td>${item.querySelector('.item-quantity').innerText}</td>
+                <td>${item.querySelector('.item-price').innerText}</td>
+              </tr>
+            `).join('');
+      
+          const totalAmountHtml = document.getElementById('totalAmount').innerHTML;
+      
+          // Create a new window for printing
+          const printWindow = window.open('', '_blank');
+          printWindow.document.write('<html><head><title>สรุปบิล</title></head><body>');
+          printWindow.document.write('<h1>สรุปบิล</h1>');
+          printWindow.document.write('<table><thead><tr><th>สินค้า</th><th>หน่วย</th><th>ราคา</th></tr></thead><tbody>');
+          printWindow.document.write(orderDetailsHtml);
+          printWindow.document.write('</tbody></table>');
+          printWindow.document.write(totalAmountHtml);
+          printWindow.document.write('</body></html>');
+          printWindow.document.close();
+          printWindow.print();
+        }
+      
+        document.querySelector('.save-button').addEventListener('click', function() {
+          generateSummaryBill();
+        });
+      
+        function generateSummaryBill() {
+          // Step 1: Collect the data from the bill, but only for items with status_bill as 'N'
+          const zoneName = document.querySelector('.zone-button').innerText;
+          const tableId = document.querySelector('.table-button').innerText;
+          const menuItems = Array.from(document.querySelectorAll('.menu-list .swipe-item'))
+            .filter(item => item.getAttribute('data-status-bill') === 'N')
+            .map(item => ({
+              product: item.querySelector('.product-name').innerText,
+              quantity: item.querySelector('.item-quantity').innerText,
+              price: item.querySelector('.item-price').innerText
+            }));
+          const totalPrice = document.querySelector('.total-price').innerText;
+          const discountPrice = document.querySelector('.discount-price').innerText;
+          const finalPrice = document.querySelector('.final-price').innerText;
+      
+          // Step 2: Display a summary page/modal with the collected data
+          let orderDetailsHtml = `
+            <p>${zoneName}</p>
+            <p>${tableId}</p>
+            <table>
+              <thead>
+                <tr>
+                  <th>สินค้า</th>
+                  <th>หน่วย</th>
+                  <th>ราคา</th>
+                </tr>
+              </thead>
+              <tbody>
+          `;
+          menuItems.forEach(item => {
+            orderDetailsHtml += `
+              <tr>
+                <td>${item.product}</td>
+                <td>${item.quantity}</td>
+                <td>${item.price}</td>
+              </tr>
+            `;
+          });
+          orderDetailsHtml += `
+              </tbody>
+            </table>
+          `;
+          document.getElementById('orderDetails').innerHTML = orderDetailsHtml;
+          document.getElementById('totalAmount').innerHTML = `
+            <p>ราคารวม: ${totalPrice}</p>
+            <p>ราคาส่วนลด: ${discountPrice}</p>
+            <p>ราคารวมแบบสรุป: ${finalPrice}</p>
+          `;
+          document.getElementById('summaryModal').style.display = 'block';
+        }
+      
+        function confirmAndClose() {
+          document.getElementById('summaryModal').style.display = 'none';
+        }
+      
+        // Close the modal when the user clicks on <span> (x)
+        document.querySelector('.close-button').addEventListener('click', function() {
+          document.getElementById('summaryModal').style.display = 'none';
+        });
+      
+        // Close the modal when the user clicks anywhere outside of the modal
+        window.onclick = function(event) {
+          if (event.target == document.getElementById('summaryModal')) {
+            document.getElementById('summaryModal').style.display = 'none';
+          }
+        }
+      </script>
+  
+      <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            const saveButton = document.querySelector('.save-button');
+            const basketSidebar = document.querySelector('.basket-sidebar');
+            const centeredContent = document.querySelector('.centered-content');
+            const toggleBasket = document.querySelector('.toggle-basket');
+            const swipeItems = document.querySelectorAll('.swipe-item');
+        
+            // Function to open the sidebar
+            function openSidebar() {
+              basketSidebar.classList.remove('close');
+              basketSidebar.classList.add('open');
+            }
+        
+            // Function to close the sidebar
+            function closeSidebar() {
+              basketSidebar.classList.remove('open');
+              basketSidebar.classList.add('close');
+            }
+        
+            // Event listener for the save button
+            saveButton.addEventListener('click', function() {
+              closeSidebar();
+              centeredContent.classList.add('hidden');
+              centeredContent.classList.remove('shifted'); // Ensure centered-content returns to its original state
+            });
+        
+            // Event listener for the toggle basket button
+            toggleBasket.addEventListener('click', function() {
+              centeredContent.classList.remove('hidden');
+              centeredContent.classList.toggle('shifted'); // Toggle the shifted class
+            });
+        
+            // Function to handle swipe items
+            function handleSwipeItems() {
+              swipeItems.forEach(item => {
+                let pressTimer;
+        
+                item.addEventListener('mousedown', function() {
+                  pressTimer = setTimeout(() => {
+                    item.querySelector('.delete-form').style.display = 'inline-block';
+                  }, 1000); // 1 second long press
+                });
+        
+                item.addEventListener('mouseup', function() {
+                  clearTimeout(pressTimer);
+                });
+        
+                item.addEventListener('mouseleave', function() {
+                  clearTimeout(pressTimer);
+                });
+              });
+            }
+        
+            // Call the function to handle swipe items
+            handleSwipeItems();
+        
+            // Example function to open the sidebar (you can call this function when needed)
+            // openSidebar();
+          });
+        </script>
+  
+      <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            const swipeItems = document.querySelectorAll('.swipe-item');
+        
+            swipeItems.forEach(item => {
+              let pressTimer;
+        
+              item.addEventListener('mousedown', function() {
+                pressTimer = setTimeout(() => {
+                  item.querySelector('.delete-form').style.display = 'inline-block';
+                }, 1000); // 1 second long press
+              });
+        
+              item.addEventListener('mouseup', function() {
+                clearTimeout(pressTimer);
+              });
+        
+              item.addEventListener('mouseleave', function() {
+                clearTimeout(pressTimer);
+              });
+            });
+          });
+        </script>
+  
+      <script>
+          document.addEventListener("DOMContentLoaded", () => {
+              const basketToggle = document.querySelector(".toggle-basket");
+              let isDragging = false;
+              let offsetX, offsetY;
+  
+              basketToggle.addEventListener("mousedown", (event) => {
+                  isDragging = true;
+                  offsetX = event.clientX - basketToggle.getBoundingClientRect().left;
+                  offsetY = event.clientY - basketToggle.getBoundingClientRect().top;
+                  basketToggle.style.position = 'absolute';
+                  basketToggle.style.zIndex = 1002; // Ensure it is above other elements
+                  document.body.style.userSelect = 'none'; // Prevent text selection while dragging
+              });
+  
+              document.addEventListener("mousemove", (event) => {
+                  if (isDragging) {
+                      basketToggle.style.left = `${event.clientX - offsetX}px`;
+                      basketToggle.style.top = `${event.clientY - offsetY}px`;
+                  }
+              });
+  
+              document.addEventListener("mouseup", () => {
+                  isDragging = false;
+                  document.body.style.userSelect = ''; // Re-enable text selection after dragging
+              });
+  
+              // Prevent default behavior for touch devices
+              basketToggle.addEventListener("touchstart", (event) => {
+                  isDragging = true;
+                  const touch = event.touches[0];
+                  offsetX = touch.clientX - basketToggle.getBoundingClientRect().left;
+                  offsetY = touch.clientY - basketToggle.getBoundingClientRect().top;
+                  basketToggle.style.position = 'absolute';
+                  basketToggle.style.zIndex = 1002; // Ensure it is above other elements
+                  document.body.style.userSelect = 'none'; // Prevent text selection while dragging
+              });
+  
+              document.addEventListener("touchmove", (event) => {
+                  if (isDragging) {
+                      const touch = event.touches[0];
+                      basketToggle.style.left = `${touch.clientX - offsetX}px`;
+                      basketToggle.style.top = `${touch.clientY - offsetY}px`;
+                  }
+              });
+  
+              document.addEventListener("touchend", () => {
+                  isDragging = false;
+                  document.body.style.userSelect = ''; // Re-enable text selection after dragging
+              });
+          });
+      </script>
+  
+      <script>
+          document.addEventListener("DOMContentLoaded", () => {
+              const basketToggle = document.querySelector(".toggle-basket");
+              const basketSidebar = document.querySelector(".basket-sidebar");
+              const orderForms = document.querySelectorAll(".menu-item");
+  
+              basketToggle.addEventListener("click", (event) => {
+                  event.preventDefault(); // Prevent default anchor behavior
+                  toggleBasket();
+              });
+  
+              orderForms.forEach(form => {
+                  form.addEventListener("submit", (event) => {
+                      event.preventDefault(); // Prevent default form submission
+                      const formData = new FormData(form);
+                      const menuItem = {
+                          id: formData.get("id"),
+                          name: formData.get("name"),
+                          price: parseFloat(formData.get("price")),
+                          category: formData.get("category"),
+                          picture: form.querySelector("img").src,
+                          quantity: 1
+                      };
+                      addItemToBasket(menuItem);
+                  });
+              });
+  
+              // Load basket items from localStorage
+              loadBasketFromLocalStorage();
+  
+              function toggleBasket() {
+                  basketSidebar.classList.toggle('open');
+                  basketSidebar.classList.toggle('close');
+              }
+          });
+  
+          function addItemToBasket(item) {
+              const basketList = document.querySelector('.basket-list');
+              let listItem = basketList.querySelector(`li[data-id="${item.id}"]`);
+              if (listItem) {
+                  // Item already exists, update its quantity and price
+                  const quantityElement = listItem.querySelector('.item-quantity');
+                  const priceElement = listItem.querySelector('.item-price');
+                  let quantity = parseInt(quantityElement.textContent);
+                  quantity += 1;
+                  quantityElement.textContent = quantity;
+                  priceElement.textContent = (item.price * quantity).toFixed(2);
+              } else {
+                  // Item does not exist, add as new list item
+                  listItem = document.createElement('li');
+                  listItem.dataset.id = item.id;
+                  listItem.innerHTML = `
+                      <img src="${item.picture}" alt="${item.name}" style="width: 50px; height: 50px;">
+                      <span>${item.name}</span>
+                      <div class="quantity-controls">
+                          <button class="decrease-quantity">-</button>
+                          <span class="item-quantity">${item.quantity}</span>
+                          <button class="increase-quantity">+</button>
+                      </div>
+                      <span class="item-price">${item.price.toFixed(2)}</span>
+                  `;
+                  basketList.appendChild(listItem);
+                  listItem.querySelector('.increase-quantity').addEventListener('click', () => updateQuantity(item.id, item.price, 1));
+                  listItem.querySelector('.decrease-quantity').addEventListener('click', () => updateQuantity(item.id, item.price, -1));
+              }
+              updateTotalPrice();
+              saveBasketToLocalStorage();
+              updateBasketCount();
+          }
+  
+          function updateQuantity(itemId, itemPrice, change) {
+              const listItem = document.querySelector(`li[data-id="${itemId}"]`);
+              const quantityElement = listItem.querySelector('.item-quantity');
+              const priceElement = listItem.querySelector('.item-price');
+              let quantity = parseInt(quantityElement.textContent);
+              quantity += change;
+              if (quantity < 1) {
+                  removeItemFromBasket(itemId);
+              } else {
+                  quantityElement.textContent = quantity;
+                  priceElement.textContent = (itemPrice * quantity).toFixed(2);
+              }
+              updateTotalPrice();
+              saveBasketToLocalStorage();
+              updateBasketCount();
+          }
+  
+          function removeItemFromBasket(itemId) {
+              const listItem = document.querySelector(`li[data-id="${itemId}"]`);
+              listItem.remove();
+              updateTotalPrice();
+              saveBasketToLocalStorage();
+              updateBasketCount();
+          }
+  
+          function updateTotalPrice() {
+              const basketList = document.querySelector('.basket-list');
+              const priceElements = basketList.querySelectorAll('.item-price');
+              let totalPrice = 0;
+              priceElements.forEach(priceElement => {
+                  totalPrice += parseFloat(priceElement.textContent);
+              });
+              const totalPriceElement = document.querySelector('.total-price');
+              if (totalPriceElement) {
+                  totalPriceElement.textContent = totalPrice.toFixed(2);
+              }
+          }
+  
+          function saveBasketToLocalStorage() {
+              const basketList = document.querySelector('.basket-list');
+              const items = [];
+              basketList.querySelectorAll('li').forEach(listItem => {
+                  const id = listItem.dataset.id;
+                  const name = listItem.querySelector('span').textContent;
+                  const imgElement = listItem.querySelector('img');
+                  const picture = imgElement ? imgElement.src : '';
+                  const quantity = parseInt(listItem.querySelector('.item-quantity').textContent);
+                  const price = parseFloat(listItem.querySelector('.item-price').textContent) / quantity;
+                  items.push({ id, name, picture, quantity, price });
+              });
+              localStorage.setItem('basketItems', JSON.stringify(items));
+          }
+  
+          function loadBasketFromLocalStorage() {
+              const basketList = document.querySelector('.basket-list');
+              const items = JSON.parse(localStorage.getItem('basketItems')) || [];
+              items.forEach(item => {
+                  const listItem = document.createElement('li');
+                  listItem.dataset.id = item.id;
+                  listItem.innerHTML = `
+                      <img src="${item.picture}" alt="${item.name}" style="width: 50px; height: 50px;">
+                      <span>${item.name}</span>
+                      <div class="quantity-controls">
+                          <button class="decrease-quantity">-</button>
+                          <span class="item-quantity">${item.quantity}</span>
+                          <button class="increase-quantity">+</button>
+                      </div>
+                      <span class="item-price">${(item.price * item.quantity).toFixed(2)}</span>
+                  `;
+                  basketList.appendChild(listItem);
+                  listItem.querySelector('.increase-quantity').addEventListener('click', () => updateQuantity(item.id, item.price, 1));
+                  listItem.querySelector('.decrease-quantity').addEventListener('click', () => updateQuantity(item.id, item.price, -1));
+              });
+              updateTotalPrice();
+              updateBasketCount();
+          }
+  
+          function updateBasketCount() {
+              const basketList = document.querySelector('.basket-list');
+              let itemCount = 0;
+              basketList.querySelectorAll('li').forEach(listItem => {
+                  const quantity = parseInt(listItem.querySelector('.item-quantity').textContent);
+                  itemCount += quantity;
+              });
+              const basketCountElement = document.querySelector('.basket-count');
+              if (basketCountElement) {
+                  basketCountElement.textContent = itemCount;
+              }
+          }
+      </script>
+</body>
+
+</html>

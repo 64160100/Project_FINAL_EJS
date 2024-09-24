@@ -86,37 +86,65 @@ module.exports = {
         });
     },
 
-    deleteBuying: function (buyingId, callback) {
+    deleteBuying: function (buyingId, id_warehouse, unit_quantity, callback) {
+        if (typeof callback !== 'function') {
+            throw new TypeError('Callback must be a function');
+        }
+    
         // Start a transaction
         connection.beginTransaction(function(err) {
             if (err) {
                 return callback(err, null);
             }
-            // First, delete referencing rows in tbl_warehouse
-            connection.query('DELETE FROM tbl_warehouse WHERE tbl_buying_id = ?', [buyingId], function (error, results) {
-                if (error) {
+    
+            // Update the unit_quantity_all in tbl_warehouse
+            const updateQuery = `
+                UPDATE tbl_warehouse 
+                SET unit_quantity_all = unit_quantity_all - ?
+                WHERE id_warehouse = ?`;
+            connection.query(updateQuery, [unit_quantity, id_warehouse], function (updateError, updateWarehouseResults) {
+                if (updateError) {
                     // If an error occurs, rollback the transaction
                     return connection.rollback(function() {
-                        callback(error, null);
+                        callback(updateError, null);
                     });
                 }
-                // Then, delete the row in tbl_buying
-                connection.query('DELETE FROM tbl_buying WHERE id_buying_list = ?', [buyingId], function (error, results) {
-                    if (error) {
+    
+                // Check for foreign key constraints before deleting from tbl_buying
+                connection.query('SELECT COUNT(*) AS count FROM tbl_warehouse WHERE tbl_buying_id = ?', [buyingId], function (fkError, fkResults) {
+                    if (fkError) {
                         // If an error occurs, rollback the transaction
                         return connection.rollback(function() {
-                            callback(error, null);
+                            callback(fkError, null);
                         });
                     }
-                    // If no errors, commit the transaction
-                    connection.commit(function(err) {
-                        if (err) {
+    
+                    if (fkResults[0].count > 0) {
+                        // If there are foreign key constraints, rollback the transaction
+                        return connection.rollback(function() {
+                            callback(new Error('Cannot delete or update a parent row: a foreign key constraint fails'), null);
+                        });
+                    }
+    
+                    // Then, delete the row in tbl_buying
+                    connection.query('DELETE FROM tbl_buying WHERE id_buying_list = ?', [buyingId], function (deleteError, deleteBuyingResults) {
+                        if (deleteError) {
+                            // If an error occurs, rollback the transaction
                             return connection.rollback(function() {
-                                callback(err, null);
+                                callback(deleteError, null);
                             });
                         }
-                        // Success
-                        callback(null, results);
+    
+                        // If no errors, commit the transaction
+                        connection.commit(function(commitError) {
+                            if (commitError) {
+                                return connection.rollback(function() {
+                                    callback(commitError, null);
+                                });
+                            }
+                            // Success
+                            callback(null, { buyingResults: deleteBuyingResults, warehouseResults: updateWarehouseResults });
+                        });
                     });
                 });
             });
@@ -196,6 +224,15 @@ module.exports = {
 
     viewSettingUnit: function (callback) {
         connection.query('SELECT id_unit FROM setting_unit', (error, results) => {
+            if (error) {
+                return callback(error);
+            }
+            return callback(null, results);
+        });
+    },
+
+    getLastProductCode: function (callback) {
+        connection.query('SELECT id_buying_list FROM tbl_buying ORDER BY id_buying_list DESC LIMIT 1', (error, results) => {
             if (error) {
                 return callback(error);
             }
