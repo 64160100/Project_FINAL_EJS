@@ -15,84 +15,96 @@ var upload = multer({ storage: storage });
 module.exports = {
 
     menuView: function (req, res) {
-        MenuModel.getMenu((error, menu) => {
-            if (error) {
-                console.error('Error fetching menu: ', error);
-                res.status(500).send('Internal Server Error');
-            } else {
-                // Fetch food recipes and warehouse data for comparison
-                MenuModel.getFoodRecipesMenu((error, foodRecipes) => {
-                    console.log('foodRecipes:', foodRecipes);
-                    if (error) {
-                        console.error('Error fetching food recipes: ', error);
-                        res.status(500).send('Internal Server Error');
-                    } else {
-                        MenuModel.getWarehouse((error, warehouse) => {
-                            console.log('warehouse:', warehouse);
-                            if (error) {
-                                console.error('Error fetching warehouse: ', error);
-                                res.status(500).send('Internal Server Error');
-                            } else {
-                                // Aggregate results by id_warehouse
-                                const aggregatedResults = warehouse.reduce((acc, current) => {
-                                    // Ensure unit_quantity_all is treated as a number for summation
-                                    current.unit_quantity_all = parseFloat(current.unit_quantity_all) || 0;
-
-                                    // If the id_warehouse already exists, sum up the unit_quantity_all and append tbl_buying_id
-                                    if (acc[current.id_warehouse]) {
-                                        acc[current.id_warehouse].unit_quantity_all += current.unit_quantity_all;
-                                        acc[current.id_warehouse].tbl_buying_ids.push(current.tbl_buying_id);
-                                    } else {
-                                        // Otherwise, add the entry to the accumulator
-                                        acc[current.id_warehouse] = {
-                                            ...current,
-                                            tbl_buying_ids: [current.tbl_buying_id] // Initialize tbl_buying_ids array
-                                        };
-                                    }
-                                    return acc;
-                                }, {});
-
-                                // Convert the aggregated results back to an array
-                                const aggregatedArray = Object.values(aggregatedResults);
-                                console.log(aggregatedArray);
-
-                                // Aggregate warehouse quantities by name_product
-                                const aggregatedWarehouse = aggregatedArray.reduce((acc, item) => {
-                                    if (!acc[item.name_product]) {
-                                        acc[item.name_product] = 0;
-                                    }
-                                    acc[item.name_product] += item.unit_quantity_all;
-                                    return acc;
-                                }, {});
-
-                                // Calculate the number of menus that can be created
-                                const menuCounts = menu.map(menuItem => {
-                                    console.log('menuItem:', menuItem);
-                                    const ingredients = foodRecipes.filter(recipe => recipe.tbl_menu_id === menuItem.id_menu);
-                                    const minMenus = ingredients.reduce((min, ingredient) => {
-                                        const totalQuantity = aggregatedWarehouse[ingredient.name_ingredient] || 0;
-                                        const possibleMenus = Math.floor(totalQuantity / ingredient.unit_quantity);
-                                        return Math.min(min, possibleMenus);
-                                    }, Infinity);
-
-                                    // If minMenus is Infinity, set it to 0
-                                    const remainMenus = minMenus === Infinity ? 0 : minMenus;
-
-                                    return {
-                                        ...menuItem,
-                                        remain: remainMenus
-                                    };
-                                });
-
-                                console.log('menuCounts:', menuCounts);
-                                res.render('menu', { menu: menuCounts });
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    },
+		MenuModel.getMenu((error, menu) => {
+			if (error) {
+				console.error('Error fetching menu: ', error);
+				res.status(500).send('Internal Server Error');
+			} else {
+				// Fetch food recipes and warehouse data for comparison
+				MenuModel.getFoodRecipesMenu((error, foodRecipes) => {
+					if (error) {
+						console.error('Error fetching food recipes: ', error);
+						res.status(500).send('Internal Server Error');
+					} else {
+						MenuModel.getWarehouse((error, warehouse) => {
+							if (error) {
+								console.error('Error fetching warehouse: ', error);
+								res.status(500).send('Internal Server Error');
+							} else {
+								// Aggregate results by id_warehouse
+								const aggregatedResults = warehouse.reduce((acc, current) => {
+									// Ensure unit_quantity_all is treated as a number for summation
+									current.unit_quantity_all = parseFloat(current.unit_quantity_all) || 0;
+	
+									// If the id_warehouse already exists, sum up the unit_quantity_all and append tbl_buying_id
+									if (acc[current.id_warehouse]) {
+										acc[current.id_warehouse].unit_quantity_all += current.unit_quantity_all;
+										acc[current.id_warehouse].tbl_buying_ids.push(current.tbl_buying_id);
+									} else {
+										// Otherwise, add the entry to the accumulator
+										acc[current.id_warehouse] = {
+											...current,
+											tbl_buying_ids: [current.tbl_buying_id] // Initialize tbl_buying_ids array
+										};
+									}
+									return acc;
+								}, {});
+								// Convert the aggregated results back to an array
+								const aggregatedArray = Object.values(aggregatedResults);
+								// Aggregate warehouse quantities by name_product
+								const aggregatedWarehouse = aggregatedArray.reduce((acc, item) => {
+									if (!acc[item.name_product]) {
+										acc[item.name_product] = 0;
+									}
+									acc[item.name_product] += item.unit_quantity_all;
+									return acc;
+								}, {});
+								// Calculate the number of menus that can be created
+								const menuCounts = menu.map(menuItem => {
+									const ingredients = foodRecipes.filter(recipe => recipe.tbl_menu_id === menuItem.id_menu);
+									const minMenus = ingredients.reduce((min, ingredient) => {
+										const totalQuantity = aggregatedWarehouse[ingredient.name_ingredient] || 0;
+										const possibleMenus = Math.floor(totalQuantity / ingredient.unit_quantity);
+										return Math.min(min, possibleMenus);
+									}, Infinity);
+									// If minMenus is Infinity, set it to 0
+									const remainMenus = minMenus === Infinity ? 0 : minMenus;
+									
+									return {	
+										...menuItem,
+										remain: remainMenus,
+										status: remainMenus === 0 ? 'OFF' : 'ON'
+									};
+								});
+								console.log('menuCounts:', menuCounts);
+								// Update remain and status in the database
+								const updatePromises = menuCounts.map(menuItem => {
+									return new Promise((resolve, reject) => {
+										MenuModel.updateMenuRemainAndStatus(menuItem.id_menu, menuItem.remain, menuItem.status, (error, results) => {
+											if (error) {
+												reject(error);
+											} else {
+												resolve(results);
+											}
+										});
+									});
+								});
+	
+								Promise.all(updatePromises)
+									.then(() => {
+										res.render('menu', { menu: menuCounts });
+									})
+									.catch(error => {
+										console.error('Error updating menu remain and status: ', error);
+										res.status(500).send('Internal Server Error');
+									});
+							}
+						});
+					}
+				});
+			}
+		});
+	},
 
 	menuAdd: function (req, res) {
         MenuModel.getMenu((error, menu) => {
@@ -216,6 +228,7 @@ module.exports = {
 									acc[option.name_options].push(option);
 									return acc;
 								}, {});
+								console.log('groupedMenuOptions:', groupedMenuOptions);
 								res.render('view_menu', { menu: menu, groupedMenuOptions: groupedMenuOptions });
 							}
 						});
@@ -303,8 +316,6 @@ module.exports = {
                                                                     // Fetch the existing image path from the menu object
                                                                     const existingImagePath = menu.imagePath || '';
 
-                                                                    console.log('menu:', aggregatedArray);
-
                                                                     res.render('edit_menu', {
                                                                         menu: menu,
                                                                         settingType: settingType,
@@ -355,7 +366,6 @@ module.exports = {
 				remain: 0
 			};
 
-			console.log('menu: ', menu);
 
 			let name_ingredients = req.body.name_ingredient;
 			let unit_quantity = req.body.quantity;
@@ -803,6 +813,7 @@ module.exports = {
 														console.error('Error fetching menu options: ', error);
 														res.status(500).send('Internal Server Error');
 													} else {
+														console.log('menuOptions:', menuFormbuying);
 														res.render('menu_options', {
 															menu: menu,
 															settingType: settingType,
@@ -1046,4 +1057,5 @@ module.exports = {
 			});
 		});
 	},
+
 };	

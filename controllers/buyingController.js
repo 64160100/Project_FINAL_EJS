@@ -212,8 +212,8 @@ module.exports = {
 		const id_warehouse = req.body.id_warehouse; // Get id_warehouse from the request body
 
 		BuyingModel.deleteBuying(id_buying_list, id_warehouse, unit_quantity, (deleteError, deleteResults) => {
+			console.log(deleteResults);
 			if (deleteError) {
-				console.log(deleteError);
 				return res.status(500).send('Error deleting buying entry');
 			}
 

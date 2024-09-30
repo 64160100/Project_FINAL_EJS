@@ -88,16 +88,16 @@
         <div class="submenu">
           <a href="/menu" class="link submenu-title">เมนูอาหารและบริการ</a>
           <a href="/menu" class="link">เมนูอาหาร</a>
-          <a href="#" class="link">ตั้งค่าหมวดหมู่</a>
-          <a href="#" class="link">ตั้งค่าหน่วยสินค้า</a>
-          <a href="#" class="link">ตั้งค่าประเภท</a>
+          <a href="/setting_menu_category" class="link">ตั้งค่าหมวดหมู่</a>
+          <a href="/setting_menu_type" class="link">ตั้งค่าประเภท</a>
+          <a href="/setting_menu_unit" class="link">ตั้งค่าหน่วยสินค้า</a>
         </div>
       </li>
 
       <!-- -------- Non Dropdown List Item ------- -->
       <li class="dropdown">
         <div class="title">
-          <a href="/table" class="link">
+          <a href="table" class="link">
             <i class='bx bx-table'></i>
             <span class="name">โต๊ะอาหาร</span>
           </a>
@@ -122,9 +122,9 @@
         <div class="submenu">
           <a href="/buying" class="link submenu-title">รายการจัดซื้อและคงคลัง</a>
           <a href="/buying" class="link">รายการจัดซื้อ</a>
-          <a href="#" class="link">คงคลัง</a>
-          <a href="#" class="link">ตั้งค่าประเภท</a>
-          <a href="#" class="link">ตั้งค่าปริมาณ</a>
+          <a href="/warehouse" class="link">คงคลัง</a>
+          <a href="/setting_type" class="link">ตั้งค่าประเภท</a>
+          <a href="/setting_unit" class="link">ตั้งค่าปริมาณ</a>
         </div>
       </li>
 
@@ -172,56 +172,36 @@
     <!-- ============= Center Dashboard =============== -->
 
     <div class="centered-content">
-      <% if (!zone_name || !table_id) { %>
-        <form action="/zone/select" method="POST">
-          <label for="zone">เลือกโซน:</label>
-          <select name="zone" id="zone">
-            <% zones.forEach(function(zone) { %>
-              <option value="<%= zone.zone_name %>">
-                <%= zone.zone_name %>
-              </option>
+      <% for (let category in groupedMenu) { %>
+        <div class="category">
+          <h3>
+            <%= category %>
+          </h3>
+          <div class="menu-items">
+            <% groupedMenu[category].forEach(menuItem=> { %>
+              <form class="menu-item" action="/order" method="POST">
+                <input type="hidden" name="id" value="<%= menuItem.id %>">
+                <input type="hidden" name="name" value="<%= menuItem.name %>">
+                <input type="hidden" name="price" value="<%= menuItem.price %>">
+                <input type="hidden" name="category" value="<%= menuItem.category %>">
+                <a href="<%= menuItem.status === 'OFF' ? '#' : '/zone/' + zone_name + '/table/' + table_id + '/customize/' + menuItem.id %>"
+                  class="<%= menuItem.status === 'OFF' ? 'disabled-link' : '' %>">
+                  <div class="image-container">
+                    <img class="menu-item-image <%= menuItem.status === 'OFF' ? 'grayscale' : '' %>"
+                      src="/img/<%= menuItem.picture %>" alt="<%= menuItem.name %>">
+                  </div>
+                  <h4 class="<%= menuItem.status === 'OFF' ? 'text-muted' : '' %>">
+                    <%= menuItem.name %>
+                  </h4>
+                  <p class="<%= menuItem.status === 'OFF' ? 'text-muted' : '' %>">
+                    <%= menuItem.price %> บาท
+                  </p>
+                </a>
+              </form>
               <% }); %>
-          </select>
-          <label for="table">เลือกโต๊ะ:</label>
-          <select name="table" id="table">
-            <% tables.forEach(function(table) { %>
-              <option value="<%= table.id_table %>">
-                <%= table.id_table %>
-              </option>
-              <% }); %>
-          </select>
-          <button type="submit">ยืนยัน</button>
-        </form>
-        <% } else { %>
-          <% for (let category in groupedMenu) { %>
-            <div class="category">
-              <h3>
-                <%= category %>
-              </h3>
-              <div class="menu-items">
-                <% groupedMenu[category].forEach(menuItem=> { %>
-                  <form class="menu-item" action="/order" method="POST">
-                    <input type="hidden" name="id" value="<%= menuItem.id %>">
-                    <input type="hidden" name="name" value="<%= menuItem.name %>">
-                    <input type="hidden" name="price" value="<%= menuItem.price %>">
-                    <input type="hidden" name="category" value="<%= menuItem.category %>">
-                    <a href="/zone/<%= zone_name %>/table/<%= table_id %>/customize/<%= menuItem.id %>">
-                      <div class="image-container">
-                        <img class="menu-item-image" src="/img/<%= menuItem.picture %>" alt="<%= menuItem.name %>">
-                      </div>
-                      <h4>
-                        <%= menuItem.name %>
-                      </h4>
-                      <p>
-                        <%= menuItem.price %> บาท
-                      </p>
-                    </a>
-                  </form>
-                  <% }); %>
-              </div>
-            </div>
-            <% } %>
-              <% } %>
+          </div>
+        </div>
+        <% } %>
     </div>
 
     <div class="toggle-basket">
@@ -313,9 +293,10 @@
           <button class="save-button">บันทึก</button>
           <button class="checkout-button"
             onclick="window.location.href='/zone/<%= zone_name %>/table/<%= table_id %>/view_checkbill'">ชำระเงิน</button>
-          <button class="print-qr-button">
-            <i class='bx bx-qr'></i> ปริ้นคิวอาร์โค้ด
-          </button>
+            <button class="print-qr-button">
+              <i class='bx bx-qr'></i> ปริ้นคิวอาร์โค้ด
+            </button>
+            <div id="qrcode"></div>
         </div>
       </ul>
     </div>
@@ -335,11 +316,30 @@
         </form>
       </div>
     </div>
-
-
   </section>
 
   <script src="/js/index.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <script>
+    document.querySelector('.print-qr-button').addEventListener('click', function () {
+      // Extract zone and table IDs from the DOM or variables
+      const zoneId = 'a'; // Replace with actual logic to get zone ID
+      const tableId = '1'; // Replace with actual logic to get table ID
+      const url = `http://localhost:3000/zone/${zoneId}/table/${tableId}/order_food`;
+      const qrcodeContainer = document.getElementById('qrcode');
+      
+      // Clear any existing QR code
+      qrcodeContainer.innerHTML = '';
+  
+      // Generate the QR code
+      new QRCode(qrcodeContainer, {
+        text: url,
+        width: 128,
+        height: 128
+      });
+    });
+</script>
 
   <script>
     function submitSaveForm() {
@@ -368,12 +368,12 @@
       const orderDetailsHtml = Array.from(document.querySelectorAll('.menu-list .swipe-item'))
         .filter(item => item.getAttribute('data-status-bill') === 'N')
         .map(item => `
-            <tr>
-              <td>${item.querySelector('.product-name').innerText}</td>
-              <td>${item.querySelector('.item-quantity').innerText}</td>
-              <td>${item.querySelector('.item-price').innerText}</td>
-            </tr>
-          `).join('');
+          <tr>
+            <td>${item.querySelector('.product-name').innerText}</td>
+            <td>${item.querySelector('.item-quantity').innerText}</td>
+            <td>${item.querySelector('.item-price').innerText}</td>
+          </tr>
+        `).join('');
 
       const totalAmountHtml = document.getElementById('totalAmount').innerHTML;
 
@@ -405,43 +405,43 @@
           quantity: item.querySelector('.item-quantity').innerText,
           price: item.querySelector('.item-price').innerText
         }));
-      const totalPrice = document.querySelector('.total-price').innerText;
-      const discountPrice = document.querySelector('.discount-price').innerText;
-      const finalPrice = document.querySelector('.final-price').innerText;
+      const totalPrice = parseFloat(document.querySelector('.total-price').innerText);
+      const discountPrice = parseFloat(document.querySelector('.discount-price').innerText);
+      const finalPrice = totalPrice - discountPrice;
 
       // Step 2: Display a summary page/modal with the collected data
       let orderDetailsHtml = `
-          <p>${zoneName}</p>
-          <p>${tableId}</p>
-          <table>
-            <thead>
-              <tr>
-                <th>สินค้า</th>
-                <th>หน่วย</th>
-                <th>ราคา</th>
-              </tr>
-            </thead>
-            <tbody>
-        `;
+        <p>${zoneName}</p>
+        <p>${tableId}</p>
+        <table>
+          <thead>
+            <tr>
+              <th>สินค้า</th>
+              <th>หน่วย</th>
+              <th>ราคา</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
       menuItems.forEach(item => {
         orderDetailsHtml += `
-            <tr>
-              <td>${item.product}</td>
-              <td>${item.quantity}</td>
-              <td>${item.price}</td>
-            </tr>
-          `;
+          <tr>
+            <td>${item.product}</td>
+            <td>${item.quantity}</td>
+            <td>${item.price}</td>
+          </tr>
+        `;
       });
       orderDetailsHtml += `
-            </tbody>
-          </table>
-        `;
+          </tbody>
+        </table>
+      `;
       document.getElementById('orderDetails').innerHTML = orderDetailsHtml;
       document.getElementById('totalAmount').innerHTML = `
-          <p>ราคารวม: ${totalPrice}</p>
-          <p>ราคาส่วนลด: ${discountPrice}</p>
-          <p>ราคารวมแบบสรุป: ${finalPrice}</p>
-        `;
+        <p>ราคารวม: ${totalPrice.toFixed(2)}</p>
+        <p>ราคาส่วนลด: ${discountPrice.toFixed(2)}</p>
+        <p>ราคารวมแบบสรุป: ${finalPrice.toFixed(2)}</p>
+      `;
       document.getElementById('summaryModal').style.display = 'block';
     }
 
@@ -761,6 +761,3 @@
       }
     }
   </script>
-</body>
-
-</html>

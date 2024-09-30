@@ -110,7 +110,7 @@ module.exports = {
         if (typeof callback !== 'function') {
             throw new TypeError('Callback must be a function');
         }
-    
+        
         // Start a transaction
         connection.beginTransaction(function(err) {
             if (err) {
@@ -130,19 +130,13 @@ module.exports = {
                     });
                 }
     
-                // Check for foreign key constraints before deleting from tbl_buying
-                connection.query('SELECT COUNT(*) AS count FROM tbl_warehouse WHERE tbl_buying_id = ?', [buyingId], function (fkError, fkResults) {
-                    if (fkError) {
+                // Delete the row in tbl_warehouse
+                const deleteWarehouseQuery = 'DELETE FROM tbl_warehouse WHERE tbl_buying_id = ?';
+                connection.query(deleteWarehouseQuery, [buyingId], function (deleteWarehouseError, deleteWarehouseResults) {
+                    if (deleteWarehouseError) {
                         // If an error occurs, rollback the transaction
                         return connection.rollback(function() {
-                            callback(fkError, null);
-                        });
-                    }
-    
-                    if (fkResults[0].count > 0) {
-                        // If there are foreign key constraints, rollback the transaction
-                        return connection.rollback(function() {
-                            callback(new Error('Cannot delete or update a parent row: a foreign key constraint fails'), null);
+                            callback(deleteWarehouseError, null);
                         });
                     }
     
@@ -163,7 +157,7 @@ module.exports = {
                                 });
                             }
                             // Success
-                            callback(null, { buyingResults: deleteBuyingResults, warehouseResults: updateWarehouseResults });
+                            callback(null, { buyingResults: deleteBuyingResults, warehouseResults: updateWarehouseResults, deleteWarehouseResults: deleteWarehouseResults });
                         });
                     });
                 });

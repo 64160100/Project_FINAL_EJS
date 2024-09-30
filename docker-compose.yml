@@ -45,24 +45,24 @@ services:
     depends_on:
       - db
     
-  owaspwaf:
-    image: owasp/modsecurity-crs:apache-alpine
-    ports:
-      - '80:80'
-    environment:
-      SERVERNAME: modsec2-apache
-      BACKEND: http://server:3000
-      # PORT: 3000
-      TZ: "Asia/Bangkok"
-      ERRORLOG: "/var/log/error.log"
-      ACCESSLOG: "/var/log/access.log"
-      MODSEC_AUDIT_LOG_FORMAT: Native
-      MODSEC_AUDIT_LOG_TYPE: Serial
-      MODSEC_AUDIT_LOG: "/var/log/modsec_audit.log"
-      MODSEC_RESP_BODY_ACCESS: "On"
-      MODSEC_RESP_BODY_MIMETYPE: "text/plain text/html text/xml application/json"
-    depends_on:
-      - db
+  # owaspwaf:
+  #   image: owasp/modsecurity-crs:apache-alpine
+  #   ports:
+  #     - '80:80'
+  #   environment:
+  #     SERVERNAME: modsec2-apache
+  #     BACKEND: http://server:3000
+  #     # PORT: 3000
+  #     TZ: "Asia/Bangkok"
+  #     ERRORLOG: "/var/log/error.log"
+  #     ACCESSLOG: "/var/log/access.log"
+  #     MODSEC_AUDIT_LOG_FORMAT: Native
+  #     MODSEC_AUDIT_LOG_TYPE: Serial
+  #     MODSEC_AUDIT_LOG: "/var/log/modsec_audit.log"
+  #     MODSEC_RESP_BODY_ACCESS: "On"
+  #     MODSEC_RESP_BODY_MIMETYPE: "text/plain text/html text/xml application/json"
+  #   depends_on:
+  #     - db
       
 volumes:
   db-data:

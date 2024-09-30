@@ -12,7 +12,7 @@ app.use(session({
     secret: 'keyboard',
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 60*60*1000 }
+    cookie: { maxAge: 60 * 60 * 1000 }
 }));
 app.use(flash());
 
@@ -22,37 +22,31 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // ===================== Python-Script ===================== //
-
 app.get('/', (req, res) => {
     if (!req.session.user) {
         return res.redirect('/login');
     }
     const permissions = req.session.permissions;
-    res.render('index', { user: req.session.user, permissions: permissions });
+
+    if (!permissions || permissions.dashboard.dashboard_read !== 'Y') {
+        res.redirect('/404');
+    } else {
+        res.render('index', { user: req.session.user, permissions: permissions });
+    }
 });
 
 app.get('/404', (req, res) => {
     res.status(404).render('404_not_found'); // Adjust the render target to your 404 page template
 });
 
+// ===================== dashboard ===================== //
+app.get('/dashboard', require('./routes/dashboard'));
 
-app.get('/dashboard', (req, res) => {
-    if (!req.session.user) {
-        return res.redirect('/login');
-    }
-    const permissions = req.session.permissions;
-    
-    if (!permissions || permissions.dashboard.dashboard_read !== 'Y') {
-        res.redirect('/404');
-    } else {
-    res.render('dashboard', { user: req.session.user, permissions: permissions });
-    }
-});
 
 // ===================== Login ===================== //
-app.get('/login' , require('./routes/login'));
-app.get('/logout' , require('./routes/login'));
-app.post('/loginUser' , require('./routes/login'))
+app.get('/login', require('./routes/login'));
+app.get('/logout', require('./routes/login'));
+app.post('/loginUser', require('./routes/login'))
 
 // ===================== Employee ===================== //
 app.get('/employee', require('./routes/employee'));
@@ -126,11 +120,12 @@ app.get('/view_bill', require('./routes/table'));
 
 app.get('/zone/:zone/table/:table/order_food', require('./routes/table'));
 app.get('/zone/:zone/table/:table/customize/:id', require('./routes/table'));
-app.get('/zone/:zone/table/:table/view_checkbill', require('./routes/table'));
 app.post('/zone/:zone/table/:table/create_order', require('./routes/table'));
 app.post('/zone/:zone/table/:table/update_order', require('./routes/table'));
 app.post('/zone/:zone/table/:table/delete_order', require('./routes/table'));
 
+app.get('/zone/:zone/table/:table/view_checkbill', require('./routes/table'));
+app.post('/zone/:zone/table/:table/create_checkbill', require('./routes/table'));
 // ===================== Buying ===================== //
 app.get('/buying', require('./routes/buying'));
 app.get('/add_buying', require('./routes/buying'));

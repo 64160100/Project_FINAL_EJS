@@ -89,15 +89,15 @@
                     <a href="/menu" class="link submenu-title">เมนูอาหารและบริการ</a>
                     <a href="/menu" class="link">เมนูอาหาร</a>
                     <a href="/setting_menu_category" class="link">ตั้งค่าหมวดหมู่</a>
-                    <a href="/setting_menu_type" class="link">ตั้งค่าหน่วยสินค้า</a>
-                    <a href="/setting_menu_unit" class="link">ตั้งค่าประเภท</a>
+                    <a href="/setting_menu_type" class="link">ตั้งค่าประเภท</a>
+                    <a href="/setting_menu_unit" class="link">ตั้งค่าหน่วยสินค้า</a>
                 </div>
             </li>
 
             <!-- -------- Non Dropdown List Item ------- -->
             <li class="dropdown">
                 <div class="title">
-                    <a href="/table" class="link">
+                    <a href="table" class="link">
                         <i class='bx bx-table'></i>
                         <span class="name">โต๊ะอาหาร</span>
                     </a>
@@ -106,7 +106,7 @@
                 <div class="submenu">
                     <a href="/table" class="link submenu-title">โต๊ะอาหาร</a>
                     <a href="/table" class="link">จัดโต๊ะอาหาร</a>
-                    <a href="#" class="link">สั่งเมนู</a>
+                    <a href="/view_bill" class="link">บิลอาหาร</a>
                 </div>
             </li>
 
@@ -195,7 +195,7 @@
                             <li>
                                 <%= buying.id_buying_list %>
                             </li>
-                            <li>
+                            <li class="product-name">
                                 <%= buying.name_product %>
                             </li>
                             <li>
@@ -225,17 +225,16 @@
                                     <%= buying.second %>
                                 </span>s
                             </li>
-                            <li class="buying-action ">
-                                <button onclick="location.href='/view_buying/<%= buying.id_buying_list %>'"
-                                    class="view-button">ดูข้อมูล</button>
-                                    <form action="/delete_buying/<%= buying.id_buying_list %>" method="post" style="display: inline;">
-                                        <input type="hidden" name="unit_quantity" value="<%= buying.unit_quantity %>">
-                                        <button type="submit" class="delete-button">ลบ</button>
-                                    </form>
+                            <li class="buying-action">
+                                <button onclick="location.href='/view_buying/<%= buying.id_buying_list %>'" class="view-button">ดูข้อมูล</button>
+                                <form action="/delete_buying/<%= buying.id_buying_list %>" method="post" style="display: inline;">
+                                    <input type="hidden" name="unit_quantity" value="<%= buying.unit_quantity %>">
+                                    <button type="submit" class="delete-button">ลบ</button>
+                                </form>
                             </li>
                         </ul>
                     </div>
-                    <% }); %>
+                <% }); %>
             </div>
         </div>
     </section>
@@ -243,6 +242,29 @@
     <!-- Link JS -->
     <script src="../js/index.js"></script>
     <script src="../js/buying.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Count the occurrences of each product name
+            const productCount = {};
+            document.querySelectorAll('.product-name').forEach(function(element) {
+                const productName = element.textContent.trim();
+                if (!productCount[productName]) {
+                    productCount[productName] = 0;
+                }
+                productCount[productName]++;
+            });
+    
+            // Disable delete buttons for products with less than 2 occurrences
+            document.querySelectorAll('.buying-item').forEach(function(item) {
+                const productName = item.querySelector('.product-name').textContent.trim();
+                if (productCount[productName] < 2) {
+                    const deleteButton = item.querySelector('.delete-button');
+                    deleteButton.disabled = true;
+                    deleteButton.style.backgroundColor = 'gray';
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

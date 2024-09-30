@@ -89,15 +89,15 @@
                     <a href="/menu" class="link submenu-title">เมนูอาหารและบริการ</a>
                     <a href="/menu" class="link">เมนูอาหาร</a>
                     <a href="/setting_menu_category" class="link">ตั้งค่าหมวดหมู่</a>
-                    <a href="/setting_menu_type" class="link">ตั้งค่าหน่วยสินค้า</a>
-                    <a href="/setting_menu_unit" class="link">ตั้งค่าประเภท</a>
+                    <a href="/setting_menu_type" class="link">ตั้งค่าประเภท</a>
+                    <a href="/setting_menu_unit" class="link">ตั้งค่าหน่วยสินค้า</a>
                 </div>
             </li>
 
             <!-- -------- Non Dropdown List Item ------- -->
             <li class="dropdown">
                 <div class="title">
-                    <a href="/table" class="link">
+                    <a href="table" class="link">
                         <i class='bx bx-table'></i>
                         <span class="name">โต๊ะอาหาร</span>
                     </a>
@@ -106,7 +106,7 @@
                 <div class="submenu">
                     <a href="/table" class="link submenu-title">โต๊ะอาหาร</a>
                     <a href="/table" class="link">จัดโต๊ะอาหาร</a>
-                    <a href="#" class="link">สั่งเมนู</a>
+                    <a href="/view_bill" class="link">บิลอาหาร</a>
                 </div>
             </li>
 
@@ -122,9 +122,9 @@
                 <div class="submenu">
                     <a href="/buying" class="link submenu-title">รายการจัดซื้อและคงคลัง</a>
                     <a href="/buying" class="link">รายการจัดซื้อ</a>
-                    <a href="#" class="link">คงคลัง</a>
-                    <a href="#" class="link">ตั้งค่าประเภท</a>
-                    <a href="#" class="link">ตั้งค่าปริมาณ</a>
+                    <a href="/warehouse" class="link">คงคลัง</a>
+                    <a href="/setting_type" class="link">ตั้งค่าประเภท</a>
+                    <a href="/setting_unit" class="link">ตั้งค่าปริมาณ</a>
                 </div>
             </li>
 
@@ -217,10 +217,12 @@
                                 <%= menu.remain %>
                             </li>
                             <li>
-                                <% if (menu.status === 'ON') { %>
-                                    <button class="btn btn-success">ON</button>
+                                <% if (menu.remain === 0) { %>
+                                    <button class="btn btn-danger" disabled>OFF</button>
+                                <% } else if (menu.status === 'ON') { %>
+                                    <button class="btn btn-success" onclick="updateStatus('<%= menu.id_menu %>', 'OFF')" disabled>ON</button>
                                 <% } else if (menu.status === 'OFF') { %>
-                                    <button class="btn btn-danger">OFF</button>
+                                    <button class="btn btn-danger" onclick="updateStatus('<%= menu.id_menu %>', 'ON')" disabled>OFF</button>
                                 <% } %>
                             </li>
                             <li class="menu-action">
@@ -238,4 +240,28 @@
 
     <!-- Link JS -->
     <script src="../js/index.js"></script>
+
+    <script>
+        function updateStatus(id_menu, newStatus) {
+            fetch(`/update_menu_status/${id_menu}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ status: newStatus })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload(); // Reload the page to reflect the changes
+                } else {
+                    alert('Error updating status');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error updating status');
+            });
+        }
+        </script>
 </body>

@@ -88,16 +88,16 @@
                 <div class="submenu">
                     <a href="/menu" class="link submenu-title">เมนูอาหารและบริการ</a>
                     <a href="/menu" class="link">เมนูอาหาร</a>
-                    <a href="#" class="link">ตั้งค่าหมวดหมู่</a>
-                    <a href="#" class="link">ตั้งค่าหน่วยสินค้า</a>
-                    <a href="#" class="link">ตั้งค่าประเภท</a>
+                    <a href="/setting_menu_category" class="link">ตั้งค่าหมวดหมู่</a>
+                    <a href="/setting_menu_type" class="link">ตั้งค่าประเภท</a>
+                    <a href="/setting_menu_unit" class="link">ตั้งค่าหน่วยสินค้า</a>
                 </div>
             </li>
 
             <!-- -------- Non Dropdown List Item ------- -->
             <li class="dropdown">
                 <div class="title">
-                    <a href="/table" class="link">
+                    <a href="table" class="link">
                         <i class='bx bx-table'></i>
                         <span class="name">โต๊ะอาหาร</span>
                     </a>
@@ -106,7 +106,7 @@
                 <div class="submenu">
                     <a href="/table" class="link submenu-title">โต๊ะอาหาร</a>
                     <a href="/table" class="link">จัดโต๊ะอาหาร</a>
-                    <a href="#" class="link">สั่งเมนู</a>
+                    <a href="/view_bill" class="link">บิลอาหาร</a>
                 </div>
             </li>
 
@@ -122,9 +122,9 @@
                 <div class="submenu">
                     <a href="/buying" class="link submenu-title">รายการจัดซื้อและคงคลัง</a>
                     <a href="/buying" class="link">รายการจัดซื้อ</a>
-                    <a href="#" class="link">คงคลัง</a>
-                    <a href="#" class="link">ตั้งค่าประเภท</a>
-                    <a href="#" class="link">ตั้งค่าปริมาณ</a>
+                    <a href="/warehouse" class="link">คงคลัง</a>
+                    <a href="/setting_type" class="link">ตั้งค่าประเภท</a>
+                    <a href="/setting_unit" class="link">ตั้งค่าปริมาณ</a>
                 </div>
             </li>
 
@@ -200,21 +200,23 @@
                                     <div class="form-container">
                                         <label for="settingType">ประเภทสินค้า</label>
                                         <select id="settingType" name="settingType">
-                                            <% settingType.forEach(type=> { %>
-                                                <option value="<%= type.menu_type %>">
+                                            <option value="" disabled <%= !menu || !menu.menu_type ? 'selected' : '' %>>กรุณาเลือก</option>
+                                            <% settingType.forEach(type => { %>
+                                                <option value="<%= type.menu_type %>" <%= menu && type.menu_type === menu.menu_type ? 'selected' : '' %>>
                                                     <%= type.menu_type %>
                                                 </option>
-                                                <% }); %>
+                                            <% }); %>
                                         </select>
                                     </div>
                                     <div class="form-container">
                                         <label for="settingCategory">หมวดหมู่สินค้า</label>
                                         <select id="settingCategory" name="settingCategory">
-                                            <% settingCategory.forEach(category=> { %>
-                                                <option value="<%= category.menu_category %>">
+                                            <option value="" disabled <%= !menu || !menu.menu_category ? 'selected' : '' %>>กรุณาเลือก</option>
+                                            <% settingCategory.forEach(category => { %>
+                                                <option value="<%= category.menu_category %>" <%= menu && category.menu_category === menu.menu_category ? 'selected' : '' %>>
                                                     <%= category.menu_category %>
                                                 </option>
-                                                <% }); %>
+                                            <% }); %>
                                         </select>
                                     </div>
                                 </div>
@@ -227,11 +229,12 @@
                                     <div class="form-container">
                                         <label for="settingUnit">หน่วยสินค้า</label>
                                         <select id="settingUnit" name="settingUnit">
-                                            <% settingUnit.forEach(unit=> { %>
-                                                <option value="<%= unit.menu_unit %>">
+                                            <option value="" disabled <%= !menu || !menu.menu_unit ? 'selected' : '' %>>กรุณาเลือก</option>
+                                            <% settingUnit.forEach(unit => { %>
+                                                <option value="<%= unit.menu_unit %>" <%= menu && unit.menu_unit === menu.menu_unit ? 'selected' : '' %>>
                                                     <%= unit.menu_unit %>
                                                 </option>
-                                                <% }); %>
+                                            <% }); %>
                                         </select>
                                     </div>
                                     <div class="form-container">
@@ -328,17 +331,17 @@
                 });
     
                 const availableOptions = allOptions.filter(option => option.style.display !== 'none' && option.value !== '');
-                const addButton = fieldsContainer.querySelector('.addIngredient i.bx-plus-medical');
+                const addButton = fieldsContainer.querySelector('.addIngredient');
     
                 if (availableOptions.length === 0) {
-                    addButton.parentElement.innerHTML = "<i class='bx bx-error' style='font-size: 24px; color: yellow;'></i>";
-                    addButton.parentElement.style.backgroundColor = 'yellow'; // Change background color to yellow
-                    addButton.parentElement.disabled = true;
+                    addButton.innerHTML = "<i class='bx bx-error' style='font-size: 24px; color: gray;'></i>";
+                    addButton.style.backgroundColor = 'yellow'; // Change background color to yellow
+                    addButton.disabled = true;
                 } else {
-                    addButton.parentElement.innerHTML = "<i class='bx bx-plus-medical'></i>";
-                    addButton.parentElement.style.backgroundColor = ''; // Reset background color
-                    addButton.parentElement.style.color = 'white'; // Reset icon color
-                    addButton.parentElement.disabled = false;
+                    addButton.innerHTML = "<i class='bx bx-plus-medical'></i>";
+                    addButton.style.backgroundColor = ''; // Reset background color
+                    addButton.style.color = 'white'; // Reset icon color
+                    addButton.disabled = false;
                 }
             }
     
@@ -360,7 +363,9 @@
                 const target = event.target.closest('.addIngredient, .removeIngredient');
                 if (target) {
                     if (target.classList.contains('addIngredient')) {
-                        addIngredientHandler(target);
+                        if (!target.disabled) {
+                            addIngredientHandler(target);
+                        }
                     } else if (target.classList.contains('removeIngredient')) {
                         removeIngredientHandler(target);
                     }
@@ -453,5 +458,4 @@
             updateSelectOptions();
         });
     </script>
-
 </body>

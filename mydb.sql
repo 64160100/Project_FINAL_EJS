@@ -16,14 +16,20 @@ INSERT INTO `permission_table` (`permission_id`, `table_read`, `table_create`, `
 
 INSERT INTO `tbl_user` (`tbl_employees`, `tbl_user_permission`, `username`, `password`, `profile_picture`, `status`) VALUES ('BKB0001', 'Manger', 'user', '1234', NULL, 'ON');
 
-INSERT INTO `setting_type` (`id_type`) VALUES ('หมูสด');
+INSERT INTO `setting_type` (`id_type`) VALUES ('ผัก');
+
+INSERT INTO `setting_type` (`id_type`) VALUES ('เนื้อสด');
+
+INSERT INTO `setting_type` (`id_type`) VALUES ('เครื่องดื่ม');
+
+INSERT INTO `setting_type` (`id_type`) VALUES ('เครื่องปรุง');
 
 INSERT INTO `setting_unit` (`id_unit`) VALUES ('กรัม');
+
+INSERT INTO `setting_unit` (`id_unit`) VALUES ('ขวด');
 
 INSERT INTO `menu_category` (`menu_category`) VALUES ('ผัด');
 
 INSERT INTO `menu_type` (`menu_type`) VALUES ('ราดข้าว');
 
 INSERT INTO `menu_unit` (`menu_unit`) VALUES ('จาน');
-
-

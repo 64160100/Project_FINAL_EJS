@@ -45,17 +45,27 @@ module.exports = {
         });
     },
 
+    updateMenuRemainAndStatus: function (id_menu, remain, status, callback) {
+        const query = 'UPDATE tbl_menu SET remain = ?, status = ? WHERE id_menu = ?';
+        connection.query(query, [remain, status, id_menu], (error, results) => {
+            if (error) {
+                return callback(error, null);
+            }
+            callback(null, results);
+        });
+    },
+
     getMenuById: function (menuId, callback) {
         const sql = 'SELECT * FROM tbl_menu WHERE id_menu = ?';
         connection.query(sql, [menuId], (error, results) => {
             if (error) {
                 return callback(error, null);
             }
-    
+
             if (results.length === 0) {
                 return callback(null, null);
             }
-    
+
             callback(null, results[0]);
         });
     },
@@ -70,7 +80,7 @@ module.exports = {
         });
     },
 
-    getMenuOptions: function(menuId, callback) {
+    getMenuOptions: function (menuId, callback) {
         const query = 'SELECT * FROM tbl_menu_options WHERE menu_id = ?';
         connection.query(query, [menuId], (err, results) => {
             if (err) {
@@ -90,7 +100,7 @@ module.exports = {
         });
     },
 
-    getMaxIdFoodRecipes: function(callback) {
+    getMaxIdFoodRecipes: function (callback) {
         const sql = 'SELECT id_food_recipes FROM tbl_food_recipes ORDER BY id_food_recipes ASC';
         connection.query(sql, (error, results) => {
             if (error) {
@@ -247,17 +257,39 @@ module.exports = {
                 unit_id = VALUES(unit_id)
         `;
         const values = [
-            ingredient.id_food_recipes, 
+            ingredient.id_food_recipes,
             ingredient.tbl_menu_id,
             ingredient.name_ingredient,
             ingredient.unit_quantity,
             ingredient.unit_id
-        ];        
+        ];
         connection.query(query, values, (error, result) => {
             if (error) {
                 return callback(error, null);
             }
             return callback(null, result);
+        });
+    },
+
+    // Add this function to MenuModel
+    deleteFromFoodComparison: (id_food_recipes, callback) => {
+        const query = 'DELETE FROM tbl_food_comparison WHERE id_food_recipes = ?';
+        connection.query(query, [id_food_recipes], (error, results) => {
+            if (error) {
+                return callback(error, null);
+            }
+            callback(null, results);
+        });
+    },
+
+    isIngredientReferenced: (id_food_recipes, callback) => {
+        const query = 'SELECT COUNT(*) AS count FROM tbl_food_comparison WHERE id_food_recipes = ?';
+        connection.query(query, [id_food_recipes], (error, results) => {
+            if (error) {
+                return callback(error, null);
+            }
+            const isReferenced = results[0].count > 0;
+            callback(null, isReferenced);
         });
     },
 
@@ -400,7 +432,7 @@ module.exports = {
             callback(null, maxId);
         });
     },
-    
+
     insertMenuOptions: (menuOptions, callback) => {
         const query = 'INSERT INTO tbl_menu_options SET ?';
         connection.query(query, menuOptions, (error, results) => {
@@ -409,7 +441,7 @@ module.exports = {
             }
             callback(null, results);
         });
-    }, 
+    },
 
     getMenuOptionsById: (menuOptionsId, callback) => {
         const query = 'SELECT id_menu_options, menu_id FROM tbl_menu_options WHERE menu_id = ?';
@@ -447,9 +479,9 @@ module.exports = {
             if (results.length === 0) {
                 return callback(new Error('Menu option not found'), null);
             }
-    
+
             const menuId = results[0].menu_id;
-    
+
             // Query to delete the menu option
             const deleteQuery = 'DELETE FROM tbl_menu_options WHERE id_menu_options = ?';
             connection.query(deleteQuery, [menuOptionsId], (deleteError, deleteResults) => {
@@ -480,4 +512,5 @@ module.exports = {
             callback(null, results);
         });
     },
+
 };

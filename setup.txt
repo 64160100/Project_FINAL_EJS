@@ -1,4 +1,0 @@
-ALTER TABLE tbl_employees DROP INDEX title_UNIQUE;
-ALTER TABLE tbl_employees ADD CONSTRAINT unique_employee_id UNIQUE (employee_id);
-ALTER TABLE tbl_employees ADD CONSTRAINT unique_id_number UNIQUE (id_number);
-ALTER TABLE tbl_employees ADD CONSTRAINT unique_phone_number UNIQUE (phone_number);

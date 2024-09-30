@@ -88,16 +88,16 @@
                 <div class="submenu">
                     <a href="/menu" class="link submenu-title">เมนูอาหารและบริการ</a>
                     <a href="/menu" class="link">เมนูอาหาร</a>
-                    <a href="#" class="link">ตั้งค่าหมวดหมู่</a>
-                    <a href="#" class="link">ตั้งค่าหน่วยสินค้า</a>
-                    <a href="#" class="link">ตั้งค่าประเภท</a>
+                    <a href="/setting_menu_category" class="link">ตั้งค่าหมวดหมู่</a>
+                    <a href="/setting_menu_type" class="link">ตั้งค่าประเภท</a>
+                    <a href="/setting_menu_unit" class="link">ตั้งค่าหน่วยสินค้า</a>
                 </div>
             </li>
 
             <!-- -------- Non Dropdown List Item ------- -->
             <li class="dropdown">
                 <div class="title">
-                    <a href="/table" class="link">
+                    <a href="table" class="link">
                         <i class='bx bx-table'></i>
                         <span class="name">โต๊ะอาหาร</span>
                     </a>
@@ -106,7 +106,7 @@
                 <div class="submenu">
                     <a href="/table" class="link submenu-title">โต๊ะอาหาร</a>
                     <a href="/table" class="link">จัดโต๊ะอาหาร</a>
-                    <a href="#" class="link">สั่งเมนู</a>
+                    <a href="/view_bill" class="link">บิลอาหาร</a>
                 </div>
             </li>
 
@@ -122,9 +122,9 @@
                 <div class="submenu">
                     <a href="/buying" class="link submenu-title">รายการจัดซื้อและคงคลัง</a>
                     <a href="/buying" class="link">รายการจัดซื้อ</a>
-                    <a href="#" class="link">คงคลัง</a>
-                    <a href="#" class="link">ตั้งค่าประเภท</a>
-                    <a href="#" class="link">ตั้งค่าปริมาณ</a>
+                    <a href="/warehouse" class="link">คงคลัง</a>
+                    <a href="/setting_type" class="link">ตั้งค่าประเภท</a>
+                    <a href="/setting_unit" class="link">ตั้งค่าปริมาณ</a>
                 </div>
             </li>
 
@@ -626,7 +626,7 @@
                     <select name="name_ingredient" class="custom-select" required aria-label="ชื่อวัตถุดิบ">
                         <option value="" disabled selected>กรุณาเลือกวัตถุดิบ</option>
                         <% menuFormbuying.forEach(item => { %>
-                            <option value="<%= item.name_product %>" data-quantity="<%= item.unit_quantity %>" data-unit="<%= item.setting_unit_id %>">
+                            <option value="<%= item.name_product %>" data-quantity="<%= item.unit_quantity_all %>" data-unit="<%= item.setting_unit_id %>">
                                 <%= item.name_product %>
                             </option>
                         <% }); %>
