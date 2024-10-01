@@ -54,7 +54,7 @@
     text-align: center;
 }
 
-.promotion-content {
+.promotion-item {
     margin-top: 10px;
 }
 
@@ -71,26 +71,61 @@
     text-align: center;
 }
 
-.add-promotion-button {
+.btn-view, .btn-delete {
+    padding: 5px 10px;
+    text-decoration: none;
     color: white;
-    border: none;
-    background-color: #4CAF50;
-    padding: 10px 20px; 
-    font-size: 16px; 
-    border-radius: 5px;
-    cursor: pointer; 
-    transition: background-color 0.3s ease;
+    border-radius: 4px;
+    margin-right: 5px;
 }
 
-.add-promotion-button:hover {
+.btn-view {
+    background-color: #007bff; /* Blue */
+}
+
+.btn-view:hover {
+    background-color: #0056b3;
+}
+
+.btn-delete {
+    background-color: #f44336; /* Red */
+    border: none;
+    cursor: pointer;
+}
+
+.btn-delete:hover {
+    background-color: #e53935;
+}
+
+.add-promotion-button {
+    padding: 5px 10px; /* Adjusted to match .view-button */
+    background-color: #007bff; /* Consistent color across buttons */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add-promotion-button {
+    background-color: #4CAF50; /* Kept original color */
+    padding: 10px 20px; /* Kept original padding */
+    font-size: 16px; /* Ensured consistency in font size across buttons */
+    border-radius: 5px; /* Kept original border-radius */
+    cursor: pointer; /* Kept original cursor style */
+    transition: background-color 0.3s ease; /* Kept original transition for hover effect */
+}
+
+.add-buying-button:hover {
     opacity: 0.9; /* Slightly more opaque for a subtle effect */
     transform: scale(1.05); /* Slightly larger to indicate interactivity */
 }
 
-.delete-button:hover {
-    background-color: #c82333; /* A darker shade for the delete button */
+.promotion-header .promotion-details li,
+.promotion-item .promotion-detail li {
+    width: 14%;
 }
 
-.add-purchase-button:hover {
-    background-color: #369b47; /* A slightly darker green for better contrast */
+.promotion-header .promotion-details li:last-child,
+.promotion-item .promotion-detail li:last-child {
+    width: 20%;
 }

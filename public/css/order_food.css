@@ -276,14 +276,11 @@
     background-color: #007bff;
     color: #fff;
     border: none;
-    padding: 8px 16px;
-    /* Reduced padding */
+    padding: 4px 7px;
     cursor: pointer;
     border-radius: 5px;
     font-size: 14px;
-    /* Reduced font size */
-    margin-right: 8px;
-    /* Reduced margin */
+    margin-right: 4px;
 }
 
 .basket-sidebar .checkout-button {
@@ -565,18 +562,14 @@
     align-items: center;
     justify-content: center;
     width: 50px;
-    /* Ensure this matches the width of the header span */
 }
 
 .quantity-controls .item-quantity {
     text-align: center;
     font-size: 16px;
     margin: 0;
-    /* Remove any default margin */
     padding: 0;
-    /* Remove any default padding */
     width: 50px;
-    /* Ensure this matches the width of the header span */
 }
 
 .item-price {
@@ -585,10 +578,8 @@
     font-size: 16px;
 }
 
-/* Additional styles to ensure consistent alignment and sizing */
 .menu-list li span.product-name {
     flex: 2;
-    /* Adjust as needed to give more space to the product name */
     text-align: left;
 }
 
@@ -596,34 +587,24 @@
 /* Modal container */
 .modal {
     display: none;
-    /* Hidden by default */
     position: fixed;
-    /* Stay in place */
     z-index: 1000;
-    /* Sit on top */
     left: 0;
     top: 0;
     width: 100%;
-    /* Full width */
     height: 100%;
-    /* Full height */
     overflow: auto;
-    /* Enable scroll if needed */
     background-color: rgba(0, 0, 0, 0.5);
-    /* Black w/ opacity */
 }
 
 /* Modal content */
 .modal-content {
     background-color: #fefefe;
     margin: 15% auto;
-    /* 15% from the top and centered */
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
-    /* Could be more or less, depending on screen size */
     max-width: 600px;
-    /* Maximum width */
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     animation: fadeIn 0.3s ease-in-out;
@@ -687,7 +668,6 @@
 }
 
 /* ลบ */
-/* Styling for the delete button */
 .delete-button {
     background-color: red;
     color: white;
@@ -699,8 +679,6 @@
 }
 
 /* ส่วนท้าย */
-/* Ensure the container takes up the full height of the parent */
-
 .sidebar-footer {
     display: flex;
     justify-content: space-between;
@@ -716,7 +694,7 @@
 .checkout-button,
 .print-qr-button {
     padding: 10px 20px;
-    margin: 5px;
+    margin: 1px;
     background-color: #4CAF50;
     color: white;
     border: none;
@@ -737,23 +715,18 @@
 
 /* ปิดสไลด์ */
 .basket-sidebar {
-    /* Your existing styles */
     transition: transform 0.3s ease;
 }
 
 .basket-sidebar.close {
     transform: translateX(100%);
-    /* Adjust as needed to hide the sidebar */
 }
 
 /* ใหม่ */
-/* Existing CSS content */
 .basket-sidebar.close {
     transform: translateX(100%);
-    /* Adjust as needed to hide the sidebar */
 }
 
-/* New CSS for the summary bill modal */
 .modal {
     display: none;
     position: fixed;
@@ -846,3 +819,84 @@ button:hover {
 .text-muted {
     color: rgba(108, 117, 125, 0.7); /* Use rgba to make the text color faded */
 }
+
+/* ส่วนลด */
+  .total-price-container {
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 1px;
+    margin-bottom: 20px;
+  }
+
+  .price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .discount-code-input {
+    width: 80px; /* ปรับขนาดให้เล็กลง */
+    padding: 3px; /* ปรับ padding ให้เล็กลง */
+    margin-left: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  .apply-discount-button {
+    padding: 3px 8px; /* ปรับขนาดให้เล็กลง */
+    margin-left: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .apply-discount-button:hover {
+    background-color: #0056b3;
+  }
+
+  .toggle-discount-button {
+    padding: 10px 20px; /* ปรับขนาดให้เท่ากัน */
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%; /* กำหนดความกว้างของปุ่มให้เท่ากัน */
+    margin-bottom: 10px; /* เพิ่มระยะห่างระหว่างปุ่ม */
+  }
+
+  .toggle-discount-button:hover {
+    background-color: #0056b3;
+  }
+
+  .print-qr-button {
+    padding: 10px 20px; /* ปรับขนาดให้เท่ากัน */
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    width: 100%; /* กำหนดความกว้างของปุ่มให้เท่ากัน */
+    margin-bottom: 10px; /* เพิ่มระยะห่างระหว่างปุ่ม */
+  }
+
+  .print-qr-button:hover {
+    background-color: #0056b3;
+  }
+
+  .print-qr-button i {
+    margin-right: 1px;
+  }
+
+  .sidebar-footer button:hover {
+    background-color: #0056b3;
+  }
+
+  .button-column {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+  }

@@ -33,3 +33,9 @@ INSERT INTO `menu_category` (`menu_category`) VALUES ('ผัด');
 INSERT INTO `menu_type` (`menu_type`) VALUES ('ราดข้าว');
 
 INSERT INTO `menu_unit` (`menu_unit`) VALUES ('จาน');
+
+INSERT INTO `menu_category` (`menu_category`) VALUES ('เครื่องดื่ม');
+
+INSERT INTO `menu_type` (`menu_type`) VALUES ('น้ำ');
+
+INSERT INTO `menu_unit` (`menu_unit`) VALUES ('ขวด');

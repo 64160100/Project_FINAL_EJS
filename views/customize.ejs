@@ -194,107 +194,85 @@
                             <%= errorMessage %>
                         </p>
                     </div>
-                    <% } %>
-                        <form id="menuForm" action="/zone/<%= zone_name %>/table/<%= table_id %>/create_order" method="POST">
-                            <input type="hidden" name="id" value="<%= item.id %>">
-                            <input type="hidden" name="name" value="<%= item.name %>">
-                            <input type="hidden" name="price" value="<%= item.price %>">
-                            <input type="hidden" name="category" value="<%= item.category %>">
-                            <input type="hidden" name="type" value="<%= item.type %>">
-                            <input type="hidden" name="status_bill" value="N">
-                            <input type="hidden" name="remain" value="<%= item.remain %>">
-                            <input type="hidden" name="status" value="<%= item.remain > 0 ? 'ON' : 'OFF' %>">
+                <% } %>
+                <form id="menuForm" action="/zone/<%= zone_name %>/table/<%= table_id %>/create_order" method="POST">
+                    <input type="hidden" name="id" value="<%= item.id %>">
+                    <input type="hidden" name="name" value="<%= item.name %>">
+                    <input type="hidden" name="price" value="<%= item.price %>">
+                    <input type="hidden" name="category" value="<%= item.category %>">
+                    <input type="hidden" name="type" value="<%= item.type %>">
+                    <input type="hidden" name="status_bill" value="N">
+                    <input type="hidden" name="remain" value="<%= item.remain %>">
+                    <input type="hidden" name="status" value="<%= item.remain > 0 ? 'ON' : 'OFF' %>">
+                    <input type="hidden" id="price_options_all" name="price_options_all" value="0">
         
-                            <!-- Special options -->
-                            <div class="special-options">
-                                <label>เพิ่มเติม</label>
-                                <hr class="underline">
-                                <div class="checkbox-group">
-                                  <% menuOptions.forEach(option => { %>
-                                    <div class="checkbox-item">
-                                      <input type="checkbox" id="<%= option.id_menu_options %>" name="special_options" value="<%= option.id_menu_options %>" data-price="<%= option.price %>" class="special-option-checkbox">
-                                      <label for="<%= option.id_menu_options %>">
+                    <!-- Special options -->
+                    <div class="special-options">
+                        <label>เพิ่มเติม</label>
+                        <hr class="underline">
+                        <div class="checkbox-group">
+                            <% menuOptions.forEach(option => { %>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="<%= option.id_menu_options %>" name="special_options" value="<%= option.id_menu_options %>" data-price="<%= option.price %>" class="special-option-checkbox">
+                                    <label for="<%= option.id_menu_options %>">
                                         <%= option.name_options %> +<%= option.price %>
-                                      </label>
-                                      <input type="hidden" name="name_options_<%= option.id_menu_options %>" value="<%= option.name_options %>">
-                                      <% option.ingredients.forEach((ingredient, index) => { %>
+                                    </label>
+                                    <input type="hidden" name="name_options_<%= option.id_menu_options %>" value="<%= option.name_options %>">
+                                    <input type="hidden" name="options_price_<%= option.id_menu_options %>" value="<%= option.price %>">
+                                    <% option.ingredients.forEach((ingredient, index) => { %>
                                         <input type="hidden" name="ingredient_<%= option.id_menu_options %>[]" value="<%= ingredient %>">
                                         <input type="hidden" name="quantity_<%= option.id_menu_options %>[]" value="<%= option.quantities[index] %>">
                                         <input type="hidden" name="unit_<%= option.id_menu_options %>[]" value="<%= option.unit_ids[index] %>">
-                                      <% }); %>
-                                    </div>
-                                  <% }); %>
+                                    <% }); %>
                                 </div>
-                              </div>
+                            <% }); %>
+                        </div>
+                    </div>
         
-                            <!-- Where to eat options -->
-                            <div class="where-eat">
-                                <label>สถานที่รับประทาน</label>
-                                <hr class="underline">
-                                <div class="radio-group">
-                                    <div class="radio-item">
-                                        <input type="radio" id="restaurant" name="where_eat" value="Restaurant" checked>
-                                        <label for="restaurant">ที่ร้าน</label>
-                                    </div>
-                                    <div class="radio-item">
-                                        <input type="radio" id="home" name="where_eat" value="Home">
-                                        <label for="home">ที่บ้าน</label>
-                                    </div>
-                                </div>
+                    <!-- Where to eat options -->
+                    <div class="where-eat">
+                        <label>สถานที่รับประทาน</label>
+                        <hr class="underline">
+                        <div class="radio-group">
+                            <div class="radio-item">
+                                <input type="radio" id="restaurant" name="where_eat" value="Restaurant" checked>
+                                <label for="restaurant">ที่ร้าน</label>
                             </div>
+                            <div class="radio-item">
+                                <input type="radio" id="home" name="where_eat" value="Home">
+                                <label for="home">ที่บ้าน</label>
+                            </div>
+                        </div>
+                    </div>
         
-                            <!-- Quantity input -->
-                            <% if (errorMessage) { %>
-                                <div class="error-message" style="color: red;">
-                                    <%= errorMessage %>
-                                </div>
-                                <button type="button" onclick="window.location.href='/zone/<%= zone_name %>/table/<%= table_id %>/order_food'">ย้อนกลับ</button>
-                            <% } else if (item.remain === 0) { %>
-                                <div class="error-message" style="color: red;">
-                                    สินค้าหมด
-                                </div>
-                                <button type="button" onclick="window.location.href='/zone/<%= zone_name %>/table/<%= table_id %>/order_food'">ย้อนกลับ</button>
-                            <% } else { %>
-                                <div class="quantity">
-                                    <label for="quantity">จำนวนเมนู (เหลือ: <span id="remain"><%= item.remain %></span>)</label>
-                                    <hr class="underline">
-                                    <div class="quantity-input">
-                                        <button type="button" id="decrement-btn">-</button>
-                                        <input type="number" id="quantity" name="quantity" value="1" min="1" max="<%= item.remain %>">
-                                        <button type="button" id="increment-btn">+</button>
-                                    </div>
-                                </div>
-                                <button type="submit" id="order-btn">ยืนยัน</button>
-                            <% } %>
-                        </form>
+                    <!-- Quantity input -->
+                    <% if (errorMessage) { %>
+                        <div class="error-message" style="color: red;">
+                            <%= errorMessage %>
+                        </div>
+                        <button type="button" onclick="window.location.href='/zone/<%= zone_name %>/table/<%= table_id %>/order_food'">ย้อนกลับ</button>
+                    <% } else if (item.remain === 0) { %>
+                        <div class="error-message" style="color: red;">
+                            สินค้าหมด
+                        </div>
+                        <button type="button" onclick="window.location.href='/zone/<%= zone_name %>/table/<%= table_id %>/order_food'">ย้อนกลับ</button>
+                    <% } else { %>
+                        <div class="quantity">
+                            <label for="quantity">จำนวนเมนู (เหลือ: <span id="remain"><%= item.remain %></span>)</label>
+                            <hr class="underline">
+                            <div class="quantity-input">
+                                <button type="button" id="decrement-btn">-</button>
+                                <input type="number" id="quantity" name="quantity" value="1" min="1" max="<%= item.remain %>">
+                                <button type="button" id="increment-btn">+</button>
+                            </div>
+                        </div>
+                        <button type="submit" id="order-btn">ยืนยัน</button>
+                    <% } %>
+                </form>
             </div>
         </div>
     </section>
     <script src="/js/index.js"></script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const basePrice = parseFloat(<%= item.price %>);
-            const totalPriceElement = document.getElementById('total-price');
-            const specialOptionCheckboxes = document.querySelectorAll('.special-option-checkbox');
-    
-            function updateTotalPrice() {
-                let totalPrice = basePrice;
-                specialOptionCheckboxes.forEach(checkbox => {
-                    if (checkbox.checked) {
-                        totalPrice += parseFloat(checkbox.getAttribute('data-price'));
-                    }
-                });
-                totalPriceElement.textContent = totalPrice.toFixed(2);
-            }
-    
-            specialOptionCheckboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', updateTotalPrice);
-            });
-    
-            updateTotalPrice(); // Initial calculation
-        });
-    </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -304,6 +282,7 @@
             const remainDisplay = document.getElementById('remain');
             const totalPriceElement = document.getElementById('total-price');
             const pricePerItem = parseFloat(<%= item.price %>);
+            const checkboxes = document.querySelectorAll('.special-option-checkbox');
             let remain = parseInt(remainDisplay.textContent);
     
             function updateRemainAndLock() {
@@ -318,7 +297,15 @@
     
             function updatePrice() {
                 const quantity = parseInt(quantityInput.value, 10) || 0;
-                const totalPrice = quantity * pricePerItem;
+                let totalPrice = quantity * pricePerItem;
+    
+                checkboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        const optionPrice = parseFloat(checkbox.dataset.price);
+                        totalPrice += optionPrice * quantity;
+                    }
+                });
+    
                 totalPriceElement.innerText = totalPrice.toFixed(2);
             }
     
@@ -349,6 +336,12 @@
                 }
                 updateRemainAndLock();
                 updatePrice();
+            });
+    
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function () {
+                    updatePrice();
+                });
             });
     
             // Initial check and price update

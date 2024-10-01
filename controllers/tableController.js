@@ -285,17 +285,34 @@ module.exports = {
 													acc[option.num_list].push(option);
 													return acc;
 												}, {});
+
+												// Calculate total price including options
+												const menuItemsWithTotalPrice = menuItems.map(item => {
+													let totalPrice = parseFloat(item.price_all);
+													const options = groupedOptions[item.num_list];
+													if (options) {
+														options.forEach(option => {
+															if (option.price_options_all) {
+																totalPrice += parseFloat(option.price_options_all);
+															}
+														});
+													}
+													return {
+														...item,
+														totalPrice: totalPrice
+													};
+												});
 	
 												// Load basket items from session
 												const basket = req.session.basket || [];
 												
-												// Step 5: Render the order_food view with the retrieved data
+												console.log('Grouped menu:', groupedMenu);
 												res.render('order_food', {
 													groupedMenu: groupedMenu,
 													basket: basket,
 													zone_name: zoneName,
 													table_id: tableId,
-													menuItems: menuItems,
+													menuItems: menuItemsWithTotalPrice,
 													groupedOptions: groupedOptions,
 												});
 											});
@@ -312,7 +329,6 @@ module.exports = {
 			});
 		});
 	},
-
 
 	// เพิ่มฟังก์ชัน zoneCustomize
 	zoneCustomize: (req, res) => {
@@ -359,6 +375,13 @@ module.exports = {
 						errorMessage = `Insufficient quantity for products: ${productNames}.`;
 					}
 	
+					// Calculate options_price, price_options_all, and num_unit
+					const numUnit = req.body.quantity || 1; // Default to 1 if not provided
+					menuOptions.forEach(option => {
+						option.num_unit = numUnit;
+						option.price_options_all = option.price * numUnit;
+					});
+					
 					res.render('customize', {
 						item: item,
 						menuOptions: menuOptions,
@@ -377,23 +400,23 @@ module.exports = {
 		const zoneName = req.params.zone;
 		const tableId = req.params.table;
 		let selectedOptions = req.body.special_options || [];
-	
+		
 		// Ensure selectedOptions is an array
 		if (!Array.isArray(selectedOptions)) {
 			selectedOptions = [selectedOptions];
 		}
 	
 		const nameOptions = selectedOptions.map(id => req.body[`name_options_${id}`]);
-	
+
 		TableModel.getMaxNumList((error, maxNumList) => {
 			if (error) {
 				console.error('Error fetching max num_list:', error);
 				return res.status(500).send('Error fetching max num_list');
 			}
-	
+		
 			// Calculate the new num_list value
 			const newNumList = maxNumList + 1;
-	
+		
 			const orderData = {
 				num_list: newNumList,
 				menu_id: req.body.id,
@@ -408,7 +431,7 @@ module.exports = {
 				name_options: nameOptions,
 				status_bill: 'N'
 			};
-	
+		
 			// Check for specific error message before proceeding
 			if (req.body.errorMessage && req.body.errorMessage.includes('Insufficient quantity for product')) {
 				return res.render('customize', {
@@ -423,36 +446,43 @@ module.exports = {
 					menuOptions: [] // Ensure menuOptions is passed to the view
 				});
 			}
-	
+		
 			TableModel.createOrder(orderData, (error, result) => {
 				if (error) {
 					console.error('Error creating order:', error);
 					return res.status(500).send('Error creating order');
 				}
-	
+			
 				// Fetch the max list_menu_id from list_menu_options table
 				TableModel.getListMenuId((error, maxListMenuId) => {
 					if (error) {
 						console.error('Error fetching max list_menu_id:', error);
 						return res.status(500).send('Error fetching max list_menu_id');
 					}
-	
+			
 					// Increment maxListMenuId for each option
 					let list_menu_id = maxListMenuId;
-	
+			
 					const optionsData = selectedOptions.map((optionId, index) => {
 						list_menu_id++; // Increment maxListMenuId by 1
+						const numUnit = req.body.quantity; // Use num_unit from req.body.quantity
+						const optionPrice = parseFloat(req.body[`options_price_${optionId}`]); // Get the option price from the request body
+						const priceOptionsAll = optionPrice * numUnit; // Calculate price_options_all by multiplying options_price with num_unit
+			
 						return {
 							list_menu_id: list_menu_id,
 							option_id: optionId,
 							option_name: nameOptions[index],
 							num_list: newNumList,
 							product_list: req.body.name,
+							num_unit: numUnit,
+							options_price: optionPrice,
+							price_options_all: priceOptionsAll,
 							id_table: tableId,
-							zone_name: zoneName
+							zone_name: zoneName,
 						};
 					});
-	
+			
 					// Create special options if there are any
 					if (optionsData.length > 0) {
 						console.log('Creating special options:', optionsData);
@@ -481,35 +511,79 @@ module.exports = {
 					deleteOrder(orderData.num_list, orderData.id_table, orderData.zone_name); // Delete the created order
 					return res.status(500).send('Error fetching max id_food_comparison_options');
 				}
-	
+		
 				// Iterate over each option and create entries for tbl_food_comparison_options
 				const foodComparisonOptionsData = optionsData.flatMap((option, index) => {
 					const ingredients = req.body[`ingredient_${option.option_id}`] || [];
 					const quantities = req.body[`quantity_${option.option_id}`] || [];
 					const units = req.body[`unit_${option.option_id}`] || [];
-	
+					const numUnit = req.body.quantity; // Get the num_unit from the request body
+		
 					return ingredients.map((ingredient, idx) => ({
 						id_food_comparison_options: maxId + 1 + idx + index * ingredients.length,
 						list_menu_options: option.list_menu_id,
-						num_unit: quantities[idx],
+						num_unit: numUnit,
 						name_ingredient_options: ingredient,
-						unit_quantity_options: quantities[idx],
+						unit_quantity_options: quantities[idx] * numUnit, // Multiply unit_quantity by num_unit
 						unit_id_options: units[idx],
 						id_table: orderData.id_table,
 						zone_name: orderData.zone_name
 					}));
 				});
-				
-				console.log('Creating food comparison options:', foodComparisonOptionsData);
-
-				TableModel.createFoodComparisonOptions(foodComparisonOptionsData, (error, result) => {
+		
+				// Ensure unique id_food_comparison_options within the same num_list
+				const uniqueFoodComparisonOptionsData = [];
+				const idMap = new Map();
+		
+				foodComparisonOptionsData.forEach((item, index) => {
+					const key = `${item.list_menu_options}-${item.id_table}-${item.zone_name}-${item.name_ingredient_options}`;
+					if (!idMap.has(key)) {
+						idMap.set(key, maxId + 1 + idMap.size);
+					}
+					uniqueFoodComparisonOptionsData.push({
+						...item,
+						id_food_comparison_options: idMap.get(key)
+					});
+				});
+		
+				TableModel.createFoodComparisonOptions(uniqueFoodComparisonOptionsData, (error, result) => {
 					if (error) {
 						console.error('Error creating food comparison options:', error);
 						deleteOrder(orderData.num_list, orderData.id_table, orderData.zone_name); // Delete the created order
 						return res.status(500).send('Error creating food comparison options');
 					}
-					// Proceed with the new code after creating food comparison options
-					proceedWithUpdate(orderData);
+		
+					// Proceed to update the recipe data in tbl_warehouse
+					const ingredientsToUpdate = uniqueFoodComparisonOptionsData.map(optionData => ({
+						name_ingredient: optionData.name_ingredient_options,
+						unit_quantity: optionData.unit_quantity_options
+					}));
+		
+					if (ingredientsToUpdate.length > 0) {
+						TableModel.updateWarehouseProducts(ingredientsToUpdate, (updateError, updateResult) => {
+							if (updateError) {
+								console.error('Error updating warehouse products:', updateError);
+								// Send error to the view
+								deleteOrder(orderData.num_list, orderData.id_table, orderData.zone_name); // Delete the created order
+								return res.render('customize', {
+									groupedMenu: {},
+									basket: req.session.basket || [],
+									zone_name: orderData.zone_name,
+									table_id: orderData.id_table,
+									menuItems: [],
+									groupedOptions: {},
+									errorMessage: `Error updating warehouse products: ${updateError.message}`,
+									item: orderData, // Ensure item is passed to the view
+									menuOptions: [] // Ensure menuOptions is passed to the view
+								});
+							}
+							// Proceed with the new code after updating warehouse products
+							proceedWithUpdate(orderData);
+						});
+					} else {
+						// Proceed with the new code if there are no ingredients to update
+						proceedWithUpdate(orderData);
+					}
 				});
 			});
 		}
@@ -595,6 +669,7 @@ module.exports = {
 							}));
 	
 							TableModel.saveFoodComparison(foodComparisonDataArray, (error, result) => {
+								
 								if (error) {
 									console.error('Error saving food comparison:', error);
 									saveError = true;
@@ -685,75 +760,132 @@ module.exports = {
 		const zoneName = req.params.zone;
 		const tableId = req.params.table;
 		const orderId = req.body.num_list;
-
-		// First, fetch the food comparison data for the order
-		TableModel.getFoodComparisonByOrderId(orderId, (fetchError, foodComparisonResults) => {
-			if (fetchError) {
-				console.error('Error fetching food comparison data:', fetchError);
-				return res.status(500).send('Error fetching food comparison data');
+	
+		// Check the database for list_menu_options
+		TableModel.checkListMenuOptions(orderId, (checkError, checkResults) => {
+			if (checkError) {
+				console.error('Error fetching list_menu_options data:', checkError);
+				return res.status(500).send('Error fetching list_menu_options data');
 			}
-
-			// Proceed to update the recipe data in tbl_warehouse
-			const ingredientsToUpdate = foodComparisonResults.map(recipeData => ({
-				name_ingredient: recipeData.name_ingredient_all,
-				unit_quantity: recipeData.unit_quantity_all
-			}));
-			console.log('Ingredients to Update:', ingredientsToUpdate);
-
-			if (ingredientsToUpdate.length > 0) {
-				TableModel.returnWarehouseProducts(ingredientsToUpdate, (updateError, updateResult) => {
-					if (updateError) {
-						console.error('Error updating warehouse products:', updateError);
-						return res.status(500).send('Error updating warehouse products');
+	
+			const listMenuIds = checkResults.map(result => result.list_menu_id);
+	
+			if (listMenuIds.length === 0) {
+				// If no list_menu_ids, proceed with deletion directly
+				proceedWithDeletion();
+			} else {
+				// Fetch the food comparison options data for the order
+				TableModel.getFoodComparisonOptionsByListMenuIds(listMenuIds, (optionsFetchError, foodComparisonOptionsResults) => {
+					if (optionsFetchError) {
+						console.error('Error fetching food comparison options data:', optionsFetchError);
+						return res.status(500).send('Error fetching food comparison options data');
 					}
-
-					// Delete the order from the list_menu_options table
-					TableModel.deleteOptionsByOrderId(orderId, (optionsError) => {
-						if (optionsError) {
-							console.error('Error deleting order options:', optionsError);
-							return res.status(500).send('Error deleting order options');
-						}
-
-						// Then, delete the order from the tbl_food_comparison table
+	
+					const optionsIngredientsToUpdate = foodComparisonOptionsResults.map(optionData => ({
+						name_ingredient: optionData.name_ingredient_options,
+						unit_quantity: optionData.unit_quantity_options
+					}));
+	
+					if (optionsIngredientsToUpdate.length > 0) {
+						TableModel.returnWarehouseProducts(optionsIngredientsToUpdate, (optionsUpdateError, optionsUpdateResult) => {
+							if (optionsUpdateError) {
+								console.error('Error updating warehouse products for options:', optionsUpdateError);
+								return res.status(500).send('Error updating warehouse products for options');
+							}
+	
+							// Delete the order from the tbl_food_comparison_options table
+							TableModel.deleteFoodComparisonOptionsByListMenuIds(listMenuIds, (foodComparisonOptionsError) => {
+								if (foodComparisonOptionsError) {
+									console.error('Error deleting food comparison options:', foodComparisonOptionsError);
+									return res.status(500).send('Error deleting food comparison options');
+								}
+	
+								proceedWithDeletion();
+							});
+						});
+					} else {
+						// If no options ingredients to update, proceed with deletion
+						TableModel.deleteFoodComparisonOptionsByListMenuIds(listMenuIds, (foodComparisonOptionsError) => {
+							if (foodComparisonOptionsError) {
+								console.error('Error deleting food comparison options:', foodComparisonOptionsError);
+								return res.status(500).send('Error deleting food comparison options');
+							}
+	
+							proceedWithDeletion();
+						});
+					}
+				});
+			}
+	
+			function proceedWithDeletion() {
+				// Proceed to fetch the food comparison data for the order
+				TableModel.getFoodComparisonByOrderId(orderId, (fetchError, foodComparisonResults) => {
+					if (fetchError) {
+						console.error('Error fetching food comparison data:', fetchError);
+						return res.status(500).send('Error fetching food comparison data');
+					}
+	
+					const ingredientsToUpdate = foodComparisonResults.map(recipeData => ({
+						name_ingredient: recipeData.name_ingredient_all,
+						unit_quantity: recipeData.unit_quantity_all
+					}));
+	
+					if (ingredientsToUpdate.length > 0) {
+						TableModel.returnWarehouseProducts(ingredientsToUpdate, (updateError, updateResult) => {
+							if (updateError) {
+								console.error('Error updating warehouse products:', updateError);
+								return res.status(500).send('Error updating warehouse products');
+							}
+	
+							// Delete the order from the tbl_food_comparison table
+							TableModel.deleteFoodComparisonByOrderId(orderId, (foodComparisonError) => {
+								if (foodComparisonError) {
+									console.error('Error deleting food comparison:', foodComparisonError);
+									return res.status(500).send('Error deleting food comparison');
+								}
+	
+								// Delete the order from the list_menu_options table
+								TableModel.deleteOptionsByOrderId(orderId, (optionsError) => {
+									if (optionsError) {
+										console.error('Error deleting order options:', optionsError);
+										return res.status(500).send('Error deleting order options');
+									}
+	
+									// Finally, delete the order from the main orders table
+									TableModel.deleteOrderById(orderId, (orderError) => {
+										if (orderError) {
+											console.error('Error deleting order:', orderError);
+											return res.status(500).send('Error deleting order');
+										}
+										res.redirect(`/zone/${zoneName}/table/${tableId}/order_food`);
+									});
+								});
+							});
+						});
+					} else {
+						// If no ingredients to update, proceed with deletion
 						TableModel.deleteFoodComparisonByOrderId(orderId, (foodComparisonError) => {
 							if (foodComparisonError) {
 								console.error('Error deleting food comparison:', foodComparisonError);
 								return res.status(500).send('Error deleting food comparison');
 							}
-
-							// Finally, delete the order from the main orders table
-							TableModel.deleteOrderById(orderId, (orderError) => {
-								if (orderError) {
-									console.error('Error deleting order:', orderError);
-									return res.status(500).send('Error deleting order');
+	
+							TableModel.deleteOptionsByOrderId(orderId, (optionsError) => {
+								if (optionsError) {
+									console.error('Error deleting order options:', optionsError);
+									return res.status(500).send('Error deleting order options');
 								}
-								res.redirect(`/zone/${zoneName}/table/${tableId}/order_food`);
+	
+								TableModel.deleteOrderById(orderId, (orderError) => {
+									if (orderError) {
+										console.error('Error deleting order:', orderError);
+										return res.status(500).send('Error deleting order');
+									}
+									res.redirect(`/zone/${zoneName}/table/${tableId}/order_food`);
+								});
 							});
 						});
-					});
-				});
-			} else {
-				// If no ingredients to update, proceed with deletion
-				TableModel.deleteOptionsByOrderId(orderId, (optionsError) => {
-					if (optionsError) {
-						console.error('Error deleting order options:', optionsError);
-						return res.status(500).send('Error deleting order options');
 					}
-
-					TableModel.deleteFoodComparisonByOrderId(orderId, (foodComparisonError) => {
-						if (foodComparisonError) {
-							console.error('Error deleting food comparison:', foodComparisonError);
-							return res.status(500).send('Error deleting food comparison');
-						}
-
-						TableModel.deleteOrderById(orderId, (orderError) => {
-							if (orderError) {
-								console.error('Error deleting order:', orderError);
-								return res.status(500).send('Error deleting order');
-							}
-							res.redirect(`/zone/${zoneName}/table/${tableId}/order_food`);
-						});
-					});
 				});
 			}
 		});

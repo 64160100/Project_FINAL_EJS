@@ -126,7 +126,8 @@ app.post('/zone/:zone/table/:table/delete_order', require('./routes/table'));
 
 app.get('/zone/:zone/table/:table/view_checkbill', require('./routes/table'));
 app.post('/zone/:zone/table/:table/create_checkbill', require('./routes/table'));
-// ===================== Buying ===================== //
+
+// ===================== Buying ===================== // 
 app.get('/buying', require('./routes/buying'));
 app.get('/add_buying', require('./routes/buying'));
 app.get('/view_buying/:id', require('./routes/buying'));
@@ -151,7 +152,12 @@ app.post('/update_warehouse', require('./routes/buying'));
 
 // ===================== Promotion ===================== //
 app.get('/promotion', require('./routes/promotion'));
-
+app.get('/view_promotion/:id', require('./routes/promotion'));
+app.get('/add_promotion', require('./routes/promotion'));
+app.get('/edit_promotion/:id', require('./routes/promotion'));
+app.post('/create_promotion', require('./routes/promotion'));
+app.post('/delete_promotion/:id', require('./routes/promotion'));
+app.post('/update_promotion', require('./routes/promotion'));
 
 app.get('/test', (req, res) => {
     res.render('Test', { message: 'Test route is working!' });

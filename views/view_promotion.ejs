@@ -12,7 +12,7 @@
     <!-- Styles  -->
     <link rel="shortcut icon" href="img/kxp_fav.png" type="image/x-icon">
     <link rel="stylesheet" href="../css/index.css">
-    <link rel="stylesheet" href="../css/promotion.css">
+    <link rel="stylesheet" href="../css/viwe_promotion.css">
 </head>
 
 <body>
@@ -164,14 +164,11 @@
 
         <!-- ============= Top Dashboard =============== -->
 
-        <div class="topic">
-            โปรโมชั่น
-            <div class="search-add-container">
-                <input type="text" id="searchBox" placeholder="ค้นหาสิทธิ์ผู้ใช้งาน..." />
-                <button onclick="window.location.href='/add_promotion'"
-                    class="add-promotion-button">เพิ่มโปรโมชั่น</button>
-            </div>
+        <div class="breadcrumbs">
+            <a href="/dashboard"> หน้าหลัก</a> > <a href="/promotion">โปรโมชั่น</a> > <span>รายละเอียดโปรโมชั่น</span>
         </div>
+        <div class="topic"><a href="javascript:history.back()" style="text-decoration: none;">
+                <i class='bx bx-left-arrow-alt'></i></a>รายละเอียดโปรโมชั่น</div>
 
         <!-- ============= Center Dashboard =============== -->
 
@@ -182,40 +179,46 @@
                         <li>รหัสโปรโมชั่น</li>
                         <li>ชื่อโปรโมชั่น</li>
                         <li>ส่วนลดราคา</li>
+                        <li>สถานะ</li>
                         <li>วันที่เริ่ม</li>
                         <li>วันสุดท้าย</li>
-                        <li>การกระทำ</li>
+                        <li>รหัสโปรโมชั่นย่อย</li>
                     </ul>
                 </div>
                 <hr class="underline">
                 <% promotions.forEach(function(promotion) { %>
                     <div class="promotion-item">
                         <ul class="promotion-detail">
+                            <li><%= promotion.id_promotion %></li>
+                            <li><%= promotion.name_promotion %></li>
+                            <li><%= promotion.price_discount %></li>
                             <li>
-                                <%= promotion.sum_promotion_id %>
+                                <% if (promotion.status_promotion === 'N') { %>
+                                    <button class="status-button not-used" disabled>ยังไม่ถูกใช้งาน</button>
+                                <% } else if (promotion.status_promotion === 'Y') { %>
+                                    <button class="status-button used" disabled>ถูกใช้งานไปแล้ว</button>
+                                <% } %>
                             </li>
-                            <li>
-                                <%= promotion.name_promotion %>
-                            </li>
-                            <li>
-                                <%= promotion.price_discount %>
-                            </li>
-                            <li>
-                                <%= promotion.start_date %>
-                            </li>
-                            <li>
-                                <%= promotion.last_day %>
-                            </li>
-                            <li>
-                                <a href="/view_promotion/<%= promotion.sum_promotion_id %>" class="btn-view">ดูข้อมูล</a>
-                                <form action="/promotion/<%= promotion.id_promotion %>/delete" method="POST" style="display:inline;">
-                                    <button type="submit" class="btn-delete">ลบ</button>
-                                </form>
-                            </li>
+                            <li><%= promotion.start_date.toISOString().split('T')[0] %></li>
+                            <li><%= promotion.last_day.toISOString().split('T')[0] %></li>
+                            <li><%= promotion.promo_code %></li>
                         </ul>
                     </div>
                 <% }); %>
             </div>
+            <% if (totalPages > 1) { %>
+                <div class="pagination">
+                    <% if (currentPage > 1) { %>
+                        <a href="?page=<%= currentPage - 1 %>">ย้อนกลับ</a>
+                    <% } %>
+                    <% for (let i = 1; i <= totalPages; i++) { %>
+                        <a href="?page=<%= i %>" class="<%= currentPage === i ? 'active' : '' %>"><%= i %></a>
+                    <% } %>
+                    <% if (currentPage < totalPages) { %>
+                        <a href="?page=<%= currentPage + 1 %>">ถัดไป</a>
+                    <% } %>
+                </div>
+            <% } %>
         </div>
     </section>
 

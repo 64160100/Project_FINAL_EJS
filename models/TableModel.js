@@ -597,10 +597,10 @@ module.exports = {
 
     createSpecialOption: (optionsData, callback) => {
         const query = `
-            INSERT INTO list_menu_options (list_menu_id, id_menu_options, name_options, num_list, product_list, id_table, zone_name)
+            INSERT INTO list_menu_options (list_menu_id, id_menu_options, name_options, num_list, product_list, id_table, zone_name, options_price, num_unit, price_options_all)
             VALUES ?
         `;
-
+    
         const values = optionsData.map(option => [
             option.list_menu_id,
             option.option_id,
@@ -608,9 +608,12 @@ module.exports = {
             option.num_list,
             option.product_list,
             option.id_table,
-            option.zone_name
+            option.zone_name,
+            option.options_price,
+            option.num_unit,
+            option.price_options_all
         ]);
-
+    
         connection.query(query, [values], (error, results) => {
             if (error) {
                 return callback(error, null);
@@ -735,6 +738,52 @@ module.exports = {
         executeQuery(0);
     },
 
+    deleteFoodComparisonOptionsByListMenuIds: (listMenuIds, callback) => {
+        const query = 'DELETE FROM tbl_food_comparison_options WHERE list_menu_options IN (?)';
+        connection.query(query, [listMenuIds], (error, results) => {
+            if (error) {
+                return callback(error);
+            }
+            callback(null, results);
+        });
+    },
+
+    getFoodComparisonOptionsByOrderId: (orderId, callback) => {
+        const query = 'SELECT * FROM tbl_food_comparison_options WHERE list_menu_options = ?';
+        connection.query(query, [orderId], (error, results) => {
+            if (error) {
+                return callback(error);
+            }
+            callback(null, results);
+        });
+    },
+
+    checkListMenuOptions(orderId, callback) {
+        const query = `
+            SELECT lmo.*
+            FROM list_menu_options lmo
+            WHERE lmo.num_list = ?
+        `;
+    
+        connection.query(query, [orderId], (error, results) => {
+            if (error) {
+                console.error('Error fetching list_menu_options data:', error);
+                return callback(error, null);
+            }
+            callback(null, results);
+        });
+    },
+
+    getFoodComparisonOptionsByListMenuIds: (listMenuIds, callback) => {
+        const query = 'SELECT * FROM tbl_food_comparison_options WHERE list_menu_options IN (?)';
+        connection.query(query, [listMenuIds], (error, results) => {
+            if (error) {
+                return callback(error);
+            }
+            callback(null, results);
+        });
+    },
+
     getFoodComparisonByOrderId: (orderId, callback) => {
         const query = `
             SELECT * FROM tbl_food_comparison 
@@ -758,6 +807,35 @@ module.exports = {
             }
             callback(null, results);
         });
+    },
+
+    returnWarehouseOptions: (ingredients, callback) => {
+        const queries = ingredients.map(ingredient => {
+            return {
+                query: `
+                    UPDATE tbl_warehouse 
+                    SET unit_quantity_all = unit_quantity_all + ?
+                    WHERE name_product = ?
+                `,
+                values: [ingredient.unit_quantity, ingredient.name_ingredient]
+            };
+        });
+
+        const executeQuery = (index) => {
+            if (index >= queries.length) {
+                return callback(null, { message: 'All updates executed successfully' });
+            }
+
+            const { query, values } = queries[index];
+            connection.query(query, values, (error, results) => {
+                if (error) {
+                    return callback(error);
+                }
+                executeQuery(index + 1);
+            });
+        };
+
+        executeQuery(0);
     },
 
     deleteOptionsByOrderId: (orderId, callback) => {
@@ -919,15 +997,6 @@ module.exports = {
         });
     },
 
-    getFoodComparisonOptionsByNumList: (num_list, callback) => {
-        const query = 'SELECT * FROM tbl_food_comparison_options WHERE num_list = ?';
-        connection.query(query, [num_list], (error, results) => {
-            if (error) {
-                return callback(error);
-            }
-            callback(null, results);
-        });
-    },
 
     restoreWarehouseProducts: (ingredients, callback) => {
         const queries = ingredients.map(ingredient => {
@@ -971,16 +1040,6 @@ module.exports = {
         });
     },
 
-    deleteFoodComparisonOptions: (data, callback) => {
-        const query = 'DELETE FROM tbl_food_comparison_options WHERE id_food_comparison_options IN (?)';
-        const ids = data.map(item => item.id_food_comparison_options);
-        connection.query(query, [ids], (error, results) => {
-            if (error) {
-                return callback(error);
-            }
-            callback(null, results);
-        });
-    },
 
     updateWarehouseProducts: (ingredients, callback) => {
         const queries = ingredients.map(ingredient => {

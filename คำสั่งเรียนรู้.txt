@@ -17,14 +17,12 @@ git pull origin 10-percent
 หากคุณต้องการบังคับให้ push โดยไม่สนใจการเปลี่ยนแปลงใน remote repository (ซึ่งอาจทำให้ข้อมูลสูญหาย)
 git push --force origin main
 
-
 คำสั่ง docker 
 docker build . -t <ตั้งชื่อ> --> เพื่อ build container เก็บเป็น image อะไรที่เคย run ก็จะถูก Cast(โยน) ไว้
 docker run -it --rm -p 3003:3000 --name <ชื่อ container> <ชื่อ image docker> --> สั่ง Run app วิธีที่ 1
 docker run -d -p 3005:3000 <ชื่อ image docker> --> สั่ง Run app วิธี 2
 
 docker logs <ชื่อ container> --> เช็ค log
-
 
 คำสั่ง mysql
 
