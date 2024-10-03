@@ -124,6 +124,8 @@ app.post('/zone/:zone/table/:table/create_order', require('./routes/table'));
 app.post('/zone/:zone/table/:table/update_order', require('./routes/table'));
 app.post('/zone/:zone/table/:table/delete_order', require('./routes/table'));
 
+app.post('/zone/:zone/table/:table/app_promotion', require('./routes/table'));
+
 app.get('/zone/:zone/table/:table/view_checkbill', require('./routes/table'));
 app.post('/zone/:zone/table/:table/create_checkbill', require('./routes/table'));
 
@@ -144,6 +146,8 @@ app.get('/setting_add_unit', require('./routes/buying'));
 app.post('/create_setting_unit', require('./routes/buying'));
 app.post('/delete_setting_unit/:id', require('./routes/buying'));
 
+app.get('/search-product', require('./routes/buying'));
+
 app.post('/updateBuyingTime', require('./routes/buying'));
 
 app.get('/warehouse', require('./routes/buying'));
@@ -162,6 +166,7 @@ app.post('/update_promotion', require('./routes/promotion'));
 app.get('/test', (req, res) => {
     res.render('Test', { message: 'Test route is working!' });
 });
+
 
 app.listen(3000, () => {
     console.log('Server has started with port 3000');

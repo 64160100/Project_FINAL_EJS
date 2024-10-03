@@ -187,33 +187,29 @@
                                 </p>
                             <% } %>
                         </div>
+
                         <div class="form-group">
                             <label for="name_product">ชื่อสินค้า</label>
-                            <input type="text" id="name_product" name="name_product" required>
+                            <input type="text" id="name_product" name="name_product" required onkeyup="searchProductName()" onkeydown="handleEnter(event)">
+                            <div id="suggestions" class="suggestions"></div>
                             <% if (error.name_product) { %>
-                                <p style="color: red;">
-                                    <%= error.name_product %> มีอยู่แล้ว
-                                </p>
+                              <p style="color: red;">
+                                <%= error.name_product %> มีอยู่แล้ว
+                              </p>
                             <% } %>
-                        </div>
+                          </div>
+
                     <% } %>
-                    <div class="form-group">
-                        <label for="date_of_receipt">วันที่รับสินค้า</label>
-                        <input type="date" id="date_of_receipt" name="date_of_receipt" required readonly>
-                    </div>
 
                     <div class="form-group">
                         <label for="setting_type_id">ประเภทสินค้า</label>
                         <select id="setting_type_id" name="setting_type_id" required aria-label="ประเภทสินค้า">
-                            <option value="" disabled <%=!selectedSettingType ? 'selected' : '' %>
-                                >กรุณาเลือกประเภทสินค้า</option>
-                            <% settingTypes.forEach(function(type) { %>
-                                <option value="<%= type.id_type %>" <%=selectedSettingType===type.id_type ? 'selected' : '' %>><%=
-                                        type.id_type %>
-                                </option>
-                                <% }); %>
+                          <option value="" disabled <%=!selectedSettingType ? 'selected' : '' %>>กรุณาเลือกประเภทสินค้า</option>
+                          <% settingTypes.forEach(function(type) { %>
+                            <option value="<%= type.id_type %>" <%=selectedSettingType===type.id_type ? 'selected' : '' %>><%= type.id_type %></option>
+                          <% }); %>
                         </select>
-                    </div>
+                      </div>
 
                     <div class="form-row grouped-fields-container">
                         <div class="form-group col-md-12">
@@ -221,16 +217,12 @@
                             <div class="input-group">
                                 <input type="number" class="form-control" id="unit_quantity" name="unit_quantity"
                                     placeholder="กรอกปริมาณ" required>
-                                <select id="setting_unit_id" name="setting_unit_id" class="custom-select" required
-                                    aria-label="หน่วยสินค้า">
-                                    <option value="" disabled <%=!selectedSettingUnit ? 'selected' : '' %>>เลือกหน่วย
-                                    </option>
-                                    <% settingUnits.forEach(function(unit) { %>
-                                        <option value="<%= unit.id_unit %>" <%=selectedSettingUnit===unit.id_unit ? 'selected'
-                                            : '' %>><%= unit.id_unit %>
-                                        </option>
+                                    <select id="setting_unit_id" name="setting_unit_id" class="custom-select" required aria-label="หน่วยสินค้า">
+                                        <option value="" disabled <%=!selectedSettingUnit ? 'selected' : '' %>>เลือกหน่วย</option>
+                                        <% settingUnits.forEach(function(unit) { %>
+                                          <option value="<%= unit.id_unit %>" <%=selectedSettingUnit===unit.id_unit ? 'selected' : '' %>><%= unit.id_unit %></option>
                                         <% }); %>
-                                </select>
+                                      </select>
                             </div>
                         </div>
                     </div>
@@ -239,6 +231,12 @@
                         <label for="price">ราคา</label>
                         <input type="number" id="price" name="price" required>
                     </div>
+
+                    <div class="form-group">
+                        <label for="date_of_receipt">วันที่รับสินค้า</label>
+                        <input type="date" id="date_of_receipt" name="date_of_receipt" required readonly>
+                    </div>
+
                     <div class="form-group">
                         <label for="time">เวลา (วัน:ชั่วโมง:นาที:วินาที):</label>
                         <input type="text" id="time" name="time" value="00d : 00h : 00m : 00s" readonly>
@@ -251,6 +249,75 @@
 
     <!-- Link JS -->
     <script src="../js/index.js"></script>
+
+    <script>
+        function searchProductName() {
+          const input = document.getElementById('name_product');
+          const query = input.value;
+          if (query.length > 2) {
+            fetch(`/search-product?query=${query}`)
+              .then(response => response.json())
+              .then(data => {
+                const suggestions = document.getElementById('suggestions');
+                suggestions.innerHTML = '';
+                if (data.length === 0) {
+                  const noResult = document.createElement('div');
+                  noResult.classList.add('suggestion-item');
+                  noResult.innerText = 'ไม่พบผลลัพธ์';
+                  suggestions.appendChild(noResult);
+                } else {
+                  data.forEach(item => {
+                    const div = document.createElement('div');
+                    div.classList.add('suggestion-item');
+                    div.innerText = item.name_product;
+                    div.onclick = () => {
+                      input.value = item.name_product;
+                      input.placeholder = '';
+                      suggestions.innerHTML = '';
+                      setProductDetails(item);
+                    };
+                    suggestions.appendChild(div);
+                  });
+                  // Set the first suggestion as the placeholder
+                  input.placeholder = data[0].name_product;
+                }
+              });
+          } else {
+            document.getElementById('suggestions').innerHTML = '';
+            input.placeholder = '';
+          }
+        }
+      
+        function handleEnter(event) {
+          const input = document.getElementById('name_product');
+          if (event.key === 'Enter' && input.placeholder) {
+            input.value = input.placeholder;
+            input.placeholder = '';
+          }
+        }
+      
+        function setProductDetails(product) {
+          const typeSelect = document.getElementById('setting_type_id');
+          const unitSelect = document.getElementById('setting_unit_id');
+      
+          // Set the selected type
+          for (let i = 0; i < typeSelect.options.length; i++) {
+            if (typeSelect.options[i].value === product.setting_type_id) {
+              typeSelect.selectedIndex = i;
+              break;
+            }
+          }
+      
+          // Set the selected unit
+          for (let i = 0; i < unitSelect.options.length; i++) {
+            if (unitSelect.options[i].value === product.setting_unit_id) {
+              unitSelect.selectedIndex = i;
+              break;
+            }
+          }
+        }
+      </script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var today = new Date().toISOString().split('T')[0];

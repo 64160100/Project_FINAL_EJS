@@ -305,6 +305,21 @@ module.exports = {
 		});
 	},
 
+	searchProduct(req, res) {
+		const query = req.query.query;
+		console.log(query);
+		BuyingModel.searchProducts(query, (err, results) => {
+			console.log(results);
+		  if (err) {
+			return res.status(500).send(err);
+		  }
+		  if (results.length === 0) {
+			return res.status(404).json({ message: 'No products found' });
+		  }
+		  res.json(results);
+		});
+	},
+
 	warehouseView: (req, res) => {
 		BuyingModel.viewWarehouse((error, results) => {
 			if (error) {

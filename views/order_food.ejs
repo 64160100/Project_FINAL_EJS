@@ -281,25 +281,35 @@
             <% }); %>
         </ul>
 
+        <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
+          <div class="error-message"><%= errorMessage %></div>
+      <% } %>
+
         <hr class="divider">
         <div class="total-price-container">
           <div class="price-row discount-section" style="display: none;">
-            <label for="discount-code">รหัสส่วนลด:</label>
-            <input type="text" id="discount-code" name="discount_code" class="discount-code-input">
-            <button class="apply-discount-button" onclick="applyDiscount()">ใช้ส่วนลด</button>
-          </div>
+            <form id="discount-form" action="/zone/<%= zone_name %>/table/<%= table_id %>/app_promotion" method="POST">
+              <label for="discount-code">รหัสส่วนลด:</label>
+              <input type="text" id="discount-code" name="discount_code" class="discount-code-input">
+              <button type="submit" class="apply-discount-button">ใช้ส่วนลด</button>
+          </form>
+        </div>
           <hr class="divider">
           <div class="price-row">
             <span>ราคารวม:</span>
-            <span class="total-price">0.00</span>
+            <span id="total-price">
+              <%= totalPrice %>
+            </span>
           </div>
           <div class="price-row">
             <span>ราคาส่วนลด:</span>
-            <span class="discount-price">0.00</span>
-          </div>
+            <span class="discount-price"><%= discountPrice || '0.00' %></span>
+        </div>
           <div class="price-row">
             <span>ราคารวมแบบสรุป:</span>
-            <span class="final-price">0.00</span>
+            <span id="final-price">
+              <%= finalPrice %>
+            </span>
           </div>
         </div>
         <hr class="divider">
@@ -315,62 +325,34 @@
           </div>
           <div id="qrcode"></div>
         </div>
-      </ul>
-    </div>
 
-    <div id="summaryModal" class="modal">
-      <div class="modal-content">
-        <span class="close-button">&times;</span>
-        <h1>สรุปบิล</h1>
-        <div id="orderDetails">รายการอาหารที่สั่ง:</div>
-        <div id="totalAmount">รวมทั้งหมด:</div>
-        <form id="save-form" action="/zone/<%= zone_name %>/table/<%= table_id %>/update_order" method="POST">
-          <input type="hidden" name="num_list" id="num_list">
-          <input type="hidden" name="status_bill" value="Y">
-          <input type="hidden" name="id_table" id="table_id" value="<%= table_id %>">
-          <input type="hidden" name="zone_name" id="zone_name" value="<%= zone_name %>">
-          <button type="button" class="save-button" onclick="submitSaveForm()">บันทึก</button>
-        </form>
-      </div>
-    </div>
+        <div id="summaryModal" class="modal">
+          <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h1>สรุปบิล</h1>
+            <div id="orderDetails">รายการอาหารที่สั่ง:</div>
+            <div id="totalAmount">รวมทั้งหมด:</div>
+            <form id="save-form" action="/zone/<%= zone_name %>/table/<%= table_id %>/update_order" method="POST">
+              <input type="hidden" name="num_list" id="num_list">
+              <input type="hidden" name="status_bill" value="Y">
+              <input type="hidden" name="id_table" id="table_id" value="<%= table_id %>">
+              <input type="hidden" name="zone_name" id="zone_name" value="<%= zone_name %>">
+              <button type="button" class="save-button" onclick="submitSaveForm()">บันทึก</button>
+            </form>
+          </div>
+        </div>
   </section>
 
   <script src="/js/index.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
+
   <script>
     function toggleDiscount() {
-      const discountSection = document.querySelector('.discount-section');
-      if (discountSection.style.display === 'none') {
-        discountSection.style.display = 'flex';
-      } else {
-        discountSection.style.display = 'none';
-      }
+        const discountSection = document.querySelector('.discount-section');
+        discountSection.style.display = discountSection.style.display === 'none' ? 'block' : 'none';
     }
-  
-    async function applyDiscount() {
-      const discountCode = document.getElementById('discount-code').value;
-      try {
-        const response = await fetch('/apply-discount', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ discount_code: discountCode })
-        });
-        const data = await response.json();
-        if (data.success) {
-          // อัปเดตราคาส่วนลดและราคารวมแบบสรุป
-          document.querySelector('.discount-price').textContent = data.discountAmount.toFixed(2);
-          document.querySelector('.final-price').textContent = data.finalPrice.toFixed(2);
-        } else {
-          alert('รหัสส่วนลดไม่ถูกต้อง');
-        }
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    }
-  </script>
+</script>
 
   <script>
     document.querySelector('.print-qr-button').addEventListener('click', function () {

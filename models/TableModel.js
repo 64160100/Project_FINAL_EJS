@@ -120,11 +120,11 @@ module.exports = {
                     name: item.name_product,
                     picture: item.menu_picture,
                     price: item.price,
-                    remain: item.remain, // Include the remain field
+                    remain: item.remain,
                     status: item.status,
                     category: item.menu_category,
                     type: item.menu_type,
-                    menu_unit: item.menu_type,
+                    menu_unit: item.menu_type
                 }));
                 return callback(null, menu);
             }
@@ -147,6 +147,19 @@ module.exports = {
         connection.query(query, (error, results) => {
             if (error) {
                 return callback(error);
+            }
+            callback(null, results);
+        });
+    },
+
+    getPromotions: (callback) => {
+        const query = `
+            SELECT id_promotion, price_discount, status_promotion, promo_code
+            FROM tbl_promotion
+        `;
+        connection.query(query, (error, results) => {
+            if (error) {
+                return callback(error, null);
             }
             callback(null, results);
         });
@@ -212,9 +225,11 @@ module.exports = {
                 name: item.name_product,
                 picture: item.menu_picture,
                 price: item.price,
-                remain: item.remain,
+                remain: item.remain, // Include the remain field
+                status: item.status,
                 category: item.menu_category,
                 type: item.menu_type,
+                menu_unit: item.menu_type,
             }));
 
             return callback(null, menu[0]); // Assuming you want to return a single item
@@ -600,7 +615,7 @@ module.exports = {
             INSERT INTO list_menu_options (list_menu_id, id_menu_options, name_options, num_list, product_list, id_table, zone_name, options_price, num_unit, price_options_all)
             VALUES ?
         `;
-    
+
         const values = optionsData.map(option => [
             option.list_menu_id,
             option.option_id,
@@ -613,7 +628,7 @@ module.exports = {
             option.num_unit,
             option.price_options_all
         ]);
-    
+
         connection.query(query, [values], (error, results) => {
             if (error) {
                 return callback(error, null);
@@ -764,7 +779,7 @@ module.exports = {
             FROM list_menu_options lmo
             WHERE lmo.num_list = ?
         `;
-    
+
         connection.query(query, [orderId], (error, results) => {
             if (error) {
                 console.error('Error fetching list_menu_options data:', error);
@@ -867,6 +882,59 @@ module.exports = {
             callback(null, results);
         });
     },
+
+    getPromotionByCode: (promoCode, callback) => {
+        const query = `
+            SELECT id_promotion, price_discount, status_promotion, promo_code
+            FROM tbl_promotion
+            WHERE promo_code = ?
+        `;
+        connection.query(query, [promoCode], (error, results) => {
+            if (error) {
+                return callback(error, null);
+            }
+            callback(null, results[0]);
+        });
+    },
+
+    getGroupedMenu: (callback) => {
+        const query = `
+                SELECT 
+                    categories.name AS category_name, 
+                    menu_items.id, 
+                    menu_items.name, 
+                    menu_items.price 
+                FROM 
+                    menu_items 
+                JOIN 
+                    categories 
+                ON 
+                    menu_items.category_id = categories.id
+                ORDER BY 
+                    categories.name, menu_items.name
+            `;
+
+        connection.query(query, (error, results) => {
+            if (error) {
+                return callback(error, null);
+            }
+
+            const groupedMenu = results.reduce((acc, item) => {
+                if (!acc[item.category_name]) {
+                    acc[item.category_name] = [];
+                }
+                acc[item.category_name].push({
+                    id: item.id,
+                    name: item.name,
+                    price: item.price
+                });
+                return acc;
+            }, {});
+
+            callback(null, groupedMenu);
+        });
+    },
+
 
     getBill: (callback) => {
         const sqlQuery = `
@@ -1067,50 +1135,50 @@ module.exports = {
                 values: [ingredient.unit_quantity, ingredient.name_ingredient]
             };
         });
-    
+
         const executeQuery = (index) => {
             if (index >= queries.length) {
                 return callback(null, { message: 'All updates executed successfully' });
             }
-    
+
             const { checkQuery, updateQuery, restoreQuery, updateMenuStatusQuery, values } = queries[index];
             const [unitQuantity, nameIngredient] = values;
-    
+
             // Check current unit_quantity_all
             connection.query(checkQuery, [nameIngredient], (checkError, checkResults) => {
                 if (checkError) {
                     console.error('Error executing check query:', checkError);
                     return callback(checkError, null);
                 }
-    
+
                 const currentQuantity = checkResults[0]?.unit_quantity_all;
                 if (currentQuantity === undefined) {
                     const error = new Error(`Product ${nameIngredient} not found`);
                     console.error(error.message);
                     return callback(error, null);
                 }
-    
+
                 if (currentQuantity - unitQuantity < 0) {
                     const maxOrders = Math.floor(currentQuantity / unitQuantity);
                     const error = new Error(`Insufficient quantity for product ${nameIngredient}. You can order up to ${maxOrders} more times.`);
                     console.error(error.message);
                     return callback(error, null);
                 }
-    
+
                 // Proceed with update if quantity is sufficient
                 connection.query(updateQuery, values, (updateError, updateResults) => {
                     if (updateError) {
                         console.error('Error executing update query:', updateError);
                         return callback(updateError, null);
                     }
-    
+
                     // Check if the updated quantity is less than or equal to 0
                     connection.query(checkQuery, [nameIngredient], (checkErrorAfterUpdate, checkResultsAfterUpdate) => {
                         if (checkErrorAfterUpdate) {
                             console.error('Error executing check query after update:', checkErrorAfterUpdate);
                             return callback(checkErrorAfterUpdate, null);
                         }
-    
+
                         const updatedQuantity = checkResultsAfterUpdate[0]?.unit_quantity_all;
                         if (updatedQuantity <= 0) {
                             // Update the status of the product in tbl_menu to 'OFF'
@@ -1128,7 +1196,7 @@ module.exports = {
                 });
             });
         };
-    
+
         executeQuery(0);
     },
 
@@ -1153,14 +1221,13 @@ module.exports = {
     },
 
     deleteOrder: (id_food_comparison, id_table, zone_name, callback) => {
-        // First, delete the row in tbl_food_comparison
         const deleteFoodComparisonQuery = 'DELETE FROM tbl_food_comparison WHERE id_food_comparison = ?';
         connection.query(deleteFoodComparisonQuery, [id_food_comparison], (error, results) => {
+            console.log('Deleted food comparison:', results);
             if (error) {
                 return callback(error, null);
             }
 
-            // Then, delete the row in list_menu using num_list from id_food_comparison
             const deleteListMenuQuery = 'DELETE FROM list_menu WHERE num_list = ? AND id_table = ? AND zone_name = ?';
             connection.query(deleteListMenuQuery, [id_food_comparison, id_table, zone_name], (error, results) => {
                 if (error) {
@@ -1186,74 +1253,62 @@ module.exports = {
     getLatestRecordCheckBill: (callback) => {
         const query = 'SELECT MAX(id_record) AS maxIdRecord FROM record_check_bill';
         connection.query(query, (error, results) => {
-          if (error) {
-            return callback(error, null);
-          }
-          const maxIdRecord = results[0] ? results[0].maxIdRecord : null;
-          callback(null, maxIdRecord);
+            if (error) {
+                return callback(error, null);
+            }
+            const maxIdRecord = results[0] ? results[0].maxIdRecord : null;
+            callback(null, maxIdRecord);
         });
-      },
-    
-      getLatestBillNumber: (callback) => {
+    },
+
+    getLatestBillNumber: (callback) => {
         const query = 'SELECT MAX(bill_number) AS maxBillNumber FROM record_check_bill';
         connection.query(query, (error, results) => {
-          if (error) {
-            return callback(error, null);
-          }
-          const maxBillNumber = results[0] ? results[0].maxBillNumber : null;
-          callback(null, maxBillNumber);
+            if (error) {
+                return callback(error, null);
+            }
+            const maxBillNumber = results[0] ? results[0].maxBillNumber : null;
+            callback(null, maxBillNumber);
         });
-      },
-    
-      getCheckBillMenuItems: (tableId, zoneName, callback) => {
+    },
+
+    getCheckBillMenuItems: (tableId, zoneName, callback) => {
         const query = 'SELECT * FROM list_menu WHERE id_table = ? AND zone_name = ?';
         connection.query(query, [tableId, zoneName], (error, results) => {
-          if (error) {
-            return callback(error, null);
-          }
-          callback(null, results);
+            if (error) {
+                return callback(error, null);
+            }
+            callback(null, results);
         });
-      },
-    
-      insertCheckBill: (aggregatedData, callback) => {
+    },
+
+    insertCheckBill: (aggregatedData, callback) => {
         const query = `
           INSERT INTO record_check_bill (id_record, bill_number, num_list, product_list, total_amount, discount, final_amount, payment_method, id_table, zone_name, created_at, num_nuit)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
-    
-        const values = [
-          aggregatedData.id_record,
-          aggregatedData.bill_number,
-          aggregatedData.num_list.join(','),
-          aggregatedData.product_list,
-          aggregatedData.total_amount,
-          aggregatedData.discount,
-          aggregatedData.final_amount,
-          aggregatedData.payment_method,
-          aggregatedData.id_table,
-          aggregatedData.zone_name,
-          new Date(), // Add the current timestamp for created_at
-          aggregatedData.num_nuit // Add num_nuit field
-        ];
-        
-        connection.query(query, values, (error, results) => {
-          if (error) {
-            console.error('Error inserting record_check_bill:', error);
-            return callback(error, null);
-          }
-          console.log('Inserted record_check_bill:', results);
-          return callback(null, results);
-        });
-      },
-    
-      deleteListMenuItemByNumList: (tableId, zoneName, numList, callback) => {
-        const query = 'DELETE FROM list_menu WHERE id_table = ? AND zone_name = ? AND num_list = ?';
-        connection.query(query, [tableId, zoneName, numList], callback);
-      },
-    
-      deleteFoodComparisonItemByNumList: (tableId, zoneName, numList, callback) => {
-        const query = 'DELETE FROM tbl_food_comparison WHERE id_table = ? AND zone_name = ? AND num_list = ?';
-        connection.query(query, [tableId, zoneName, numList], callback);
-      }
 
+        const values = [
+            aggregatedData.id_record,
+            aggregatedData.bill_number,
+            aggregatedData.num_list.join(','),
+            aggregatedData.product_list,
+            aggregatedData.total_amount,
+            aggregatedData.discount,
+            aggregatedData.final_amount,
+            aggregatedData.payment_method,
+            aggregatedData.id_table,
+            aggregatedData.zone_name,
+            new Date(), // Add the current timestamp for created_at
+            aggregatedData.num_nuit // Add num_nuit field
+        ];
+
+        connection.query(query, values, (error, results) => {
+            if (error) {
+                console.error('Error inserting record_check_bill:', error);
+                return callback(error, null);
+            }
+            return callback(null, results);
+        });
+    },
 };

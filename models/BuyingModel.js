@@ -274,6 +274,16 @@ module.exports = {
         });
     },
 
+    searchProducts(query, callback) {
+        const sql = 'SELECT name_product, setting_unit_id, setting_type_id FROM tbl_buying WHERE name_product LIKE ?';
+        connection.query(sql, [`%${query}%`], (err, results) => {
+            if (err) {
+                return callback(err);
+            }
+            callback(null, results);
+        });
+    },
+
     viewWarehouse: function(callback) {
         // SQL query to join tbl_warehouse with tbl_buying and select required fields including name_product
         const query = `

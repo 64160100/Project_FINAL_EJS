@@ -22,6 +22,8 @@ router.post('/zone/:zone/table/:table/create_order', table.createOrder);
 router.post('/zone/:zone/table/:table/update_order', table.updateOrder);
 router.post('/zone/:zone/table/:table/delete_order', table.deleteOrder);
 
+router.post('/zone/:zone/table/:table/app_promotion', table.applyDiscount);
+
 router.get('/zone/:zone/table/:table/view_checkbill', table.zoneViewCheckBill);
 router.post('/zone/:zone/table/:table/create_checkbill', table.createCheckBill);
 module.exports = router;

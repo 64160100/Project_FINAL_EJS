@@ -182,128 +182,144 @@
       </div>
       <div class="payment-methods">
         <form id="qr-form" action="/zone/<%= zone_name %>/table/<%= table_id %>/create_checkbill" method="POST">
-          <button id="qrPaymentButton" class="payment-button" type="button" onclick="setPaymentMethod('qr')">ชำระเงินแบบสแกนคิวอาร์โค้ด</button>
+          <button id="qrPaymentButton" class="payment-button" type="button"
+            onclick="setPaymentMethod('qr')">ชำระเงินแบบสแกนคิวอาร์โค้ด</button>
           <input type="hidden" name="payment_method" id="payment_method_qr" value="qr">
         </form>
-    
+
         <form id="cash-form" action="/zone/<%= zone_name %>/table/<%= table_id %>/create_checkbill" method="POST">
-          <button id="cashPaymentButton" class="payment-button" type="button" onclick="setPaymentMethod('cash')">ชำระเงินสด</button>
+          <button id="cashPaymentButton" class="payment-button" type="button"
+            onclick="setPaymentMethod('cash')">ชำระเงินสด</button>
           <input type="hidden" name="payment_method" id="payment_method_cash" value="cash">
         </form>
       </div>
     </div>
-    
-    <!-- Cash Payment Modal -->
+
+    <!-- Modal สำหรับสลิปการชำระเงิน -->
+    <div id="receipt" style="display: none;">
+      <div class="modal-content">
+        <span class="close-button" onclick="closeReceipt()">&times;</span>
+        <h2>สลิปการชำระเงิน</h2>
+        <div id="receipt-details"></div>
+        <div id="receipt-totalAmount"></div>
+        <button type="button" class="print-button" onclick="openPrintWindow()">ปริ้นสลิป</button>
+      </div>
+    </div>
+
+    <!-- Modal สำหรับการชำระเงินสด -->
     <div id="cashPaymentModal" class="modal">
       <div class="modal-content">
-        <span class="close-button">&times;</span>
+        <span class="close-button" onclick="closeModal('cashPaymentModal')">&times;</span>
         <h1>ชำระเงินสด</h1>
         <p>กรุณายืนยันการชำระเงินสด</p>
         <button id="confirmCashPayment" class="confirm-button" onclick="submitCashForm()">ยืนยัน</button>
       </div>
     </div>
-    
+
     <!-- QR Code Payment Modal -->
     <div id="qrPaymentModal" class="modal">
       <div class="modal-content">
-        <span class="close-button">&times;</span>
+        <span class="close-button" onclick="closeModal('qrPaymentModal')">&times;</span>
         <h1>ชำระเงินแบบสแกนคิวอาร์โค้ด</h1>
         <p>กรุณาสแกนคิวอาร์โค้ดเพื่อชำระเงิน</p>
         <img src="/path/to/qr-code.png" alt="QR Code" class="qr-code">
         <button id="confirmQrPayment" class="confirm-button" onclick="submitQrForm()">ยืนยัน</button>
       </div>
     </div>
-    
+
     <div class="toggle-basket">
       <div class="basket">
         <span class="basket-count">
-          <%= basket.reduce((acc, item) => acc + item.quantity, 0) %>
+          <%= basket.reduce((acc, item)=> acc + item.quantity, 0) %>
         </span>
         <i class='bx bx-basket'></i>
       </div>
     </div>
-    
- <div class="basket-sidebar close">
-  <ul class="basket-list">
-    <div class="zone-table-info">
-      <% if (zone_name && table_id) { %>
-        <button class="zone-button">โซน: <%= zone_name %></button>
-        <button class="table-button">โต๊ะ: <%= table_id %></button>
-      <% } %>
-    </div>
-    <hr class="divider">
-    <div class="header-titles">
-      <span>รายการสินค้า</span>
-      <span>หน่วย</span>
-      <span>ราคาสินค้า</span>
-    </div>
-    <ul class="menu-list">
-      <% menuItems.forEach(item => { %>
-        <li class="swipe-item" data-id="<%= item.id %>" data-num-list="<%= item.num_list %>"
-          data-id-table="<%= item.id_table %>" data-zone-name="<%= item.zone_name %>"
-          data-status-bill="<%= item.status_bill %>">
-          <% if (item.status_bill !== 'Y') { %>
-            <button class="edit-button">
-              <i class='bx bx-edit'></i>
-            </button>
-          <% } %>
-          <span class="product-name">
-            <%= item.product_list %>
-            <% const matchingOptions = groupedOptions[item.num_list]; %>
-            <% if (matchingOptions) { %>
-              <% matchingOptions.forEach(option => { %>
-                <div class="checkbox-item">
-                  <label for="<%= option.id_menu_options %>">
-                    + <%= option.name_options %>
-                  </label>
-                </div>
-              <% }); %>
-            <% } %>
-          </span>
-          <div class="quantity-controls">
-            <span class="item-quantity">
-              <%= item.num_unit %>
-            </span>
-          </div>
-          <span class="item-price">
-            <%= item.price_all %>
-          </span>
-          <% if (item.status_bill !== 'Y') { %>
-            <form class="delete-form" action="/zone/<%= item.zone_name %>/table/<%= item.id_table %>/delete_order" method="POST" style="display: none;">
-              <input type="hidden" name="num_list" value="<%= item.num_list %>">
-              <button type="submit" class="delete-button">ลบ</button>
-            </form>
-          <% } %>
-        </li>
-      <% }); %>
-    </ul>
 
-    <hr class="divider">
-    <div class="total-price-container">
-      <div class="price-row">
-        <span>ราคารวม:</span>
-        <span class="total-price" id="totalPrice">0.00</span>
-      </div>
-      <div class="price-row">
-        <span>ราคาส่วนลด:</span>
-        <span class="discount-price" id="discountPrice">0.00</span>
-      </div>
-      <div class="price-row">
-        <span>ราคารวมแบบสรุป:</span>
-        <span class="final-price" id="finalPrice">0.00</span>
-      </div>
+    <div class="basket-sidebar close">
+      <ul class="basket-list">
+        <div class="zone-table-info">
+          <% if (zone_name && table_id) { %>
+            <button class="zone-button">โซน: <%= zone_name %></button>
+            <button class="table-button">โต๊ะ: <%= table_id %></button>
+            <% } %>
+        </div>
+        <hr class="divider">
+        <div class="header-titles">
+          <span>รายการสินค้า</span>
+          <span>หน่วย</span>
+          <span>ราคาสินค้า</span>
+        </div>
+        <ul class="menu-list">
+          <% menuItems.forEach(item=> { %>
+            <li class="swipe-item" data-id="<%= item.id %>" data-num-list="<%= item.num_list %>"
+              data-id-table="<%= item.id_table %>" data-zone-name="<%= item.zone_name %>"
+              data-status-bill="<%= item.status_bill %>">
+              <% if (item.status_bill !=='Y' ) { %>
+                <button class="edit-button">
+                  <i class='bx bx-edit'></i>
+                </button>
+                <% } %>
+                  <span class="product-name">
+                    <%= item.product_list %>
+                      <% const matchingOptions=groupedOptions[item.num_list]; %>
+                        <% if (matchingOptions) { %>
+                          <% matchingOptions.forEach(option=> { %>
+                            <div class="checkbox-item">
+                              <label for="<%= option.id_menu_options %>">
+                                + <%= option.name_options %>
+                              </label>
+                            </div>
+                            <% }); %>
+                              <% } %>
+                  </span>
+                  <div class="quantity-controls">
+                    <span class="item-quantity">
+                      <%= item.num_unit %>
+                    </span>
+                  </div>
+                  <span class="item-price">
+                    <%= item.price_all %>
+                  </span>
+                  <% if (item.status_bill !=='Y' ) { %>
+                    <form class="delete-form"
+                      action="/zone/<%= item.zone_name %>/table/<%= item.id_table %>/delete_order" method="POST"
+                      style="display: none;">
+                      <input type="hidden" name="num_list" value="<%= item.num_list %>">
+                      <button type="submit" class="delete-button">ลบ</button>
+                    </form>
+                    <% } %>
+            </li>
+            <% }); %>
+        </ul>
+
+        <hr class="divider">
+        <div class="total-price-container">
+          <div class="price-row">
+            <span>ราคารวม:</span>
+            <span class="total-price" id="totalPrice">0.00</span>
+          </div>
+          <div class="price-row">
+            <span>ราคาส่วนลด:</span>
+            <span class="discount-price" id="discountPrice">0.00</span>
+          </div>
+          <div class="price-row">
+            <span>ราคารวมแบบสรุป:</span>
+            <span class="final-price" id="finalPrice">0.00</span>
+          </div>
+        </div>
+        <hr class="divider">
+        <div class="sidebar-footer">
+          <button class="save-button">บันทึก</button>
+          <button class="checkout-button"
+            onclick="transferPricesToForm('qr-form'); document.getElementById('qr-form').submit();">ชำระเงิน</button>
+          <button class="print-qr-button">
+            <i class='bx bx-qr'></i> ปริ้นคิวอาร์โค้ด
+          </button>
+        </div>
+      </ul>
     </div>
-    <hr class="divider">
-    <div class="sidebar-footer">
-      <button class="save-button">บันทึก</button>
-      <button class="checkout-button" onclick="transferPricesToForm('qr-form'); document.getElementById('qr-form').submit();">ชำระเงิน</button>
-      <button class="print-qr-button">
-        <i class='bx bx-qr'></i> ปริ้นคิวอาร์โค้ด
-      </button>
-    </div>
-  </ul>
-</div>
-    
+
     <div id="summaryModal" class="modal">
       <div class="modal-content">
         <span class="close-button">&times;</span>
@@ -323,6 +339,64 @@
   <script src="/js/index.js"></script>
 
   <script>
+    function generateReceipt() {
+      // เก็บข้อมูลจากรายการสินค้าในหน้าเว็บ
+      const items = Array.from(document.querySelectorAll('.menu-list .swipe-item'))
+        .filter(item => item.getAttribute('data-status-bill') === 'N')
+        .map(item => ({
+          name: item.querySelector('.product-name').innerText,
+          quantity: item.querySelector('.item-quantity').innerText,
+          price: item.querySelector('.item-price').innerText
+        }));
+
+      // คำนวณราคารวม
+      const total = items.reduce((sum, item) => sum + (parseFloat(item.price) * parseInt(item.quantity)), 0);
+
+      // สร้างสลิป
+      let receiptDetails = `วันที่: ${new Date().toLocaleString()}<br>`;
+      items.forEach(item => {
+        receiptDetails += `ชื่อสินค้า: ${item.name}, จำนวน: ${item.quantity}, ราคา: ${item.price} บาท<br>`;
+      });
+      receiptDetails += `รวมทั้งหมด: ${total} บาท`;
+
+      // แสดงสลิปในหน้าเว็บ
+      document.getElementById('receipt-details').innerHTML = receiptDetails;
+      document.getElementById('receipt-totalAmount').innerHTML = `รวมทั้งหมด: ${total} บาท`;
+      document.getElementById('receipt').style.display = 'block';
+
+      openPrintWindow();
+    }
+
+    function closeReceipt() {
+      document.getElementById('receipt').style.display = 'none';
+    }
+
+    function openPrintWindow() {
+      const receiptDetails = document.getElementById('receipt-details').innerHTML;
+      const receiptTotalAmount = document.getElementById('receipt-totalAmount').innerHTML;
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write('<html><head><title>สลิปการชำระเงิน</title></head><body>');
+      printWindow.document.write('<div class="modal-content">');
+      printWindow.document.write('<h2>สลิปการชำระเงิน</h2>');
+      printWindow.document.write('<div>' + receiptDetails + '</div>');
+      printWindow.document.write('<div>' + receiptTotalAmount + '</div>');
+      printWindow.document.write('</div></body></html>');
+      printWindow.document.close();
+      printWindow.print();
+    }
+
+    function submitCashForm() {
+      generateReceipt();
+      closeModal('cashPaymentModal');
+      document.getElementById('cash-form').submit();
+    }
+
+    function submitQrForm() {
+      generateReceipt();
+      closeModal('qrPaymentModal');
+      document.getElementById('qr-form').submit();
+    }
+
     function setPaymentMethod(method) {
       if (method === 'cash') {
         // Show the cash payment modal
@@ -332,30 +406,25 @@
         document.getElementById('qrPaymentModal').style.display = 'block';
       }
     }
-  
-    function submitCashForm() {
-      document.getElementById('cash-form').submit();
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = 'none';
     }
-  
-    function submitQrForm() {
-      document.getElementById('qr-form').submit();
-    }
-  
+
     // Close the modal when the close button is clicked
     document.querySelectorAll('.close-button').forEach(button => {
-      button.onclick = function() {
+      button.onclick = function () {
         button.closest('.modal').style.display = 'none';
       };
     });
-  
+
     // Close the modal when clicking outside of the modal content
-    window.onclick = function(event) {
+    window.onclick = function (event) {
       if (event.target.classList.contains('modal')) {
         event.target.style.display = 'none';
       }
     };
   </script>
-
 
   <script>
     function submitSaveForm() {

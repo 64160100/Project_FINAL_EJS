@@ -19,6 +19,8 @@ router.get('/setting_add_unit', buying.settingAddUnitView);
 router.post('/create_setting_unit', buying.createSettingUnit);
 router.post('/delete_setting_unit/:id', buying.deleteSettingUnit);
 
+router.get('/search-product', buying.searchProduct);
+
 router.post('/updateBuyingTime', buying.updateBuyingTime);
 
 router.get('/warehouse', buying.warehouseView);

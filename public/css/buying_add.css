@@ -25,7 +25,7 @@
     margin: 10px 0;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     font-size: 16px;
     background-color: #fdfdfd;
     color: #495057;
@@ -88,19 +88,24 @@ button[type="reset"] {
 }
 
 .grouped-fields-container .input-group {
-    display: flex; /* Ensures that the input group acts as a flex container */
+    display: flex;
+    /* Ensures that the input group acts as a flex container */
     border: 1px solid #ced4da;
     border-radius: 0.25rem;
     background-color: #ffffff;
     padding: 0.5rem;
-    max-width: 50%; /* Controls the max width of the input group */
+    max-width: 50%;
+    /* Controls the max width of the input group */
 }
 
 .grouped-fields-container .form-control,
 .grouped-fields-container .custom-select {
-    flex-grow: 1; /* Allows fields to grow to fill the container */
-    flex-shrink: 1; /* Allows fields to shrink if necessary */
-    flex-basis: 0%; /* Starts with the smallest base size and grows as needed */
+    flex-grow: 1;
+    /* Allows fields to grow to fill the container */
+    flex-shrink: 1;
+    /* Allows fields to shrink if necessary */
+    flex-basis: 0%;
+    /* Starts with the smallest base size and grows as needed */
     position: relative;
     margin-bottom: 0;
     background-color: #f8f9fa;
@@ -110,10 +115,43 @@ button[type="reset"] {
     font-family: Arial, sans-serif;
     font-size: 16px;
     font-weight: 450;
-    border-radius: 0; /* Optional: Adjusts border-radius for a unified look */
+    border-radius: 0;
+    /* Optional: Adjusts border-radius for a unified look */
 }
 
 /* Specific adjustments for form-control if needed */
 .grouped-fields-container .form-control {
-    border-right: none; /* Removes the right border to blend with adjacent select */
+    border-right: none;
+    /* Removes the right border to blend with adjacent select */
+}
+
+.form-group {
+    position: relative;
+}
+
+.suggestions {
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: #fff;
+    position: absolute;
+    width: 35%; /* Make the suggestions dropdown the same width as the input */
+    z-index: 1000;
+    top: 95%; /* Position it directly below the input field */
+    left: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    border-radius: 4px; /* Rounded corners */
+}
+
+.suggestion-item {
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.suggestion-item:hover {
+    background-color: #f0f0f0;
+}
+
+.suggestion-item:not(:last-child) {
+    border-bottom: 1px solid #eee; /* Add a divider between items */
 }
