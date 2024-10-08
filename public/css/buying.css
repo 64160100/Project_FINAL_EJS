@@ -116,3 +116,54 @@
 .add-buying-button:hover {
     background-color: #369b47; /* A slightly darker green for better contrast */
 }
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.pagination a {
+    margin: 0 5px;
+    padding: 8px 16px;
+    text-decoration: none;
+    color: #007bff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.pagination a:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.pagination a.active {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}
+
+#showZeroQuantity, #showDuplicates {
+    margin-left: 10px;
+    margin-right: 5px;
+}
+
+label[for="showZeroQuantity"], label[for="showDuplicates"] {
+    font-size: 12px; /* Reduced font size */
+    color: #333;
+    cursor: pointer;
+}
+
+#showZeroQuantity:checked + label, #showDuplicates:checked + label {
+    font-weight: bold;
+}
+
+#searchBox {
+    margin-left: 10px;
+}
+
+.add-buying-button {
+    margin-left: 10px;
+}

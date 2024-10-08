@@ -235,7 +235,7 @@
               data-status-bill="<%= item.status_bill %>">
               <% if (item.status_bill !=='Y' ) { %>
                 <button class="edit-button">
-                  <i class='bx bx-edit'></i>
+                  <i class='bx bx-x'><br>ค้าง</i>
                 </button>
                 <% } %>
                   <span class="product-name">
@@ -281,91 +281,92 @@
             <% }); %>
         </ul>
 
-        <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
-          <div class="error-message"><%= errorMessage %></div>
-      <% } %>
+        <% if (typeof errorMessage !=='undefined' && errorMessage) { %>
+          <div class="error-message">
+            <%= errorMessage %>
+          </div>
+          <% } %>
 
-        <hr class="divider">
-        <div class="total-price-container">
-          <div class="price-row discount-section" style="display: none;">
-            <form id="discount-form" action="/zone/<%= zone_name %>/table/<%= table_id %>/app_promotion" method="POST">
-              <label for="discount-code">รหัสส่วนลด:</label>
-              <input type="text" id="discount-code" name="discount_code" class="discount-code-input">
-              <button type="submit" class="apply-discount-button">ใช้ส่วนลด</button>
-          </form>
-        </div>
-          <hr class="divider">
-          <div class="price-row">
-            <span>ราคารวม:</span>
-            <span id="total-price">
-              <%= totalPrice %>
-            </span>
-          </div>
-          <div class="price-row">
-            <span>ราคาส่วนลด:</span>
-            <span class="discount-price"><%= discountPrice || '0.00' %></span>
-        </div>
-          <div class="price-row">
-            <span>ราคารวมแบบสรุป:</span>
-            <span id="final-price">
-              <%= finalPrice %>
-            </span>
-          </div>
-        </div>
-        <hr class="divider">
-        <div class="sidebar-footer">
-          <button class="save-button">บันทึก</button>
-          <button class="checkout-button"
-            onclick="window.location.href='/zone/<%= zone_name %>/table/<%= table_id %>/view_checkbill'">ชำระเงิน</button>
-          <div class="button-column">
-            <button class="toggle-discount-button" onclick="toggleDiscount()">ใช้รหัสส่วนลด</button>
-            <button class="print-qr-button">
-              <i class='bx bx-qr'></i> ปริ้นคิวอาร์โค้ด
-            </button>
-          </div>
-          <div id="qrcode"></div>
-        </div>
+            <hr class="divider">
+            <div class="total-price-container">
+              <div class="price-row discount-section" style="display: none;">
+                <form id="discount-form" action="/zone/<%= zone_name %>/table/<%= table_id %>/app_promotion" method="POST">
+                  <label for="discount-code">รหัสส่วนลด:</label>
+                  <input type="text" id="discount-code" name="discount_code" class="discount-code-input">
+                  <input type="hidden" id="status-promotion" name="status_promotion" value="Y">
+                  <button type="submit" id="apply-discount-button" class="apply-discount-button">ใช้ส่วนลด</button>
+                </form>
+              </div>
+              <div class="price-row">
+                <span>ราคารวม:</span>
+                <span class="total-price" id="totalPrice">
+                  <%= totalPrice %>
+                </span>
+              </div>
+              <div class="price-row">
+                <span>ราคาส่วนลด:</span>
+                <span class="discount-price" id="discountPrice">
+                  <%= discountPrice || '0.00' %>
+                </span>
+              </div>
+              <div class="price-row">
+                <span>ราคารวมแบบสรุป:</span>
+                <span class="final-price" id="finalPrice">
+                  <%= finalPrice < 0 ? 0 : finalPrice %>
+                </span>
+              </div>
+            </div>
+            <hr class="divider">
+            <div class="sidebar-footer">
+              <button class="save-button">บันทึก</button>
+              <button class="checkout-button"
+                onclick="window.location.href='/zone/<%= zone_name %>/table/<%= table_id %>/view_checkbill'">ชำระเงิน</button>
+              <div class="button-column">
+                <button class="toggle-discount-button" onclick="toggleDiscount()">ใช้รหัสส่วนลด</button>
+                <button class="print-qr-button">
+                  <i class='bx bx-qr'></i> ปริ้นคิวอาร์โค้ด
+                </button>
+              </div>
+              <div id="qrcode"></div>
+            </div>
+      </ul>
+    </div>
 
-        <div id="summaryModal" class="modal">
-          <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h1>สรุปบิล</h1>
-            <div id="orderDetails">รายการอาหารที่สั่ง:</div>
-            <div id="totalAmount">รวมทั้งหมด:</div>
-            <form id="save-form" action="/zone/<%= zone_name %>/table/<%= table_id %>/update_order" method="POST">
-              <input type="hidden" name="num_list" id="num_list">
-              <input type="hidden" name="status_bill" value="Y">
-              <input type="hidden" name="id_table" id="table_id" value="<%= table_id %>">
-              <input type="hidden" name="zone_name" id="zone_name" value="<%= zone_name %>">
-              <button type="button" class="save-button" onclick="submitSaveForm()">บันทึก</button>
-            </form>
-          </div>
-        </div>
+    <div id="summaryModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h1>สรุปบิล</h1>
+        <div id="orderDetails">รายการอาหารที่สั่ง:</div>
+        <div id="totalAmount">รวมทั้งหมด:</div>
+        <form id="save-form" action="/zone/<%= zone_name %>/table/<%= table_id %>/update_order" method="POST">
+          <input type="hidden" name="num_list" id="num_list">
+          <input type="hidden" name="status_bill" value="Y">
+          <input type="hidden" name="id_table" id="table_id" value="<%= table_id %>">
+          <input type="hidden" name="zone_name" id="zone_name" value="<%= zone_name %>">
+          <button type="button" class="save-button" onclick="submitSaveForm()">บันทึก</button>
+        </form>
+      </div>
+    </div>
   </section>
 
   <script src="/js/index.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-
+  
   <script>
     function toggleDiscount() {
-        const discountSection = document.querySelector('.discount-section');
-        discountSection.style.display = discountSection.style.display === 'none' ? 'block' : 'none';
+      const discountSection = document.querySelector('.discount-section');
+      discountSection.style.display = discountSection.style.display === 'none' ? 'block' : 'none';
     }
-</script>
 
-  <script>
+    // Print QR code
     document.querySelector('.print-qr-button').addEventListener('click', function () {
-      // Extract zone and table IDs from the DOM or variables
-      const zoneId = 'a'; // Replace with actual logic to get zone ID
-      const tableId = '1'; // Replace with actual logic to get table ID
+      const zoneId = '<%= zone_name %>'; // Replace with actual logic to get zone ID
+      const tableId = '<%= table_id %>'; // Replace with actual logic to get table ID
       const url = `http://localhost:3000/zone/${zoneId}/table/${tableId}/order_food`;
       const qrcodeContainer = document.getElementById('qrcode');
 
-      // Clear any existing QR code
       qrcodeContainer.innerHTML = '';
-
-      // Generate the QR code
       new QRCode(qrcodeContainer, {
         text: url,
         width: 128,
@@ -374,126 +375,170 @@
     });
   </script>
 
-  <script>
-    function submitSaveForm() {
-      // Collect num_list values from menu items with status_bill as 'N'
-      const numListValues = Array.from(document.querySelectorAll('.menu-list .swipe-item'))
-        .filter(item => item.getAttribute('data-status-bill') === 'N')
-        .map(item => item.getAttribute('data-num-list'));
+<script>
+  function submitSaveForm() {
+    const numListValues = Array.from(document.querySelectorAll('.menu-list .swipe-item'))
+      .filter(item => item.getAttribute('data-status-bill') === 'N')
+      .map(item => item.getAttribute('data-num-list'));
 
-      if (numListValues.length === 0) {
-        alert('No items with status_bill as N to submit.');
-        return;
-      }
-
-      // Set the collected num_list value to the hidden input
-      document.getElementById('num_list').value = numListValues.join(',');
-
-      // Print the bill
-      printBill();
-
-      // Submit the form
-      document.getElementById('save-form').submit();
+    if (numListValues.length === 0) {
+      alert('No items with status_bill as N to submit.');
+      return;
     }
 
-    function printBill() {
-      // Collect the data from the bill, but only for items with status_bill as 'N'
-      const orderDetailsHtml = Array.from(document.querySelectorAll('.menu-list .swipe-item'))
-        .filter(item => item.getAttribute('data-status-bill') === 'N')
-        .map(item => `
-          <tr>
-            <td>${item.querySelector('.product-name').innerText}</td>
-            <td>${item.querySelector('.item-quantity').innerText}</td>
-            <td>${item.querySelector('.item-price').innerText}</td>
-          </tr>
-        `).join('');
+    document.getElementById('num_list').value = numListValues.join(',');
+    sendToKitchen(); // Send order details to the kitchen
+    document.getElementById('save-form').submit();
+  }
 
-      const totalAmountHtml = document.getElementById('totalAmount').innerHTML;
+  // Send order details to the kitchen
+  function sendToKitchen() {
+    const zoneName = document.querySelector('.zone-button').innerText;
+    const tableId = document.querySelector('.table-button').innerText;
+    const orderDetailsHtml = Array.from(document.querySelectorAll('.menu-list .swipe-item'))
+      .filter(item => item.getAttribute('data-status-bill') === 'N')
+      .map(item => `
+        <div>
+          <span>${item.querySelector('.item-quantity').innerText}</span>
+          <span>${item.querySelector('.product-name').innerText}</span>
+        </div>
+      `).join('');
 
-      // Create a new window for printing
-      const printWindow = window.open('', '_blank');
-      printWindow.document.write('<html><head><title>สรุปบิล</title></head><body>');
-      printWindow.document.write('<h1>สรุปบิล</h1>');
-      printWindow.document.write('<table><thead><tr><th>สินค้า</th><th>หน่วย</th><th>ราคา</th></tr></thead><tbody>');
-      printWindow.document.write(orderDetailsHtml);
-      printWindow.document.write('</tbody></table>');
-      printWindow.document.write(totalAmountHtml);
-      printWindow.document.write('</body></html>');
-      printWindow.document.close();
-      printWindow.print();
-    }
-
-    document.querySelector('.save-button').addEventListener('click', function () {
-      generateSummaryBill();
+    const totalPrice = document.querySelector('.total-price').innerText;
+    const currentDate = new Date();
+    const formattedDate = currentDate.toLocaleString('th-TH', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric'
     });
 
-    function generateSummaryBill() {
-      // Step 1: Collect the data from the bill, but only for items with status_bill as 'N'
-      const zoneName = document.querySelector('.zone-button').innerText;
-      const tableId = document.querySelector('.table-button').innerText;
-      const menuItems = Array.from(document.querySelectorAll('.menu-list .swipe-item'))
-        .filter(item => item.getAttribute('data-status-bill') === 'N')
-        .map(item => ({
-          product: item.querySelector('.product-name').innerText,
-          quantity: item.querySelector('.item-quantity').innerText,
-          price: item.querySelector('.item-price').innerText
-        }));
-      const totalPrice = parseFloat(document.querySelector('.total-price').innerText);
-      const discountPrice = parseFloat(document.querySelector('.discount-price').innerText);
-      const finalPrice = totalPrice - discountPrice;
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write('<html><head><title>Order for Kitchen</title><style>');
+    printWindow.document.write('@page { size: 88mm 88mm; margin: 0; }');
+    printWindow.document.write('body { font-family: Arial, sans-serif; }');
+    printWindow.document.write('.bill { width: 100%; }');
+    printWindow.document.write('.bill-header, .bill-footer { text-align: center; }');
+    printWindow.document.write('.bill-header h1 { font-size: 16px; }'); // Reduced size for "รายการอาหาร"
+    printWindow.document.write('.bill-header p { font-size: 20px; font-weight: bold; }'); // Increased size for zone and table
+    printWindow.document.write('.bill-body { border-top: 1px solid #000; border-bottom: 1px solid #000; margin: 10px 0; }');
+    printWindow.document.write('.bill-body div { display: flex; justify-content: space-between; }');
+    printWindow.document.write('</style></head><body>');
+    printWindow.document.write('<div class="bill">');
+    printWindow.document.write('<div class="bill-header">');
+    printWindow.document.write('<h1>รายการอาหาร</h1>');
+    printWindow.document.write(`<p>${zoneName}</p>`); // Increased size
+    printWindow.document.write(`<p>${tableId}</p>`); // Increased size
+    printWindow.document.write('</div>');
+    printWindow.document.write('<div class="bill-body">');
+    printWindow.document.write(orderDetailsHtml);
+    printWindow.document.write('</div>');
+    printWindow.document.write('<div class="bill-footer">');
+    printWindow.document.write(`<p>${formattedDate}</p>`);
+    printWindow.document.write('<p>------------------------------------</p>');
+    printWindow.document.write(`<p>ราคารวม ${totalPrice}</p>`);
+    printWindow.document.write('</div>');
+    printWindow.document.write('</div>');
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.print();
+  }
 
-      // Step 2: Display a summary page/modal with the collected data
-      let orderDetailsHtml = `
-        <p>${zoneName}</p>
-        <p>${tableId}</p>
-        <table>
-          <thead>
-            <tr>
-              <th>สินค้า</th>
-              <th>หน่วย</th>
-              <th>ราคา</th>
-            </tr>
-          </thead>
-          <tbody>
-      `;
-      menuItems.forEach(item => {
-        orderDetailsHtml += `
+  // Print bill
+  function printBill() {
+    const orderDetailsHtml = Array.from(document.querySelectorAll('.menu-list .swipe-item'))
+      .filter(item => item.getAttribute('data-status-bill') === 'N')
+      .map(item => `
+        <tr>
+          <td>${item.querySelector('.product-name').innerText}</td>
+          <td>${item.querySelector('.item-quantity').innerText}</td>
+          <td>${item.querySelector('.item-price').innerText}</td>
+        </tr>
+      `).join('');
+
+    const totalAmountHtml = document.getElementById('totalAmount').innerHTML;
+
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write('<html><head><title>สรุปบิล</title></head><body>');
+    printWindow.document.write('<h1>สรุปบิล</h1>');
+    printWindow.document.write('<table><thead><tr><th>สินค้า</th><th>หน่วย</th><th>ราคา</th></tr></thead><tbody>');
+    printWindow.document.write(orderDetailsHtml);
+    printWindow.document.write('</tbody></table>');
+    printWindow.document.write(totalAmountHtml);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.print();
+  }
+
+  document.querySelector('.save-button').addEventListener('click', function () {
+    generateSummaryBill();
+  });
+
+  function generateSummaryBill() {
+    const zoneName = document.querySelector('.zone-button').innerText;
+    const tableId = document.querySelector('.table-button').innerText;
+    const menuItems = Array.from(document.querySelectorAll('.menu-list .swipe-item'))
+      .filter(item => item.getAttribute('data-status-bill') === 'N')
+      .map(item => ({
+        product: item.querySelector('.product-name').innerText,
+        quantity: item.querySelector('.item-quantity').innerText,
+        price: item.querySelector('.item-price').innerText
+      }));
+    const totalPrice = document.querySelector('.total-price').innerText;
+    const discountPrice = document.querySelector('.discount-price').innerText;
+    const finalPrice = document.querySelector('.final-price').innerText;
+
+    let orderDetailsHtml = `
+      <p>${zoneName}</p>
+      <p>${tableId}</p>
+      <table>
+        <thead>
           <tr>
-            <td>${item.product}</td>
-            <td>${item.quantity}</td>
-            <td>${item.price}</td>
+            <th>สินค้า</th>
+            <th>หน่วย</th>
+            <th>ราคา</th>
           </tr>
-        `;
-      });
+        </thead>
+        <tbody>
+    `;
+    menuItems.forEach(item => {
       orderDetailsHtml += `
-          </tbody>
-        </table>
+        <tr>
+          <td>${item.product}</td>
+          <td>${item.quantity}</td>
+          <td>${item.price}</td>
+        </tr>
       `;
-      document.getElementById('orderDetails').innerHTML = orderDetailsHtml;
-      document.getElementById('totalAmount').innerHTML = `
-        <p>ราคารวม: ${totalPrice.toFixed(2)}</p>
-        <p>ราคาส่วนลด: ${discountPrice.toFixed(2)}</p>
-        <p>ราคารวมแบบสรุป: ${finalPrice.toFixed(2)}</p>
-      `;
-      document.getElementById('summaryModal').style.display = 'block';
-    }
-
-    function confirmAndClose() {
-      document.getElementById('summaryModal').style.display = 'none';
-    }
-
-    // Close the modal when the user clicks on <span> (x)
-    document.querySelector('.close-button').addEventListener('click', function () {
-      document.getElementById('summaryModal').style.display = 'none';
     });
+    orderDetailsHtml += `
+        </tbody>
+      </table>
+    `;
+    document.getElementById('orderDetails').innerHTML = orderDetailsHtml;
+    document.getElementById('totalAmount').innerHTML = `
+      <p>ราคารวม: ${totalPrice}</p>
+      <p>ราคาส่วนลด: ${discountPrice}</p>
+      <p>ราคารวมแบบสรุป: ${finalPrice}</p>
+    `;
+    document.getElementById('summaryModal').style.display = 'block';
+  }
 
-    // Close the modal when the user clicks anywhere outside of the modal
-    window.onclick = function (event) {
-      if (event.target == document.getElementById('summaryModal')) {
-        document.getElementById('summaryModal').style.display = 'none';
-      }
+  function confirmAndClose() {
+    document.getElementById('summaryModal').style.display = 'none';
+  }
+
+  document.querySelector('.close-button').addEventListener('click', function () {
+    document.getElementById('summaryModal').style.display = 'none';
+  });
+
+  window.onclick = function (event) {
+    if (event.target == document.getElementById('summaryModal')) {
+      document.getElementById('summaryModal').style.display = 'none';
     }
-  </script>
+  }
+</script>
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -549,11 +594,8 @@
         });
       }
 
-      // Call the function to handle swipe items
       handleSwipeItems();
 
-      // Example function to open the sidebar (you can call this function when needed)
-      // openSidebar();
     });
   </script>
 

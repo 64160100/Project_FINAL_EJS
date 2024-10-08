@@ -368,6 +368,23 @@ module.exports = {
         });
     },
 
+    getPriceDiscountPromotion: (callback) => {
+        const query = `
+          SELECT price_discount_promotion
+          FROM list_menu
+          LIMIT 1
+        `;
+    
+        connection.query(query, (error, results) => {
+          if (error) {
+            console.error('Error fetching price discount promotion:', error);
+            return callback(error);
+          }
+          const priceDiscountPromotion = results[0] ? parseFloat(results[0].price_discount_promotion) : 0;
+          callback(null, priceDiscountPromotion);
+        });
+      },
+
     getMenuWithRemainAndStatus: function (callback) {
         const query = 'SELECT id_menu, name_product, price, menu_picture, remain, status, menu_category, menu_type FROM tbl_menu';
         connection.query(query, (error, results) => {
@@ -726,30 +743,90 @@ module.exports = {
     returnWarehouseProducts: (ingredients, callback) => {
         const queries = ingredients.map(ingredient => {
             return {
-                query: `
+                checkQuery: `
+                    SELECT id_warehouse, tbl_buying_id, unit_quantity_all 
+                    FROM tbl_warehouse 
+                    WHERE name_product = ?
+                    ORDER BY id_warehouse ASC
+                `,
+                updateWarehouseQuery: `
                     UPDATE tbl_warehouse 
                     SET unit_quantity_all = unit_quantity_all + ?
-                    WHERE name_product = ?
+                    WHERE id_warehouse = ? AND tbl_buying_id = ?
+                `,
+                updateBuyingQuery: `
+                    UPDATE tbl_buying 
+                    SET unit_quantity = unit_quantity + ?
+                    WHERE id_buying_list = ?
                 `,
                 values: [ingredient.unit_quantity, ingredient.name_ingredient]
             };
         });
-
+    
         const executeQuery = (index) => {
             if (index >= queries.length) {
                 return callback(null, { message: 'All updates executed successfully' });
             }
-
-            const { query, values } = queries[index];
-            connection.query(query, values, (error, results) => {
-                if (error) {
-                    console.error('Error executing update query:', error);
+            const { checkQuery, updateWarehouseQuery, updateBuyingQuery, values } = queries[index];
+            const [unitQuantity, nameIngredient] = values;
+            
+            connection.query(checkQuery, [nameIngredient], (checkError, checkResults) => {
+                if (checkError) {
+                    console.error('Error executing check query:', checkError);
+                    return callback(checkError, null);
+                }
+    
+                if (checkResults.length === 0) {
+                    const error = new Error(`Product ${nameIngredient} not found`);
+                    console.error(error.message);
                     return callback(error, null);
                 }
-                executeQuery(index + 1);
+    
+                // Sort checkResults by tbl_buying_id in descending order
+                checkResults.sort((a, b) => b.tbl_buying_id.localeCompare(a.tbl_buying_id));
+    
+                let remainingQuantity = unitQuantity;
+                const updatePromises = [];
+    
+                for (const result of checkResults) {
+                    const warehouseId = result.id_warehouse;
+                    const buyingId = result.tbl_buying_id;
+    
+                    if (remainingQuantity <= 0) break;
+    
+                    const quantityToAdd = Math.min(remainingQuantity, unitQuantity);
+                    remainingQuantity -= quantityToAdd;
+    
+                    updatePromises.push(new Promise((resolve, reject) => {
+                        console.log('Adding', quantityToAdd, 'to warehouse with ID', warehouseId);
+                        connection.query(updateWarehouseQuery, [quantityToAdd, warehouseId, buyingId], (updateError, updateResults) => {
+                            if (updateError) {
+                                console.error('Error executing update warehouse query:', updateError);
+                                return reject(updateError);
+                            }
+                            console.log('Adding', quantityToAdd, 'to buying with ID', buyingId);
+                            connection.query(updateBuyingQuery, [quantityToAdd, buyingId], (updateBuyingError, updateBuyingResults) => {
+                                if (updateBuyingError) {
+                                    console.error('Error executing update buying query:', updateBuyingError);
+                                    return reject(updateBuyingError);
+                                }
+                                resolve();
+                            });
+                        });
+                    }));
+                }
+    
+                Promise.all(updatePromises)
+                    .then(() => {
+                        executeQuery(index + 1);
+                    })
+                    .catch(updateError => {
+                        console.error('Error executing update queries:', updateError);
+                        return callback(updateError, null);
+                    });
             });
         };
-
+    
         executeQuery(0);
     },
 
@@ -863,6 +940,19 @@ module.exports = {
         });
     },
 
+    updatePromotionStatus: (promo_code, status_promotion, callback) => {
+        const query = 'UPDATE tbl_promotion SET status_promotion = ? WHERE promo_code = ?';
+        const values = [status_promotion, promo_code];
+
+        connection.query(query, values, (error, results) => {
+            if (error) {
+                console.error('Error updating promotion status:', error);
+                return callback(error);
+            }
+            callback(null, results);
+        });
+    },
+
     deleteFoodComparisonByOrderId: (orderId, callback) => {
         const query = 'DELETE FROM tbl_food_comparison WHERE num_list = ?';
         connection.query(query, [orderId], (error, results) => {
@@ -896,6 +986,21 @@ module.exports = {
             callback(null, results[0]);
         });
     },
+
+    updatePriceDiscountPromotion: (discount, promo_code, callback) => {
+        const query = `
+          UPDATE list_menu
+          SET price_discount_promotion = ?, promo_code = ?
+        `;
+    
+        connection.query(query, [discount, promo_code], (error, results) => {
+          if (error) {
+            console.error('Error updating price_discount_promotion and promo_code:', error);
+            return callback(error);
+          }
+          callback(null, results);
+        });
+      },
 
     getGroupedMenu: (callback) => {
         const query = `
@@ -1113,19 +1218,24 @@ module.exports = {
         const queries = ingredients.map(ingredient => {
             return {
                 checkQuery: `
-                    SELECT unit_quantity_all 
+                    SELECT id_warehouse, tbl_buying_id, unit_quantity_all 
                     FROM tbl_warehouse 
                     WHERE name_product = ?
                 `,
-                updateQuery: `
+                updateWarehouseQuery: `
                     UPDATE tbl_warehouse 
                     SET unit_quantity_all = GREATEST(unit_quantity_all - ?, 0)
-                    WHERE name_product = ?
+                    WHERE id_warehouse = ? AND tbl_buying_id = ?
+                `,
+                updateBuyingQuery: `
+                    UPDATE tbl_buying 
+                    SET unit_quantity = GREATEST(unit_quantity - ?, 0)
+                    WHERE id_buying_list = ?
                 `,
                 restoreQuery: `
                     UPDATE tbl_warehouse 
                     SET unit_quantity_all = unit_quantity_all + ?
-                    WHERE name_product = ?
+                    WHERE id_warehouse = ? AND tbl_buying_id = ?
                 `,
                 updateMenuStatusQuery: `
                     UPDATE tbl_menu 
@@ -1135,68 +1245,97 @@ module.exports = {
                 values: [ingredient.unit_quantity, ingredient.name_ingredient]
             };
         });
-
+    
         const executeQuery = (index) => {
             if (index >= queries.length) {
                 return callback(null, { message: 'All updates executed successfully' });
             }
-
-            const { checkQuery, updateQuery, restoreQuery, updateMenuStatusQuery, values } = queries[index];
+    
+            const { checkQuery, updateWarehouseQuery, updateBuyingQuery, restoreQuery, updateMenuStatusQuery, values } = queries[index];
             const [unitQuantity, nameIngredient] = values;
-
+    
             // Check current unit_quantity_all
             connection.query(checkQuery, [nameIngredient], (checkError, checkResults) => {
                 if (checkError) {
                     console.error('Error executing check query:', checkError);
                     return callback(checkError, null);
                 }
-
-                const currentQuantity = checkResults[0]?.unit_quantity_all;
-                if (currentQuantity === undefined) {
+    
+                if (checkResults.length === 0) {
                     const error = new Error(`Product ${nameIngredient} not found`);
                     console.error(error.message);
                     return callback(error, null);
                 }
-
-                if (currentQuantity - unitQuantity < 0) {
-                    const maxOrders = Math.floor(currentQuantity / unitQuantity);
+    
+                let remainingQuantity = unitQuantity;
+                const updatePromises = [];
+    
+                for (const result of checkResults) {
+                    const currentQuantity = result.unit_quantity_all;
+                    const warehouseId = result.id_warehouse;
+                    const buyingId = result.tbl_buying_id;
+    
+                    if (remainingQuantity <= 0) break;
+    
+                    const quantityToDeduct = Math.min(currentQuantity, remainingQuantity);
+                    remainingQuantity -= quantityToDeduct;
+    
+                    updatePromises.push(new Promise((resolve, reject) => {
+                        connection.query(updateWarehouseQuery, [quantityToDeduct, warehouseId, buyingId], (updateError, updateResults) => {
+                            if (updateError) {
+                                console.error('Error executing update warehouse query:', updateError);
+                                return reject(updateError);
+                            }
+                            connection.query(updateBuyingQuery, [quantityToDeduct, buyingId], (updateBuyingError, updateBuyingResults) => {
+                                if (updateBuyingError) {
+                                    console.error('Error executing update buying query:', updateBuyingError);
+                                    return reject(updateBuyingError);
+                                }
+                                resolve();
+                            });
+                        });
+                    }));
+                }
+    
+                if (remainingQuantity > 0) {
+                    const maxOrders = Math.floor(unitQuantity / remainingQuantity);
                     const error = new Error(`Insufficient quantity for product ${nameIngredient}. You can order up to ${maxOrders} more times.`);
                     console.error(error.message);
                     return callback(error, null);
                 }
-
-                // Proceed with update if quantity is sufficient
-                connection.query(updateQuery, values, (updateError, updateResults) => {
-                    if (updateError) {
-                        console.error('Error executing update query:', updateError);
-                        return callback(updateError, null);
-                    }
-
-                    // Check if the updated quantity is less than or equal to 0
-                    connection.query(checkQuery, [nameIngredient], (checkErrorAfterUpdate, checkResultsAfterUpdate) => {
-                        if (checkErrorAfterUpdate) {
-                            console.error('Error executing check query after update:', checkErrorAfterUpdate);
-                            return callback(checkErrorAfterUpdate, null);
-                        }
-
-                        const updatedQuantity = checkResultsAfterUpdate[0]?.unit_quantity_all;
-                        if (updatedQuantity <= 0) {
-                            // Update the status of the product in tbl_menu to 'OFF'
-                            connection.query(updateMenuStatusQuery, [nameIngredient], (updateStatusError, updateStatusResults) => {
-                                if (updateStatusError) {
-                                    console.error('Error updating menu status:', updateStatusError);
-                                    return callback(updateStatusError, null);
-                                }
+    
+                Promise.all(updatePromises)
+                    .then(() => {
+                        // Check if any of the updated quantities are less than or equal to 0
+                        connection.query(checkQuery, [nameIngredient], (checkErrorAfterUpdate, checkResultsAfterUpdate) => {
+                            if (checkErrorAfterUpdate) {
+                                console.error('Error executing check query after update:', checkErrorAfterUpdate);
+                                return callback(checkErrorAfterUpdate, null);
+                            }
+    
+                            const needsStatusUpdate = checkResultsAfterUpdate.some(result => result.unit_quantity_all <= 0);
+    
+                            if (needsStatusUpdate) {
+                                // Update the status of the product in tbl_menu to 'OFF'
+                                connection.query(updateMenuStatusQuery, [nameIngredient], (updateStatusError, updateStatusResults) => {
+                                    if (updateStatusError) {
+                                        console.error('Error updating menu status:', updateStatusError);
+                                        return callback(updateStatusError, null);
+                                    }
+                                    executeQuery(index + 1);
+                                });
+                            } else {
                                 executeQuery(index + 1);
-                            });
-                        } else {
-                            executeQuery(index + 1);
-                        }
+                            }
+                        });
+                    })
+                    .catch(updateError => {
+                        console.error('Error executing update queries:', updateError);
+                        return callback(updateError, null);
                     });
-                });
             });
         };
-
+    
         executeQuery(0);
     },
 

@@ -7,19 +7,16 @@ module.exports = {
 	tableView: (req, res) => {
 		TableModel.getTablesAndZones((error, results) => {
 			if (error) {
-				// Handle error (e.g., render an error page or send an error response)
+
 				console.error('Error fetching data from database:', error);
 				return res.status(500).send('Error fetching data from database');
 			}
 
-			// Step 2: Check if both tables and zones are not empty
 			if (results.tables.length > 0 || results.zones.length > 0) {
-				// Check if zones array is not empty and redirect to the first zone's ID
 				if (results.zones.length > 0) {
 					console.log('Redirecting to /view_zone/:id with zone ID:', results.zones[0].zone_name);
 					return res.redirect(`/view_zone/${results.zones[0].zone_name}`);
 				} else {
-					// If zones array is empty but tables array is not, handle accordingly
 					console.log('No zones found, but tables are available');
 					return res.render('table', {
 						title: 'Table View',
@@ -29,11 +26,10 @@ module.exports = {
 					});
 				}
 			} else {
-				// No tables or zones found, render the /table view with a message
 				res.render('table', {
 					title: 'Table View',
-					tables: [], // Pass an empty array for tables
-					zones: [], // Pass an empty array for zones
+					tables: [], 
+					zones: [], 
 					message: 'No tables or zones found',
 				});
 			}
@@ -168,373 +164,231 @@ module.exports = {
 	zoneOrderFood: (req, res) => {
 		const zoneName = req.params.zone;
 		const tableId = req.params.table;
-	
-		// Step 1: Query the database for the specific zone and its table
+	  
 		TableModel.getZoneAndTableDetails(zoneName, tableId, (error, results) => {
+		  if (error) {
+			console.error('Error fetching data from database:', error);
+			return res.status(500).send('Error fetching data from database');
+		  }
+	  
+		  TableModel.getOrderFood((error, menu) => {
 			if (error) {
-				console.error('Error fetching data from database:', error);
-				return res.status(500).send('Error fetching data from database');
+			  console.error(error);
+			  return res.status(500).send("An error occurred");
 			}
-	
-			// Step 2: Fetch food recipes and warehouse data for comparison
-			TableModel.getOrderFood((error, menu) => {
-				if (error) {
-					console.error(error);
-					return res.status(500).send("An error occurred");
-				}
-				TableModel.getFoodRecipesMenu((error, foodRecipes) => {
-					if (error) {
-						console.error('Error fetching food recipes: ', error);
-						return res.status(500).send('Internal Server Error');
-					} else {
-						TableModel.getWarehouse((error, warehouse) => {
-							if (error) {
-								console.error('Error fetching warehouse: ', error);
-								return res.status(500).send('Internal Server Error');
-							} else {
-								// Aggregate results by id_warehouse
-								const aggregatedResults = warehouse.reduce((acc, current) => {
-									// Ensure unit_quantity_all is treated as a number for summation
-									current.unit_quantity_all = parseFloat(current.unit_quantity_all) || 0;
-	
-									// If the id_warehouse already exists, sum up the unit_quantity_all and append tbl_buying_id
-									if (acc[current.id_warehouse]) {
-										acc[current.id_warehouse].unit_quantity_all += current.unit_quantity_all;
-										acc[current.id_warehouse].tbl_buying_ids.push(current.tbl_buying_id);
-									} else {
-										// Otherwise, add the entry to the accumulator
-										acc[current.id_warehouse] = {
-											...current,
-											tbl_buying_ids: [current.tbl_buying_id] // Initialize tbl_buying_ids array
-										};
-									}
-									return acc;
-								}, {});
-								// Convert the aggregated results back to an array
-								const aggregatedArray = Object.values(aggregatedResults);
-								// Aggregate warehouse quantities by name_product
-								const aggregatedWarehouse = aggregatedArray.reduce((acc, item) => {
-									if (!acc[item.name_product]) {
-										acc[item.name_product] = 0;
-									}
-									acc[item.name_product] += item.unit_quantity_all;
-									return acc;
-								}, {});
-								// Calculate the number of menus that can be created
-								const menuCounts = menu.map(menuItem => {
-									const ingredients = foodRecipes.filter(recipe => recipe.tbl_menu_id === menuItem.id);
-									const minMenus = ingredients.reduce((min, ingredient) => {
-										const totalQuantity = aggregatedWarehouse[ingredient.name_ingredient] || 0;
-										const possibleMenus = Math.floor(totalQuantity / ingredient.unit_quantity);
-										return Math.min(min, possibleMenus);
-									}, Infinity);
-									// If minMenus is Infinity, set it to 0
-									const remainMenus = minMenus === Infinity ? 0 : minMenus;
-									return {
-										...menuItem,
-										remain: remainMenus,
-										status: remainMenus === 0 ? 'OFF' : 'ON'
-									};
-								});
-								// Update remain and status in the database
-								const updatePromises = menuCounts.map(menuItem => {
-									return new Promise((resolve, reject) => {
-										TableModel.updateMenuRemainAndStatus(menuItem.id, menuItem.remain, menuItem.status, (error, results) => {
-											if (error) {
-												reject(error);
-											} else {
-												resolve(results);
-											}
-										});
-									});
-								});
-	
-								// Wait for all updates to complete
-								Promise.all(updatePromises)
-									.then(() => {
-										// Step 3: Fetch specific columns from list_menu
-										TableModel.getSpecificMenuItems(tableId, zoneName, (error, menuItems) => {
-											if (error) {
-												console.error('Error fetching specific menu items:', error);
-												return res.status(500).send('Error fetching specific menu items');
-											}
-	
-											// Step 4: Fetch menu options from list_menu_options table
-											TableModel.getListMenuOptions((error, listMenuOptions) => {
-												if (error) {
-													console.error('Error fetching menu options:', error);
-													return res.status(500).send('Error fetching menu options');
-												}
-	
-												// Step 5: Fetch promotions from tbl_promotion table
-												TableModel.getPromotions((error, promotions) => {
-													if (error) {
-														console.error('Error fetching promotions:', error);
-														return res.status(500).send('Error fetching promotions');
-													}
-	
-													// Group menu items by category
-													const groupedMenu = menu.reduce((acc, item) => {
-														if (!acc[item.category]) {
-															acc[item.category] = [];
-														}
-														acc[item.category].push(item);
-														return acc;
-													}, {});
-	
-													// Group listMenuOptions by num_list
-													const groupedOptions = listMenuOptions.reduce((acc, option) => {
-														if (!acc[option.num_list]) {
-															acc[option.num_list] = [];
-														}
-														acc[option.num_list].push(option);
-														return acc;
-													}, {});
-	
-													// Calculate total price including options
-													const menuItemsWithTotalPrice = menuItems.map(item => {
-														let totalPrice = parseFloat(item.price_all);
-														const options = groupedOptions[item.num_list];
-														if (options) {
-															options.forEach(option => {
-																if (option.price_options_all) {
-																	totalPrice += parseFloat(option.price_options_all);
-																}
-															});
-														}
-														return {
-															...item,
-															totalPrice: totalPrice
-														};
-													});
-	
-													// Calculate the total price
-													const totalPrice = menuItemsWithTotalPrice.reduce((acc, item) => acc + item.totalPrice, 0);
-													req.session.totalPrice = totalPrice; // Store total price in session
-	
-													// Load basket items from session
-													const basket = req.session.basket || [];
-													res.render('order_food', {
-														groupedMenu: groupedMenu,
-														basket: basket,
-														zone_name: zoneName,
-														table_id: tableId,
-														menuItems: menuItemsWithTotalPrice,
-														groupedOptions: groupedOptions,
-														promotions: promotions, // Pass promotions to the view
-														totalPrice: totalPrice.toFixed(2),
-														finalPrice: totalPrice.toFixed(2), // Initially, final price is the same as total price
-														discountPrice: '0.00', // Set discountPrice to 0.00
-													});
-												});
-											});
-										});
-									})
-									.catch(updateError => {
-										console.error('Error updating menu remain and status:', updateError);
-										res.status(500).send('Error updating menu remain and status');
-									});
-							}
+			TableModel.getFoodRecipesMenu((error, foodRecipes) => {
+			  if (error) {
+				console.error('Error fetching food recipes: ', error);
+				return res.status(500).send('Internal Server Error');
+			  } else {
+				TableModel.getWarehouse((error, warehouse) => {
+				  if (error) {
+					console.error('Error fetching warehouse: ', error);
+					return res.status(500).send('Internal Server Error');
+				  } else {
+					// Aggregate results by id_warehouse
+					const aggregatedResults = warehouse.reduce((acc, current) => {
+					  // Ensure unit_quantity_all is treated as a number for summation
+					  current.unit_quantity_all = parseFloat(current.unit_quantity_all) || 0;
+	  
+					  // If the id_warehouse already exists, sum up the unit_quantity_all and append tbl_buying_id
+					  if (acc[current.id_warehouse]) {
+						acc[current.id_warehouse].unit_quantity_all += current.unit_quantity_all;
+						acc[current.id_warehouse].tbl_buying_ids.push(current.tbl_buying_id);
+					  } else {
+						// Otherwise, add the entry to the accumulator
+						acc[current.id_warehouse] = {
+						  ...current,
+						  tbl_buying_ids: [current.tbl_buying_id] // Initialize tbl_buying_ids array
+						};
+					  }
+					  return acc;
+					}, {});
+					// Convert the aggregated results back to an array
+					const aggregatedArray = Object.values(aggregatedResults);
+					// Aggregate warehouse quantities by name_product
+					const aggregatedWarehouse = aggregatedArray.reduce((acc, item) => {
+					  if (!acc[item.name_product]) {
+						acc[item.name_product] = 0;
+					  }
+					  acc[item.name_product] += item.unit_quantity_all;
+					  return acc;
+					}, {});
+					// Calculate the number of menus that can be created
+					const menuCounts = menu.map(menuItem => {
+					  const ingredients = foodRecipes.filter(recipe => recipe.tbl_menu_id === menuItem.id);
+					  const minMenus = ingredients.reduce((min, ingredient) => {
+						const totalQuantity = aggregatedWarehouse[ingredient.name_ingredient] || 0;
+						const possibleMenus = Math.floor(totalQuantity / ingredient.unit_quantity);
+						return Math.min(min, possibleMenus);
+					  }, Infinity);
+					  // If minMenus is Infinity, set it to 0
+					  const remainMenus = minMenus === Infinity ? 0 : minMenus;
+					  return {
+						...menuItem,
+						remain: remainMenus,
+						status: remainMenus === 0 ? 'OFF' : 'ON'
+					  };
+					});
+					// Update remain and status in the database
+					const updatePromises = menuCounts.map(menuItem => {
+					  return new Promise((resolve, reject) => {
+						TableModel.updateMenuRemainAndStatus(menuItem.id, menuItem.remain, menuItem.status, (error, results) => {
+						  if (error) {
+							reject(error);
+						  } else {
+							resolve(results);
+						  }
 						});
-					}
+					  });
+					});
+	  
+					// Wait for all updates to complete
+					Promise.all(updatePromises)
+					  .then(() => {
+						// Step 3: Fetch specific columns from list_menu
+						TableModel.getSpecificMenuItems(tableId, zoneName, (error, menuItems) => {
+						  if (error) {
+							console.error('Error fetching specific menu items:', error);
+							return res.status(500).send('Error fetching specific menu items');
+						  }
+	  
+						  // Step 4: Fetch menu options from list_menu_options table
+						  TableModel.getListMenuOptions((error, listMenuOptions) => {
+							if (error) {
+							  console.error('Error fetching menu options:', error);
+							  return res.status(500).send('Error fetching menu options');
+							}
+	  
+							// Step 5: Fetch promotions from tbl_promotion table
+							TableModel.getPromotions((error, promotions) => {
+							  if (error) {
+								console.error('Error fetching promotions:', error);
+								return res.status(500).send('Error fetching promotions');
+							  }
+	  
+							  // Step 6: Fetch price_discount_promotion from list_menu table
+							  TableModel.getPriceDiscountPromotion((error, priceDiscountPromotion) => {
+								if (error) {
+								  console.error('Error fetching price discount promotion:', error);
+								  return res.status(500).send('Error fetching price discount promotion');
+								}
+	  
+								// Group menu items by category
+								const groupedMenu = menu.reduce((acc, item) => {
+								  if (!acc[item.category]) {
+									acc[item.category] = [];
+								  }
+								  acc[item.category].push(item);
+								  return acc;
+								}, {});
+	  
+								// Group listMenuOptions by num_list
+								const groupedOptions = listMenuOptions.reduce((acc, option) => {
+								  if (!acc[option.num_list]) {
+									acc[option.num_list] = [];
+								  }
+								  acc[option.num_list].push(option);
+								  return acc;
+								}, {});
+	  
+								const menuItemsWithTotalPrice = menuItems.map(item => {
+								  let totalPrice = parseFloat(item.price_all);
+								  const options = groupedOptions[item.num_list];
+								  if (options) {
+									options.forEach(option => {
+									  if (option.price_options_all) {
+										totalPrice += parseFloat(option.price_options_all);
+									  }
+									});
+								  }
+								  return {
+									...item,
+									totalPrice: totalPrice
+								  };
+								});
+	  
+								// Calculate the total price
+								const totalPrice = menuItemsWithTotalPrice.reduce((acc, item) => acc + item.totalPrice, 0);
+								req.session.totalPrice = totalPrice; // Store total price in session
+								
+								// Load basket items from session
+								const basket = req.session.basket || [];
+								res.render('order_food', {
+								  groupedMenu: groupedMenu,
+								  basket: basket,
+								  zone_name: zoneName,
+								  table_id: tableId,
+								  menuItems: menuItemsWithTotalPrice,
+								  groupedOptions: groupedOptions,
+								  promotions: promotions, // Pass promotions to the view
+								  totalPrice: totalPrice.toFixed(2),
+								  finalPrice: (totalPrice - (priceDiscountPromotion || 0)).toFixed(2), // Apply discount to final price, default to 0 if not available
+								  discountPrice: (priceDiscountPromotion || 0).toFixed(2), // Use fetched discount price, default to 0 if not available
+								});
+							  });
+							});
+						  });
+						});
+					  })
+					  .catch(updateError => {
+						console.error('Error updating menu remain and status:', updateError);
+						res.status(500).send('Error updating menu remain and status');
+					  });
+				  }
 				});
+			  }
 			});
+		  });
 		});
-	},
+	  },
 
-	applyDiscount: (req, res) => {
+	  applyDiscount: (req, res) => {
 		const { discount_code } = req.body;
 		const zoneName = req.params.zone;
 		const tableId = req.params.table;
-		console.log('Applying promotion with code:', discount_code);
-	
+	  
+		console.log('Applying promotion with code:', req.body);
 		TableModel.getPromotionByCode(discount_code, (error, promotion) => {
-			if (error) {
-				console.error('Error fetching promotion:', error);
-				req.session.errorMessage = 'Error fetching promotion';
-				return res.status(500).send('Error fetching promotion');
+		  if (error) {
+			console.error('Error fetching promotion:', error);
+			req.session.errorMessage = 'Error fetching promotion';
+			return res.status(500).send('Error fetching promotion');
+		  }
+	  
+		  const discount = parseFloat(promotion.price_discount);
+		  const totalPrice = parseFloat(req.session.totalPrice); 
+		  const finalPrice = totalPrice - discount;
+	  
+		  req.session.finalPrice = finalPrice;
+		  req.session.discountPrice = discount.toFixed(2);
+		  req.session.errorMessage = null; 
+	  
+		  console.log('Promotion applied successfully:', discount);
+		  const promo_code = discount_code;
+		  console.log('Promo code:', promo_code);
+		  TableModel.updatePriceDiscountPromotion(discount, promo_code, (updateError) => {
+			if (updateError) {
+			  console.error('Error updating price_discount_promotion:', updateError);
+			  return res.status(500).send('Error updating price_discount_promotion');
 			}
-	
-			const discount = parseFloat(promotion.price_discount);
-			const totalPrice = parseFloat(req.session.totalPrice); // Assuming totalPrice is stored in session
-			const finalPrice = totalPrice - discount;
-	
-			// Store final price and discount price in session
-			req.session.finalPrice = finalPrice;
-			req.session.discountPrice = discount.toFixed(2);
-			req.session.errorMessage = null; // Clear any previous error message
-	
-			console.log('Promotion applied successfully:', discount);
-	
-			// Fetch the necessary data to render the view
+	  
 			TableModel.getZoneAndTableDetails(zoneName, tableId, (error, results) => {
-				if (error) {
-					console.error('Error fetching data from database:', error);
-					return res.status(500).send('Error fetching data from database');
-				}
-	
-				if (!results || results.length === 0) {
-					console.error('No zone and table details found');
-					return res.status(404).send('No zone and table details found');
-				}
-	
-				TableModel.getOrderFood((error, menu) => {
-					if (error) {
-						console.error(error);
-						return res.status(500).send("An error occurred");
-					}
-	
-					TableModel.getFoodRecipesMenu((error, foodRecipes) => {
-						if (error) {
-							console.error('Error fetching food recipes: ', error);
-							return res.status(500).send('Internal Server Error');
-						}
-	
-						TableModel.getWarehouse((error, warehouse) => {
-							if (error) {
-								console.error('Error fetching warehouse: ', error);
-								return res.status(500).send('Internal Server Error');
-							}
-	
-							// Aggregate results by id_warehouse
-							const aggregatedResults = warehouse.reduce((acc, current) => {
-								current.unit_quantity_all = parseFloat(current.unit_quantity_all) || 0;
-	
-								if (acc[current.id_warehouse]) {
-									acc[current.id_warehouse].unit_quantity_all += current.unit_quantity_all;
-									acc[current.id_warehouse].tbl_buying_ids.push(current.tbl_buying_id);
-								} else {
-									acc[current.id_warehouse] = {
-										...current,
-										tbl_buying_ids: [current.tbl_buying_id]
-									};
-								}
-								return acc;
-							}, {});
-	
-							const aggregatedArray = Object.values(aggregatedResults);
-	
-							const aggregatedWarehouse = aggregatedArray.reduce((acc, item) => {
-								if (!acc[item.name_product]) {
-									acc[item.name_product] = 0;
-								}
-								acc[item.name_product] += item.unit_quantity_all;
-								return acc;
-							}, {});
-	
-							const menuCounts = menu.map(menuItem => {
-								const ingredients = foodRecipes.filter(recipe => recipe.tbl_menu_id === menuItem.id);
-								const minMenus = ingredients.reduce((min, ingredient) => {
-									const totalQuantity = aggregatedWarehouse[ingredient.name_ingredient] || 0;
-									const possibleMenus = Math.floor(totalQuantity / ingredient.unit_quantity);
-									return Math.min(min, possibleMenus);
-								}, Infinity);
-	
-								const remainMenus = minMenus === Infinity ? 0 : minMenus;
-								return {
-									...menuItem,
-									remain: remainMenus,
-									status: remainMenus === 0 ? 'OFF' : 'ON'
-								};
-							});
-	
-							const updatePromises = menuCounts.map(menuItem => {
-								return new Promise((resolve, reject) => {
-									TableModel.updateMenuRemainAndStatus(menuItem.id, menuItem.remain, menuItem.status, (error, results) => {
-										if (error) {
-											reject(error);
-										} else {
-											resolve(results);
-										}
-									});
-								});
-							});
-	
-							Promise.all(updatePromises)
-								.then(() => {
-									TableModel.getSpecificMenuItems(tableId, zoneName, (error, menuItems) => {
-										if (error) {
-											console.error('Error fetching specific menu items:', error);
-											return res.status(500).send('Error fetching specific menu items');
-										}
-	
-										TableModel.getListMenuOptions((error, listMenuOptions) => {
-											if (error) {
-												console.error('Error fetching menu options:', error);
-												return res.status(500).send('Error fetching menu options');
-											}
-	
-											TableModel.getPromotions((error, promotions) => {
-												if (error) {
-													console.error('Error fetching promotions:', error);
-													return res.status(500).send('Error fetching promotions');
-												}
-	
-												const groupedMenu = menu.reduce((acc, item) => {
-													if (!acc[item.category]) {
-														acc[item.category] = [];
-													}
-													acc[item.category].push(item);
-													return acc;
-												}, {});
-	
-												const groupedOptions = listMenuOptions.reduce((acc, option) => {
-													if (!acc[option.num_list]) {
-														acc[option.num_list] = [];
-													}
-													acc[option.num_list].push(option);
-													return acc;
-												}, {});
-	
-												const menuItemsWithTotalPrice = menuItems.map(item => {
-													let totalPrice = parseFloat(item.price_all);
-													const options = groupedOptions[item.num_list];
-													if (options) {
-														options.forEach(option => {
-															if (option.price_options_all) {
-																totalPrice += parseFloat(option.price_options_all);
-															}
-														});
-													}
-													return {
-														...item,
-														totalPrice: totalPrice
-													};
-												});
-	
-												const totalPrice = menuItemsWithTotalPrice.reduce((acc, item) => acc + item.totalPrice, 0);
-												req.session.totalPrice = totalPrice;
-	
-												const basket = req.session.basket || [];
-												res.render('order_food', {
-													zone_name: zoneName,
-													table_id: tableId,
-													totalPrice: totalPrice.toFixed(2),
-													finalPrice: finalPrice.toFixed(2),
-													discountPrice: discount.toFixed(2),
-													groupedMenu: groupedMenu,
-													basket: basket,
-													menuItems: menuItemsWithTotalPrice,
-													groupedOptions: groupedOptions,
-													promotions: promotions,
-													errorMessage: null,
-													item: {},
-													menuOptions: []
-												});
-											});
-										});
-									});
-								})
-								.catch(updateError => {
-									console.error('Error updating menu remain and status:', updateError);
-									res.status(500).send('Error updating menu remain and status');
-								});
-						});
-					});
-				});
+			  if (error) {
+				console.error('Error fetching data from database:', error);
+				return res.status(500).send('Error fetching data from database');
+			  }
+	  
+			  if (!results || results.length === 0) {
+				console.error('No zone and table details found');
+				return res.status(404).send('No zone and table details found');
+			  }
+	  
+			  res.redirect(`/zone/${zoneName}/table/${tableId}/view_checkbill`);
 			});
+		  });
 		});
-	},
+	  },
 
 	// เพิ่มฟังก์ชัน zoneCustomize
 	zoneCustomize: (req, res) => {
@@ -571,7 +425,7 @@ module.exports = {
 						errorMessage = `Insufficient quantity for products: ${productNames}.`;
 					}
 
-					const numUnit = req.body.quantity || 1; 
+					const numUnit = req.body.quantity || 1;
 					menuOptions.forEach(option => {
 						option.num_unit = numUnit;
 						option.price_options_all = option.price * numUnit;
@@ -583,7 +437,7 @@ module.exports = {
 						foodRecipes: foodRecipes,
 						zone_name: zoneName,
 						table_id: tableId,
-						errorMessage: errorMessage, 
+						errorMessage: errorMessage,
 					});
 				});
 			});
@@ -860,7 +714,6 @@ module.exports = {
 								zone_name: orderData.zone_name,
 								id_table: orderData.id_table,
 							}));
-
 							TableModel.saveFoodComparison(foodComparisonDataArray, (error, result) => {
 
 								if (error) {
@@ -1010,7 +863,6 @@ module.exports = {
 			}
 
 			function proceedWithDeletion() {
-				// Proceed to fetch the food comparison data for the order
 				TableModel.getFoodComparisonByOrderId(orderId, (fetchError, foodComparisonResults) => {
 					if (fetchError) {
 						console.error('Error fetching food comparison data:', fetchError);
@@ -1323,253 +1175,298 @@ module.exports = {
 	zoneViewCheckBill: (req, res) => {
 		const zoneName = req.params.zone;
 		const tableId = req.params.table;
-
+	  
 		// Step 1: Query the database for the specific zone and its table
 		TableModel.getZoneAndTableDetails(zoneName, tableId, (error, results) => {
+		  if (error) {
+			console.error('Error fetching data from database:', error);
+			return res.status(500).send('Error fetching data from database');
+		  }
+	  
+		  // Load basket items from session
+		  const basket = req.session.basket || [];
+	  
+		  // Step 2: Fetch specific columns from list_menu
+		  TableModel.getSpecificMenuItems(tableId, zoneName, (error, menuItems) => {
 			if (error) {
-				console.error('Error fetching data from database:', error);
-				return res.status(500).send('Error fetching data from database');
+			  console.error('Error fetching specific menu items:', error);
+			  return res.status(500).send('Error fetching specific menu items');
 			}
-
-			// Load basket items from session
-			const basket = req.session.basket || [];
-
-			// Step 2: Fetch specific columns from list_menu
-			TableModel.getSpecificMenuItems(tableId, zoneName, (error, menuItems) => {
+	  
+			// Step 3: Fetch menu options from list_menu_options table
+			TableModel.getListMenuOptions((error, listMenuOptions) => {
+			  if (error) {
+				console.error('Error fetching menu options:', error);
+				return res.status(500).send('Error fetching menu options');
+			  }
+	  
+			  // Step 4: Fetch price_discount_promotion from list_menu table
+			  TableModel.getPriceDiscountPromotion((error, priceDiscountPromotion) => {
 				if (error) {
-					console.error('Error fetching specific menu items:', error);
-					return res.status(500).send('Error fetching specific menu items');
+				  console.error('Error fetching price discount promotion:', error);
+				  return res.status(500).send('Error fetching price discount promotion');
 				}
-
-				// Step 3: Fetch menu options from list_menu_options table
-				TableModel.getListMenuOptions((error, listMenuOptions) => {
-					if (error) {
-						console.error('Error fetching menu options:', error);
-						return res.status(500).send('Error fetching menu options');
-					}
-
-					// Group listMenuOptions by num_list
-					const groupedOptions = listMenuOptions.reduce((acc, option) => {
-						if (!acc[option.num_list]) {
-							acc[option.num_list] = [];
-						}
-						acc[option.num_list].push(option);
-						return acc;
-					}, {});
-
-					const item = results[0];
-
-					// Step 4: Render the view_checkbill view with the retrieved data
-					res.render('view_checkbill', {
-						basket: basket,
-						zone_name: zoneName,
-						table_id: tableId,
-						menuItems: menuItems,
-						groupedOptions: groupedOptions,
+	  
+				// Group listMenuOptions by num_list
+				const groupedOptions = listMenuOptions.reduce((acc, option) => {
+				  if (!acc[option.num_list]) {
+					acc[option.num_list] = [];
+				  }
+				  acc[option.num_list].push(option);
+				  return acc;
+				}, {});
+	  
+				const menuItemsWithTotalPrice = menuItems.map(item => {
+				  let totalPrice = parseFloat(item.price_all);
+				  const options = groupedOptions[item.num_list];
+				  if (options) {
+					options.forEach(option => {
+					  if (option.price_options_all) {
+						totalPrice += parseFloat(option.price_options_all);
+					  }
 					});
+				  }
+				  return {
+					...item,
+					totalPrice: totalPrice
+				  };
 				});
+	  
+				const totalPrice = menuItemsWithTotalPrice.reduce((acc, item) => acc + item.totalPrice, 0);
+				req.session.totalPrice = totalPrice;
+	  
+				// Extract promo_code from menuItems
+				const get_promo_code = menuItems.length > 0 ? menuItems[0].promo_code : '';
+				
+				res.render('view_checkbill', {
+				  basket: basket,
+				  zone_name: zoneName,
+				  table_id: tableId,
+				  menuItems: menuItemsWithTotalPrice,
+				  groupedOptions: groupedOptions,
+				  totalPrice: totalPrice.toFixed(2),
+				  finalPrice: (totalPrice - (priceDiscountPromotion || 0)).toFixed(2), // Apply discount to final price, default to 0 if not available
+				  discountPrice: (priceDiscountPromotion || 0).toFixed(2), // Use fetched discount price, default to 0 if not available
+				  get_promo_code: get_promo_code // Pass get_promo_code to the template
+				});
+			  });
 			});
+		  });
 		});
-	},
+	  },
 
-	createCheckBill: (req, res) => {
+	  createCheckBill: (req, res) => {
 		const zoneName = req.params.zone;
 		const tableId = req.params.table;
 		const updatedData = req.body;
-
-		// Fetch id_record from record_check_bill
-		TableModel.getLatestRecordCheckBill((error, maxIdRecord) => {
-			if (error) {
-				console.error('Error fetching record check bill:', error);
-				return res.status(500).send('Error fetching record check bill');
-			}
-
-			// Start idRecord at 1 if no records exist, otherwise increment the maxIdRecord by 1
-			let idRecord = maxIdRecord ? maxIdRecord + 1 : 1;
-
-			TableModel.getCheckBillMenuItems(tableId, zoneName, (error, menuItems) => {
-				if (error) {
-					console.error('Error fetching specific menu items:', error);
-					return res.status(500).send('Error fetching specific menu items');
-				}
-
-				// Calculate total amount by summing up price_all from menu items where status_bill is 'Y'
-				const totalAmount = menuItems.reduce((sum, item) => {
-					if (item.status_bill === 'Y') {
-						return sum + parseFloat(item.price_all);
-					}
-					return sum;
-				}, 0);
-
-				// Calculate final amount by subtracting discount from total amount
-				const discount = updatedData.discount || 0;
-				const finalAmount = totalAmount - discount;
-
-				// Filter num_list values where status_bill is 'Y'
-				const numList = menuItems
-					.filter(item => item.status_bill === 'Y')
-					.map(item => item.num_list);
-
-				// Fetch the latest bill number
-				TableModel.getLatestBillNumber((error, maxBillNumber) => {
+	
+		console.log('Updated Data:', updatedData);
+	
+		// Extract promo_code and status_promotion from updatedData
+		const { promo_code, status_promotion } = updatedData;
+	
+		// Update promotion status
+		TableModel.updatePromotionStatus(promo_code, status_promotion, (updateError, updateResults) => {
+			if (updateError) {
+				console.error('Error updating promotion status:', updateError);
+				return res.status(500).send('Error updating promotion status');
+			} else {
+				console.log('Promotion status updated successfully:', updateResults);
+	
+				TableModel.getLatestRecordCheckBill((error, maxIdRecord) => {
 					if (error) {
-						console.error('Error fetching latest bill number:', error);
-						return res.status(500).send('Error fetching latest bill number');
+						console.error('Error fetching record check bill:', error);
+						return res.status(500).send('Error fetching record check bill');
 					}
-
-					// Start billNumber at 1 if no records exist, otherwise increment the maxBillNumber by 1
-					let billNumber = maxBillNumber ? maxBillNumber.toString().split('').reduce((acc, num) => acc + parseInt(num), 0) + 1 : 1;
-
-					// Iterate over numList and create a record for each item
-					const createRecords = numList.map(num => {
-						const filteredItems = menuItems.filter(item => item.num_list === num);
-						const aggregatedData = {
-							id_record: idRecord++,
-							bill_number: billNumber,
-							num_list: [num],
-							product_list: filteredItems.map(item => item.product_list).join(', '),
-							total_amount: totalAmount || 0,
-							discount: discount,
-							final_amount: finalAmount || 0,
-							payment_method: updatedData.payment_method,
-							id_table: filteredItems.length > 0 ? filteredItems[0].id_table : null,
-							zone_name: filteredItems.length > 0 ? filteredItems[0].zone_name : null,
-							num_nuit: filteredItems.reduce((sum, item) => sum + parseInt(item.num_unit), 0) // Add num_nuit field
-						};
-
-						return new Promise((resolve, reject) => {
-							TableModel.insertCheckBill(aggregatedData, (error, results) => {
-								if (error) {
-									console.error('Error inserting check bill:', error);
-									reject('Error inserting check bill');
-								} else {
-									resolve(results);
-								}
-							});
-						});
-					});
-
-					// Execute all insertions and then delete records from tbl_food_comparison, list_menu, tbl_food_comparison_options, and list_menu_options
-					Promise.all(createRecords)
-						.then(() => {
-							// Check the database for list_menu_options
-							const checkListMenuOptionsPromises = numList.map(num => {
+	
+					// Start idRecord at 1 if no records exist, otherwise increment the maxIdRecord by 1
+					let idRecord = maxIdRecord ? maxIdRecord + 1 : 1;
+	
+					TableModel.getCheckBillMenuItems(tableId, zoneName, (error, menuItems) => {
+						if (error) {
+							console.error('Error fetching specific menu items:', error);
+							return res.status(500).send('Error fetching specific menu items');
+						}
+	
+						// Calculate total amount by summing up price_all from menu items where status_bill is 'Y'
+						const totalAmount = menuItems.reduce((sum, item) => {
+							if (item.status_bill === 'Y') {
+								return sum + parseFloat(item.price_all);
+							}
+							return sum;
+						}, 0);
+	
+						// Calculate final amount by subtracting discount from total amount
+						const discount = updatedData.discount || 0;
+						const finalAmount = totalAmount - discount;
+	
+						// Filter num_list values where status_bill is 'Y'
+						const numList = menuItems
+							.filter(item => item.status_bill === 'Y')
+							.map(item => item.num_list);
+	
+						// Fetch the latest bill number
+						TableModel.getLatestBillNumber((error, maxBillNumber) => {
+							if (error) {
+								console.error('Error fetching latest bill number:', error);
+								return res.status(500).send('Error fetching latest bill number');
+							}
+	
+							// Start billNumber at 1 if no records exist, otherwise increment the maxBillNumber by 1
+							let billNumber = maxBillNumber ? maxBillNumber.toString().split('').reduce((acc, num) => acc + parseInt(num), 0) + 1 : 1;
+	
+							// Iterate over numList and create a record for each item
+							const createRecords = numList.map(num => {
+								const filteredItems = menuItems.filter(item => item.num_list === num);
+								const aggregatedData = {
+									id_record: idRecord++,
+									bill_number: billNumber,
+									num_list: [num],
+									product_list: filteredItems.map(item => item.product_list).join(', '),
+									total_amount: totalAmount || 0,
+									discount: discount,
+									final_amount: finalAmount || 0,
+									payment_method: updatedData.payment_method,
+									id_table: filteredItems.length > 0 ? filteredItems[0].id_table : null,
+									zone_name: filteredItems.length > 0 ? filteredItems[0].zone_name : null,
+									num_nuit: filteredItems.reduce((sum, item) => sum + parseInt(item.num_unit), 0) // Add num_nuit field
+								};
+	
 								return new Promise((resolve, reject) => {
-									TableModel.checkListMenuOptions(num, (checkError, checkResults) => {
-										if (checkError) {
-											console.error('Error fetching list_menu_options data:', checkError);
-											reject('Error fetching list_menu_options data');
+									TableModel.insertCheckBill(aggregatedData, (error, results) => {
+										if (error) {
+											console.error('Error inserting check bill:', error);
+											reject('Error inserting check bill');
 										} else {
-											resolve(checkResults);
+											resolve(results);
 										}
 									});
 								});
 							});
-
-							return Promise.all(checkListMenuOptionsPromises);
-						})
-						.then(checkResultsArray => {
-							const listMenuIds = checkResultsArray.flat().map(result => result.list_menu_id);
-
-							if (listMenuIds.length === 0) {
-								// If no list_menu_ids, proceed with deletion directly
-								return proceedWithDeletion();
-							} else {
-								// Fetch the food comparison options data for the order
-								return new Promise((resolve, reject) => {
-									TableModel.getFoodComparisonOptionsByListMenuIds(listMenuIds, (optionsFetchError, foodComparisonOptionsResults) => {
-										if (optionsFetchError) {
-											console.error('Error fetching food comparison options data:', optionsFetchError);
-											reject('Error fetching food comparison options data');
-										} else {
-											// Delete the order from the tbl_food_comparison_options table
-											TableModel.deleteFoodComparisonOptionsByListMenuIds(listMenuIds, (foodComparisonOptionsError) => {
-												if (foodComparisonOptionsError) {
-													console.error('Error deleting food comparison options:', foodComparisonOptionsError);
-													reject('Error deleting food comparison options');
+	
+							// Execute all insertions and then delete records from tbl_food_comparison, list_menu, tbl_food_comparison_options, and list_menu_options
+							Promise.all(createRecords)
+								.then(() => {
+									// Check the database for list_menu_options
+									const checkListMenuOptionsPromises = numList.map(num => {
+										return new Promise((resolve, reject) => {
+											TableModel.checkListMenuOptions(num, (checkError, checkResults) => {
+												if (checkError) {
+													console.error('Error fetching list_menu_options data:', checkError);
+													reject('Error fetching list_menu_options data');
 												} else {
-													resolve();
+													resolve(checkResults);
 												}
 											});
-										}
+										});
 									});
-								});
-							}
-						})
-						.then(() => proceedWithDeletion())
-						.then(() => res.redirect(`/zone/${zoneName}/table/${tableId}/order_food`))
-						.catch(error => res.status(500).send(error));
-
-					function proceedWithDeletion() {
-						// Proceed to fetch the food comparison data for the order
-						const fetchFoodComparisonPromises = numList.map(num => {
-							return new Promise((resolve, reject) => {
-								TableModel.getFoodComparisonByOrderId(num, (fetchError, foodComparisonResults) => {
-									if (fetchError) {
-										console.error('Error fetching food comparison data:', fetchError);
-										reject('Error fetching food comparison data');
+	
+									return Promise.all(checkListMenuOptionsPromises);
+								})
+								.then(checkResultsArray => {
+									const listMenuIds = checkResultsArray.flat().map(result => result.list_menu_id);
+	
+									if (listMenuIds.length === 0) {
+										// If no list_menu_ids, proceed with deletion directly
+										return proceedWithDeletion();
 									} else {
-										resolve(foodComparisonResults);
+										// Fetch the food comparison options data for the order
+										return new Promise((resolve, reject) => {
+											TableModel.getFoodComparisonOptionsByListMenuIds(listMenuIds, (optionsFetchError, foodComparisonOptionsResults) => {
+												if (optionsFetchError) {
+													console.error('Error fetching food comparison options data:', optionsFetchError);
+													reject('Error fetching food comparison options data');
+												} else {
+													// Delete the order from the tbl_food_comparison_options table
+													TableModel.deleteFoodComparisonOptionsByListMenuIds(listMenuIds, (foodComparisonOptionsError) => {
+														if (foodComparisonOptionsError) {
+															console.error('Error deleting food comparison options:', foodComparisonOptionsError);
+															reject('Error deleting food comparison options');
+														} else {
+															resolve();
+														}
+													});
+												}
+											});
+										});
 									}
+								})
+								.then(() => proceedWithDeletion())
+								.then(() => res.redirect(`/zone/${zoneName}/table/${tableId}/order_food`))
+								.catch(error => res.status(500).send(error));
+	
+							function proceedWithDeletion() {
+								// Proceed to fetch the food comparison data for the order
+								const fetchFoodComparisonPromises = numList.map(num => {
+									return new Promise((resolve, reject) => {
+										TableModel.getFoodComparisonByOrderId(num, (fetchError, foodComparisonResults) => {
+											if (fetchError) {
+												console.error('Error fetching food comparison data:', fetchError);
+												reject('Error fetching food comparison data');
+											} else {
+												resolve(foodComparisonResults);
+											}
+										});
+									});
 								});
-							});
+	
+								return Promise.all(fetchFoodComparisonPromises)
+									.then(foodComparisonResultsArray => {
+										// Delete the order from the tbl_food_comparison table
+										const deleteFoodComparisonPromises = numList.map(num => {
+											return new Promise((resolve, reject) => {
+												TableModel.deleteFoodComparisonByOrderId(num, (foodComparisonError) => {
+													if (foodComparisonError) {
+														console.error('Error deleting food comparison:', foodComparisonError);
+														reject('Error deleting food comparison');
+													} else {
+														resolve();
+													}
+												});
+											});
+										});
+	
+										return Promise.all(deleteFoodComparisonPromises);
+									})
+									.then(() => {
+										// Delete the order from the list_menu_options table
+										const deleteListMenuOptionsPromises = numList.map(num => {
+											return new Promise((resolve, reject) => {
+												TableModel.deleteOptionsByOrderId(num, (optionsError) => {
+													if (optionsError) {
+														console.error('Error deleting order options:', optionsError);
+														reject('Error deleting order options');
+													} else {
+														resolve();
+													}
+												});
+											});
+										});
+	
+										return Promise.all(deleteListMenuOptionsPromises);
+									})
+									.then(() => {
+										// Finally, delete the order from the main orders table
+										const deleteOrderPromises = numList.map(num => {
+											return new Promise((resolve, reject) => {
+												TableModel.deleteOrderById(num, (orderError) => {
+													if (orderError) {
+														console.error('Error deleting order:', orderError);
+														reject('Error deleting order');
+													} else {
+														resolve();
+													}
+												});
+											});
+										});
+	
+										return Promise.all(deleteOrderPromises);
+									});
+							}
 						});
-
-						return Promise.all(fetchFoodComparisonPromises)
-							.then(foodComparisonResultsArray => {
-								// Delete the order from the tbl_food_comparison table
-								const deleteFoodComparisonPromises = numList.map(num => {
-									return new Promise((resolve, reject) => {
-										TableModel.deleteFoodComparisonByOrderId(num, (foodComparisonError) => {
-											if (foodComparisonError) {
-												console.error('Error deleting food comparison:', foodComparisonError);
-												reject('Error deleting food comparison');
-											} else {
-												resolve();
-											}
-										});
-									});
-								});
-
-								return Promise.all(deleteFoodComparisonPromises);
-							})
-							.then(() => {
-								// Delete the order from the list_menu_options table
-								const deleteListMenuOptionsPromises = numList.map(num => {
-									return new Promise((resolve, reject) => {
-										TableModel.deleteOptionsByOrderId(num, (optionsError) => {
-											if (optionsError) {
-												console.error('Error deleting order options:', optionsError);
-												reject('Error deleting order options');
-											} else {
-												resolve();
-											}
-										});
-									});
-								});
-
-								return Promise.all(deleteListMenuOptionsPromises);
-							})
-							.then(() => {
-								// Finally, delete the order from the main orders table
-								const deleteOrderPromises = numList.map(num => {
-									return new Promise((resolve, reject) => {
-										TableModel.deleteOrderById(num, (orderError) => {
-											if (orderError) {
-												console.error('Error deleting order:', orderError);
-												reject('Error deleting order');
-											} else {
-												resolve();
-											}
-										});
-									});
-								});
-
-								return Promise.all(deleteOrderPromises);
-							});
-					}
+					});
 				});
-			});
+			}
 		});
 	}
 };

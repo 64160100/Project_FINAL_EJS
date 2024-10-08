@@ -39,7 +39,7 @@ module.exports = {
 					seenSumPromotionIds.add(promotion.sum_promotion_id);
 				}
 			});
-	
+			console.log(uniquePromotions);
 			res.render('promotion', { promotions: uniquePromotions });
 		});
 	},
@@ -144,15 +144,15 @@ module.exports = {
 	},
 
 	deletePromotion: (req, res) => {
-		const id = req.params.id;
-		PromotionModel.deletePromotion(id, (err, result) => {
-			if (err) {
-				return res.status(500).json({
-					message: 'Database error!',
-					error: err
-				});
-			}
-			res.redirect('/promotion');
+		const promotionId = req.params.id;
+
+		PromotionModel.deletePromotionById(promotionId, (error, result) => {
+		  if (error) {
+			console.error('Error deleting promotion:', error);
+			return res.status(500).send('Error deleting promotion');
+		  }
+	  
+		  res.redirect('/promotion'); // Redirect to the promotions list page after deletion
 		});
 	},
 

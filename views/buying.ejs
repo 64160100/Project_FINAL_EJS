@@ -167,6 +167,12 @@
         <div class="topic">
             รายการจัดซื้อ
             <div class="search-add-container">
+                <label for="showZeroQuantity">
+                    <input type="checkbox" id="showZeroQuantity" /> แสดงวัตถุดิบหมด
+                </label>
+                <label for="showDuplicates">
+                    <input type="checkbox" id="showDuplicates" /> แสดงวัตถุดิบซ้ำ
+                </label>
                 <input type="text" id="searchBox" placeholder="ค้นหาสิทธิ์ผู้ใช้งาน..." />
                 <button onclick="window.location.href='/add_buying'" class="add-buying-button">รับเข้าสินค้า</button>
             </div>
@@ -236,7 +242,21 @@
                     </div>
                 <% }); %>
             </div>
-        </div>
+        
+            <% if (totalPages > 1) { %>
+                <div class="pagination">
+                    <% if (currentPage > 1) { %>
+                        <a href="?page=<%= currentPage - 1 %>">ย้อนกลับ</a>
+                    <% } %>
+                    <% for (let i = 1; i <= totalPages; i++) { %>
+                        <a href="?page=<%= i %>" class="<%= currentPage === i ? 'active' : '' %>"><%= i %></a>
+                    <% } %>
+                    <% if (currentPage < totalPages) { %>
+                        <a href="?page=<%= currentPage + 1 %>">ถัดไป</a>
+                    <% } %>
+                </div>
+            <% } %>
+    </div>
     </section>
 
     <!-- Link JS -->
@@ -254,15 +274,44 @@
                 productCount[productName]++;
             });
     
-            // Disable delete buttons for products with less than 2 occurrences
-            document.querySelectorAll('.buying-item').forEach(function(item) {
-                const productName = item.querySelector('.product-name').textContent.trim();
-                if (productCount[productName] < 2) {
+            // Function to update the visibility of items based on the checkbox states
+            function updateVisibility() {
+                const showZeroQuantity = document.getElementById('showZeroQuantity').checked;
+                const showDuplicates = document.getElementById('showDuplicates').checked;
+    
+                document.querySelectorAll('.buying-item').forEach(function(item) {
+                    const productName = item.querySelector('.product-name').textContent.trim();
+                    const unitQuantity = parseInt(item.querySelector('input[name="unit_quantity"]').value, 10);
                     const deleteButton = item.querySelector('.delete-button');
-                    deleteButton.disabled = true;
-                    deleteButton.style.backgroundColor = 'gray';
-                }
-            });
+    
+                    // Enable delete button if there are at least 2 occurrences or unit quantity is 0
+                    if (productCount[productName] >= 2 || unitQuantity === 0) {
+                        deleteButton.disabled = false;
+                        deleteButton.style.backgroundColor = '';
+                    } else {
+                        deleteButton.disabled = true;
+                        deleteButton.style.backgroundColor = 'gray';
+                    }
+    
+                    // Show or hide the item based on the checkbox states
+                    if (showZeroQuantity && unitQuantity === 0) {
+                        item.style.display = '';
+                    } else if (showDuplicates && productCount[productName] >= 2) {
+                        item.style.display = '';
+                    } else if (!showZeroQuantity && !showDuplicates) {
+                        item.style.display = '';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            }
+    
+            // Initial update
+            updateVisibility();
+    
+            // Add event listeners to the checkboxes
+            document.getElementById('showZeroQuantity').addEventListener('change', updateVisibility);
+            document.getElementById('showDuplicates').addEventListener('change', updateVisibility);
         });
     </script>
 </body>

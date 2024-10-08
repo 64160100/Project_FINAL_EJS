@@ -206,6 +206,25 @@ module.exports = {
         });
     },
 
+    getBuyingByPageWithCount: (limit, offset, callback) => {
+        const query = 'SELECT * FROM tbl_buying LIMIT ? OFFSET ?';
+        connection.query(query, [limit, offset], (err, results) => {
+            if (err) {
+                return callback(err, null, null);
+            }
+
+            const countQuery = 'SELECT COUNT(*) AS total FROM tbl_buying';
+            connection.query(countQuery, (err, countResult) => {
+                if (err) {
+                    return callback(err, null, null);
+                }
+
+                const total = countResult[0].total;
+                callback(null, results, total);
+            });
+        });
+    },
+
 
     viewSettingType: function (callback) {
         connection.query('SELECT id_type FROM setting_type', (error, results) => {

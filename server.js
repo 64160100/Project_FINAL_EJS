@@ -28,11 +28,8 @@ app.get('/', (req, res) => {
     }
     const permissions = req.session.permissions;
 
-    if (!permissions || permissions.dashboard.dashboard_read !== 'Y') {
-        res.redirect('/404');
-    } else {
-        res.render('index', { user: req.session.user, permissions: permissions });
-    }
+    res.render('index', { user: req.session.user, permissions: permissions });
+    
 });
 
 app.get('/404', (req, res) => {

@@ -193,11 +193,11 @@
                             <input type="text" id="name_product" name="name_product" required onkeyup="searchProductName()" onkeydown="handleEnter(event)">
                             <div id="suggestions" class="suggestions"></div>
                             <% if (error.name_product) { %>
-                              <p style="color: red;">
-                                <%= error.name_product %> มีอยู่แล้ว
-                              </p>
+                                <p style="color: red;">
+                                    <%= error.name_product %> มีอยู่แล้ว
+                                </p>
                             <% } %>
-                          </div>
+                        </div>
 
                     <% } %>
 
@@ -252,71 +252,76 @@
 
     <script>
         function searchProductName() {
-          const input = document.getElementById('name_product');
-          const query = input.value;
-          if (query.length > 2) {
-            fetch(`/search-product?query=${query}`)
-              .then(response => response.json())
-              .then(data => {
-                const suggestions = document.getElementById('suggestions');
-                suggestions.innerHTML = '';
-                if (data.length === 0) {
-                  const noResult = document.createElement('div');
-                  noResult.classList.add('suggestion-item');
-                  noResult.innerText = 'ไม่พบผลลัพธ์';
-                  suggestions.appendChild(noResult);
-                } else {
-                  data.forEach(item => {
-                    const div = document.createElement('div');
-                    div.classList.add('suggestion-item');
-                    div.innerText = item.name_product;
-                    div.onclick = () => {
-                      input.value = item.name_product;
-                      input.placeholder = '';
-                      suggestions.innerHTML = '';
-                      setProductDetails(item);
-                    };
-                    suggestions.appendChild(div);
-                  });
-                  // Set the first suggestion as the placeholder
-                  input.placeholder = data[0].name_product;
-                }
-              });
-          } else {
-            document.getElementById('suggestions').innerHTML = '';
-            input.placeholder = '';
-          }
+            const input = document.getElementById('name_product');
+            const query = input.value;
+            if (query.length > 0) { // Start searching from the first character
+                fetch(`/search-product?query=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const suggestions = document.getElementById('suggestions');
+                        suggestions.innerHTML = '';
+    
+                        if (data.length === 0) {
+                            const noResult = document.createElement('div');
+                            noResult.classList.add('suggestion-item');
+                            noResult.innerText = 'ไม่พบผลลัพธ์';
+                            suggestions.appendChild(noResult);
+                        } else {
+                            const uniqueNames = new Set();
+                            data.forEach(item => {
+                                if (!uniqueNames.has(item.name_product)) {
+                                    uniqueNames.add(item.name_product);
+                                    const div = document.createElement('div');
+                                    div.classList.add('suggestion-item');
+                                    div.innerText = item.name_product;
+                                    div.onclick = () => {
+                                        input.value = item.name_product;
+                                        input.placeholder = '';
+                                        suggestions.innerHTML = '';
+                                        setProductDetails(item);
+                                    };
+                                    suggestions.appendChild(div);
+                                }
+                            });
+                            // Set the first suggestion as the placeholder
+                            input.placeholder = data[0].name_product;
+                        }
+                    });
+            } else {
+                document.getElementById('suggestions').innerHTML = '';
+                input.placeholder = '';
+            }
         }
-      
+    
         function handleEnter(event) {
-          const input = document.getElementById('name_product');
-          if (event.key === 'Enter' && input.placeholder) {
-            input.value = input.placeholder;
-            input.placeholder = '';
-          }
+            const input = document.getElementById('name_product');
+            if (event.key === 'Enter' && input.placeholder) {
+                input.value = input.placeholder;
+                input.placeholder = '';
+            }
         }
-      
+    
         function setProductDetails(product) {
-          const typeSelect = document.getElementById('setting_type_id');
-          const unitSelect = document.getElementById('setting_unit_id');
-      
-          // Set the selected type
-          for (let i = 0; i < typeSelect.options.length; i++) {
-            if (typeSelect.options[i].value === product.setting_type_id) {
-              typeSelect.selectedIndex = i;
-              break;
+            const typeSelect = document.getElementById('setting_type_id');
+            const unitSelect = document.getElementById('setting_unit_id');
+    
+            // Set the selected type
+            for (let i = 0; i < typeSelect.options.length; i++) {
+                if (typeSelect.options[i].value === product.setting_type_id) {
+                    typeSelect.selectedIndex = i;
+                    break;
+                }
             }
-          }
-      
-          // Set the selected unit
-          for (let i = 0; i < unitSelect.options.length; i++) {
-            if (unitSelect.options[i].value === product.setting_unit_id) {
-              unitSelect.selectedIndex = i;
-              break;
+    
+            // Set the selected unit
+            for (let i = 0; i < unitSelect.options.length; i++) {
+                if (unitSelect.options[i].value === product.setting_unit_id) {
+                    unitSelect.selectedIndex = i;
+                    break;
+                }
             }
-          }
         }
-      </script>
+    </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {

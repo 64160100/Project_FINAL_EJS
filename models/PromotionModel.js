@@ -80,9 +80,17 @@ module.exports = {
         connection.query('UPDATE tbl_promotion SET ? WHERE id = ?', [data, data.id], callback);
     },
 
-    deletePromotion: (id, callback) => {
-        connection.query('DELETE FROM tbl_promotion WHERE id = ?', [id], callback);
-    }
+    deletePromotionById: (promotionId, callback) => {
+        const query = 'DELETE FROM tbl_promotion WHERE sum_promotion_id = ?';
+    
+        connection.query(query, [promotionId], (error, results) => {
+          if (error) {
+            console.error('Error deleting promotion:', error);
+            return callback(error);
+          }
+          callback(null, results);
+        });
+      },
 
 
 };

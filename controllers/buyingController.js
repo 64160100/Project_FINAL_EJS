@@ -9,28 +9,37 @@ function startPythonScript() {
 module.exports = {
 
 	buyingView: function (req, res) {
+        const currentPage = parseInt(req.query.page) || 1;
+        const itemsPerPage = 10;
+        const offset = (currentPage - 1) * itemsPerPage;
 
-		BuyingModel.fetch_last_state((err, time_counters) => {
-			if (err) {
-				console.error('Error fetching state:', err);
-				res.status(500).send('Server Error');
-				return;
-			}
+        BuyingModel.fetch_last_state((err, time_counters) => {
+            if (err) {
+                console.error('Error fetching state:', err);
+                res.status(500).send('Server Error');
+                return;
+            }
 
-			for (const [id_buying_list, counters] of Object.entries(time_counters)) {
-				console.log(`ID ${id_buying_list}: ${counters.day}d ${counters.hour}h ${counters.minute}m ${counters.second}s`);
-			}
+            for (const [id_buying_list, counters] of Object.entries(time_counters)) {
+                console.log(`ID ${id_buying_list}: ${counters.day}d ${counters.hour}h ${counters.minute}m ${counters.second}s`);
+            }
 
-			BuyingModel.getBuying(function (error, results) {
-				if (error) {
-					res.status(500).send('Server Error');
-					return;
-				}
+            BuyingModel.getBuyingByPageWithCount(itemsPerPage, offset, (error, results, totalItems) => {
+                if (error) {
+                    res.status(500).send('Server Error');
+                    return;
+                }
 
-				res.render('buying', { buying: results });
-			});
-		});
-	},
+                const totalPages = Math.ceil(totalItems / itemsPerPage);
+				console.log(results);
+                res.render('buying', {
+                    buying: results,
+                    currentPage,
+                    totalPages
+                });
+            });
+        });
+    },
 
 	addBuyingView: (req, res) => {
 		// Fetch setting types

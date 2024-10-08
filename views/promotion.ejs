@@ -208,9 +208,9 @@
                             </li>
                             <li>
                                 <a href="/view_promotion/<%= promotion.sum_promotion_id %>" class="btn-view">ดูข้อมูล</a>
-                                <form action="/promotion/<%= promotion.id_promotion %>/delete" method="POST" style="display:inline;">
+                                <form action="/delete_promotion/<%= promotion.sum_promotion_id %>" method="POST" style="display:inline;">
                                     <button type="submit" class="btn-delete">ลบ</button>
-                                </form>
+                                  </form>
                             </li>
                         </ul>
                     </div>
