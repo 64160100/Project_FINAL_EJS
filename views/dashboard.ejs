@@ -2,315 +2,362 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>POS</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>POS</title>
 
-    <!-- Box Icons  -->
-    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
-    <!-- Styles  -->
-    <link rel="shortcut icon" href="img/kxp_fav.png" type="image/x-icon">
-    <link rel="stylesheet" href="../css/index.css">
-    <link rel="stylesheet" href="../css/dashboard.css">
+  <!-- Box Icons  -->
+  <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+  <!-- Styles  -->
+  <link rel="shortcut icon" href="img/kxp_fav.png" type="image/x-icon">
+  <link rel="stylesheet" href="../css/index.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
 
 </head>
 
 <body>
-    <div class="sidebar close">
-        <!-- ========== Logo ============  -->
-        <a href="#" class="logo-box">
-          <i class='bx bxs-cat'></i>
-          <div class="logo-name">POS</div>
-        </a>
-    
-        <!-- ========== List ============  -->
-    
-        <ul class="sidebar-list">
-    
-          <!-- -------- Non Dropdown List Item ------- -->
-          <li>
-            <div class="title">
-              <a href="/" class="link">
-                <i class='bx bx-home'></i>
-                <span class="name">หน้าหลัก</span>
-              </a>
-              <!-- <i class='bx bxs-chevron-down'></i> -->
-            </div>
-            <div class="submenu">
-              <a href="/" class="link submenu-title">หน้าหลัก</a>
-              <!-- submenu links here  -->
-            </div>
-          </li>
-    
-          <!-- -------- Non Dropdown List Item ------- -->
-          <li>
-            <div class="title">
-              <a href="/dashboard" class="link">
-                <i class='bx bx-grid-alt'></i>
-                <span class="name">แดชบอร์ด</span>
-              </a>
-              <!-- <i class='bx bxs-chevron-down'></i> -->
-            </div>
-            <div class="submenu">
-              <a href="/dashboard" class="link submenu-title">แดชบอร์ด</a>
-              <!-- submenu links here  -->
-            </div>
-          </li>
-    
-    
-    
-          <!-- -------- Dropdown List Item ------- -->
-          <li class="dropdown">
-            <div class="title">
-              <a href="/employee" class="link">
-                <i class='bx bx-collection'></i>
-                <span class="name">ข้อมูลพนักงาน</span>
-              </a>
-              <i class='bx bxs-chevron-down'></i>
-            </div>
-            <div class="submenu">
-              <a href="/employee" class="link submenu-title">ข้อมูลพนักงาน</a>
-              <a href="/employee" class="link">พนักงาน</a>
-              <a href="/user" class="link">ผู้ใช้งาน</a>
-              <a href="/permission" class="link">สิทธิ์ผู้ใช้งาน</a>
-            </div>
-          </li>
-    
-          <!-- -------- Dropdown List Item ------- -->
-          <li class="dropdown">
-            <div class="title">
-              <a href="/menu" class="link">
-                <i class='bx bxs-food-menu'></i>
-                <span class="name">เมนูอาหารและบริการ</span>
-              </a>
-              <i class='bx bxs-chevron-down'></i>
-            </div>
-            <div class="submenu">
-              <a href="/menu" class="link submenu-title">เมนูอาหารและบริการ</a>
-              <a href="/menu" class="link">เมนูอาหาร</a>
-              <a href="/setting_menu_category" class="link">ตั้งค่าหมวดหมู่</a>
-              <a href="/setting_menu_type" class="link">ตั้งค่าประเภท</a>
-              <a href="/setting_menu_unit" class="link">ตั้งค่าหน่วยสินค้า</a>
-            </div>
-          </li>
-    
-          <!-- -------- Non Dropdown List Item ------- -->
-          <li class="dropdown">
-            <div class="title">
-              <a href="table" class="link">
-                <i class='bx bx-table'></i>
-                <span class="name">โต๊ะอาหาร</span>
-              </a>
-              <i class='bx bxs-chevron-down'></i>
-            </div>
-            <div class="submenu">
-              <a href="/table" class="link submenu-title">โต๊ะอาหาร</a>
-              <a href="/table" class="link">จัดโต๊ะอาหาร</a>
-              <a href="/view_bill" class="link">บิลอาหาร</a>
-            </div>
-          </li>
-    
-          <!-- -------- Non Dropdown List Item ------- -->
-          <li class="dropdown">
-            <div class="title">
-              <a href="/buying" class="link">
-                <i class='bx bx-cart-download'></i>
-                <span class="name">รายการจัดซื้อและคงคลัง</span>
-              </a>
-              <i class='bx bxs-chevron-down'></i>
-            </div>
-            <div class="submenu">
-              <a href="/buying" class="link submenu-title">รายการจัดซื้อและคงคลัง</a>
-              <a href="/buying" class="link">รายการจัดซื้อ</a>
-              <a href="/warehouse" class="link">คงคลัง</a>
-              <a href="/setting_type" class="link">ตั้งค่าประเภท</a>
-              <a href="/setting_unit" class="link">ตั้งค่าปริมาณ</a>
-            </div>
-          </li>
-    
-          <!-- -------- Non Dropdown List Item ------- -->
-          <li>
-            <div class="title">
-              <a href="/promotion" class="link">
-                <i class='bx bxs-dollar-circle'></i>
-                <span class="name">โปรโมชั่น</span>
-              </a>
-              <!-- <i class='bx bxs-chevron-down'></i> -->
-            </div>
-            <div class="submenu">
-              <a href="/promotion" class="link submenu-title">โปรโมชั่น</a>
-              <!-- submenu links here  -->
-            </div>
-          </li>
-        </ul>
+  <div class="sidebar close">
+    <!-- ========== Logo ============  -->
+    <a href="#" class="logo-box">
+      <i class='bx bxs-cat'></i>
+      <div class="logo-name">POS</div>
+    </a>
+
+    <!-- ========== List ============  -->
+
+    <ul class="sidebar-list">
+
+      <!-- -------- Non Dropdown List Item ------- -->
+      <li>
+        <div class="title">
+          <a href="/" class="link">
+            <i class='bx bx-home'></i>
+            <span class="name">หน้าหลัก</span>
+          </a>
+          <!-- <i class='bx bxs-chevron-down'></i> -->
+        </div>
+        <div class="submenu">
+          <a href="/" class="link submenu-title">หน้าหลัก</a>
+          <!-- submenu links here  -->
+        </div>
+      </li>
+
+      <!-- -------- Non Dropdown List Item ------- -->
+      <li>
+        <div class="title">
+          <a href="/dashboard" class="link">
+            <i class='bx bx-grid-alt'></i>
+            <span class="name">แดชบอร์ด</span>
+          </a>
+          <!-- <i class='bx bxs-chevron-down'></i> -->
+        </div>
+        <div class="submenu">
+          <a href="/dashboard" class="link submenu-title">แดชบอร์ด</a>
+          <!-- submenu links here  -->
+        </div>
+      </li>
+
+
+
+      <!-- -------- Dropdown List Item ------- -->
+      <li class="dropdown">
+        <div class="title">
+          <a href="/employee" class="link">
+            <i class='bx bx-collection'></i>
+            <span class="name">ข้อมูลพนักงาน</span>
+          </a>
+          <i class='bx bxs-chevron-down'></i>
+        </div>
+        <div class="submenu">
+          <a href="/employee" class="link submenu-title">ข้อมูลพนักงาน</a>
+          <a href="/employee" class="link">พนักงาน</a>
+          <a href="/user" class="link">ผู้ใช้งาน</a>
+          <a href="/permission" class="link">สิทธิ์ผู้ใช้งาน</a>
+        </div>
+      </li>
+
+      <!-- -------- Dropdown List Item ------- -->
+      <li class="dropdown">
+        <div class="title">
+          <a href="/menu" class="link">
+            <i class='bx bxs-food-menu'></i>
+            <span class="name">เมนูอาหารและบริการ</span>
+          </a>
+          <i class='bx bxs-chevron-down'></i>
+        </div>
+        <div class="submenu">
+          <a href="/menu" class="link submenu-title">เมนูอาหารและบริการ</a>
+          <a href="/menu" class="link">เมนูอาหาร</a>
+          <a href="/setting_menu_category" class="link">ตั้งค่าหมวดหมู่</a>
+          <a href="/setting_menu_type" class="link">ตั้งค่าประเภท</a>
+          <a href="/setting_menu_unit" class="link">ตั้งค่าหน่วยสินค้า</a>
+        </div>
+      </li>
+
+      <!-- -------- Non Dropdown List Item ------- -->
+      <li class="dropdown">
+        <div class="title">
+          <a href="table" class="link">
+            <i class='bx bx-table'></i>
+            <span class="name">โต๊ะอาหาร</span>
+          </a>
+          <i class='bx bxs-chevron-down'></i>
+        </div>
+        <div class="submenu">
+          <a href="/table" class="link submenu-title">โต๊ะอาหาร</a>
+          <a href="/table" class="link">จัดโต๊ะอาหาร</a>
+          <a href="/view_bill" class="link">บิลอาหาร</a>
+        </div>
+      </li>
+
+      <!-- -------- Non Dropdown List Item ------- -->
+      <li class="dropdown">
+        <div class="title">
+          <a href="/buying" class="link">
+            <i class='bx bx-cart-download'></i>
+            <span class="name">รายการจัดซื้อและคงคลัง</span>
+          </a>
+          <i class='bx bxs-chevron-down'></i>
+        </div>
+        <div class="submenu">
+          <a href="/buying" class="link submenu-title">รายการจัดซื้อและคงคลัง</a>
+          <a href="/buying" class="link">รายการจัดซื้อ</a>
+          <a href="/warehouse" class="link">คงคลัง</a>
+          <a href="/setting_type" class="link">ตั้งค่าประเภท</a>
+          <a href="/setting_unit" class="link">ตั้งค่าปริมาณ</a>
+        </div>
+      </li>
+
+      <!-- -------- Non Dropdown List Item ------- -->
+      <li>
+        <div class="title">
+          <a href="/promotion" class="link">
+            <i class='bx bxs-dollar-circle'></i>
+            <span class="name">โปรโมชั่น</span>
+          </a>
+          <!-- <i class='bx bxs-chevron-down'></i> -->
+        </div>
+        <div class="submenu">
+          <a href="/promotion" class="link submenu-title">โปรโมชั่น</a>
+          <!-- submenu links here  -->
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ============= Home Section =============== -->
+  <section class="home">
+    <div class="nav">
+      <div class="toggle-sidebar">
+        <i class='bx bx-menu'></i>
+      </div>
+      <nav>
+        <div class="nav-content">
+          <div class="profile-details">
+            <img src="../img/chef.png" alt="" class="profile-image">
+            <span class="user-id">1234</span>
+          </div>
+          <a href="/login" class="auth-link">เข้าสู่ระบบ</a>
+        </div>
+      </nav>
+    </div>
+
+    <!-- ============= Top Dashboard =============== -->
+
+    <div class="topic"> แดชบอร์ด </div>
+
+    <!-- ============= Center Dashboard =============== -->
+    <div class="centered-content">
+      <div class="stats-container">
+        <div class="stat-card">
+          <h5>ยอดขาย</h5>
+          <p>
+            <%= totalSales %> บาท
+          </p>
+        </div>
+        <div class="stat-card">
+          <h5>ยอดขายสุทธิ</h5>
+          <p>
+            <%= netSales %> บาท
+          </p>
+        </div>
+        <div class="stat-card">
+          <h5>จำนวนบิล</h5>
+          <p>
+            <%= totalBills %> บิล
+          </p>
+        </div>
+        <div class="stat-card">
+          <h5>ค่าเฉลี่ยยอดขายต่อบิล</h5>
+          <p>
+            <%= averageSalesPerBill %> บาท
+          </p>
+        </div>
       </div>
 
-    <!-- ============= Home Section =============== -->
-    <section class="home">
-        <div class="nav">
-            <div class="toggle-sidebar">
-                <i class='bx bx-menu'></i>
-            </div>
-            <nav>
-                <div class="nav-content">
-                    <div class="profile-details">
-                        <img src="../img/chef.png" alt="" class="profile-image">
-                        <span class="user-id">1234</span>
-                    </div>
-                    <a href="/login" class="auth-link">เข้าสู่ระบบ</a>
-                </div>
-            </nav>
-        </div>
-
-        <!-- ============= Top Dashboard =============== -->
-
-        <div class="topic"> แดชบอร์ด </div>
-
-        <!-- ============= Center Dashboard =============== -->
-        <div class="centered-content">
-          <div class="stats-container">
-            <div class="stat-card">
-              <h5>ยอดขาย</h5>
-              <p><%= totalSales %> บาท</p>
-            </div>
-            <div class="stat-card">
-              <h5>ยอดขายสุทธิ</h5>
-              <p><%= netSales %> บาท</p>
-            </div>
-            <div class="stat-card">
-              <h5>จำนวนบิล</h5>
-              <p><%= totalBills %> บิล</p>
-            </div>
-            <div class="stat-card">
-              <h5>ค่าเฉลี่ยยอดขายต่อบิล</h5>
-              <p><%= averageSalesPerBill %> บาท</p>
-            </div>
+      <div class="flex-container">
+        <div class="flex-item">
+          <div class="chart-container">
+            <h2>ยอดจ่ายรายวัน</h2>
+            <canvas id="dailyTotalsChart"></canvas>
+            <input type="hidden" id="dailyTotalsData" value='<%= JSON.stringify(dailyTotals) %>' />
           </div>
-      
-          <div class="flex-container">
-            <div class="flex-item">
-              <div class="chart-container">
-                <h2>Daily Totals</h2>
-                <canvas id="dailyTotalsChart"></canvas>
-              </div>
-            </div>
-            <div class="flex-item">
-              <h2>Top Menu Items</h2>
-              <table>
+        </div>
+        <div class="flex-item">
+          <h2>เมนูยอดนิยม</h2>
+          <div class="scrollable-table-container">
+            <table>
+              <tr>
+                <th>แรงค์</th>
+                <th>ชื่อเมนู</th>
+                <th>จำนวนเมนู</th>
+              </tr>
+              <% topMenuItems.sort((a, b)=> b.order_count - a.order_count).forEach(function(item, index) { %>
                 <tr>
-                  <th>Product List</th>
-                  <th>Order Count</th>
-                </tr>
-                <% topMenuItems.forEach(function(item) { %>
-                <tr>
-                  <td><%= item.product_list %></td>
-                  <td><%= item.order_count %></td>
+                  <td>
+                    <%= index + 1 %>
+                  </td>
+                  <td>
+                    <%= item.product_list %>
+                  </td>
+                  <td>
+                    <%= item.order_count %>
+                  </td>
                 </tr>
                 <% }); %>
-              </table>
-            </div>
-          </div>
-      
-          <div class="chart-row">
-            <div class="chart-container">
-              <h2>Monthly Totals</h2>
-              <canvas id="monthlyTotalsChart"></canvas>
-            </div>
-      
-            <div class="chart-container">
-              <h2>Yearly Totals</h2>
-              <canvas id="yearlyTotalsChart"></canvas>
-            </div>
+            </table>
           </div>
         </div>
-    </section>
+      </div>
 
-    <!-- Link JS -->
-    <script src="../js/index.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-      // Daily Totals Chart
+      <div class="chart-row">
+        <div class="chart-container">
+          <h2>ยอดจ่ายรายเดือน</h2>
+          <canvas id="monthlyTotalsChart"></canvas>
+          <input type="hidden" id="monthlyTotalsData" value='<%= JSON.stringify(monthlyTotals) %>' />
+        </div>
+
+        <div class="chart-container">
+          <h2>ยอดจ่ายรายปี</h2>
+          <canvas id="yearlyTotalsChart"></canvas>
+          <input type="hidden" id="yearlyTotalsData" value='<%= JSON.stringify(yearlyTotals) %>' />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="../js/index.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const dailyTotals = JSON.parse(document.getElementById('dailyTotalsData').value);
+
+      // Extract dates and amounts from the dailyTotals object
+      const dates = Object.keys(dailyTotals);
+      const amounts = Object.values(dailyTotals);
+
       const dailyTotalsCtx = document.getElementById('dailyTotalsChart').getContext('2d');
       const dailyTotalsChart = new Chart(dailyTotalsCtx, {
-          type: 'line',
-          data: {
-              labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-              datasets: [{
-                  label: 'Total Amount',
-                  data: [65, 59, 80, 81, 56, 55, 40],
-                  borderColor: 'rgba(75, 192, 192, 1)',
-                  backgroundColor: 'rgba(75, 192, 192, 0.2)', // เพิ่มพื้นหลัง
-                  borderWidth: 1,
-                  fill: true
-              }]
-          },
-          options: {
-              scales: {
-                  x: {
-                      beginAtZero: true
-                  },
-                  y: {
-                      beginAtZero: true
-                  }
-              }
+        type: 'bar',
+        data: {
+          labels: dates, // Use the dates as labels
+          datasets: [{
+            label: 'Total Amount',
+            data: amounts, // Use the amounts as data
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: {
+              beginAtZero: true
+            },
+            y: {
+              beginAtZero: true
+            }
           }
+        }
       });
-  
-      // Monthly Totals Chart
+    });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Retrieve the monthlyTotals data from the hidden input field
+      const monthlyTotals = JSON.parse(document.getElementById('monthlyTotalsData').value);
+
+      // Extract months and amounts from the monthlyTotals object
+      const months = Object.keys(monthlyTotals);
+      const amounts = Object.values(monthlyTotals);
+
       const monthlyTotalsCtx = document.getElementById('monthlyTotalsChart').getContext('2d');
       const monthlyTotalsChart = new Chart(monthlyTotalsCtx, {
-          type: 'line',
-          data: {
-              labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-              datasets: [{
-                  label: 'Total Amount',
-                  data: [65, 59, 80, 81, 56, 55, 40],
-                  borderColor: 'rgba(153, 102, 255, 1)',
-                  backgroundColor: 'rgba(153, 102, 255, 0.2)', // เพิ่มพื้นหลัง
-                  borderWidth: 1,
-                  fill: true
-              }]
-          },
-          options: {
-              scales: {
-                  x: {
-                      beginAtZero: true
-                  },
-                  y: {
-                      beginAtZero: true
-                  }
-              }
+        type: 'line',
+        data: {
+          labels: months, // Use the months as labels
+          datasets: [{
+            label: 'Total Amount',
+            data: amounts, // Use the amounts as data
+            borderColor: 'rgba(153, 102, 255, 1)',
+            backgroundColor: 'rgba(153, 102, 255, 0.2)', // เพิ่มพื้นหลัง
+            borderWidth: 1,
+            fill: true
+          }]
+        },
+        options: {
+          scales: {
+            x: {
+              beginAtZero: true
+            },
+            y: {
+              beginAtZero: true
+            }
           }
+        }
       });
-  
-      // Yearly Totals Chart
-      const yearlyTotalsCtx = document.getElementById('yearlyTotalsChart').getContext('2d');
-      const yearlyTotalsChart = new Chart(yearlyTotalsCtx, {
-          type: 'line',
-          data: {
-              labels: ['2020', '2021', '2022', '2023', '2024'],
-              datasets: [{
-                  label: 'Total Amount',
-                  data: [65, 59, 80, 81, 56],
-                  borderColor: 'rgba(255, 159, 64, 1)',
-                  backgroundColor: 'rgba(255, 159, 64, 0.2)', // เพิ่มพื้นหลัง
-                  borderWidth: 1,
-                  fill: true
-              }]
-          },
-          options: {
-              scales: {
-                  x: {
-                      beginAtZero: true
-                  },
-                  y: {
-                      beginAtZero: true
-                  }
-              }
-          }
-      });
-    </script>
-</body>
+    });
+  </script>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Retrieve the yearlyTotals data from the hidden input field
+    const yearlyTotals = JSON.parse(document.getElementById('yearlyTotalsData').value);
+
+    // Extract years and amounts from the yearlyTotals object
+    const years = Object.keys(yearlyTotals);
+    const amounts = Object.values(yearlyTotals);
+
+    const yearlyTotalsCtx = document.getElementById('yearlyTotalsChart').getContext('2d');
+    const yearlyTotalsChart = new Chart(yearlyTotalsCtx, {
+      type: 'line',
+      data: {
+        labels: years, // Use the years as labels
+        datasets: [{
+          label: 'Total Amount',
+          data: amounts, // Use the amounts as data
+          borderColor: 'rgba(255, 159, 64, 1)', // Change border color to orange
+          backgroundColor: 'rgba(255, 159, 64, 0.2)', // Change background color to orange
+          borderWidth: 1,
+          fill: true
+        }]
+      },
+      options: {
+        scales: {
+          x: {
+            beginAtZero: true
+          },
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  });
+</script>
+</body>
 </html>

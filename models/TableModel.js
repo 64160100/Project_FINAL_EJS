@@ -987,20 +987,21 @@ module.exports = {
         });
     },
 
-    updatePriceDiscountPromotion: (discount, promo_code, callback) => {
+    updatePriceDiscountPromotion: (discount, promo_code, tableId, zoneName, callback) => {
         const query = `
           UPDATE list_menu
           SET price_discount_promotion = ?, promo_code = ?
+          WHERE id_table = ? AND zone_name = ?
         `;
-    
-        connection.query(query, [discount, promo_code], (error, results) => {
+      
+        connection.query(query, [discount, promo_code, tableId, zoneName], (error, results) => {
           if (error) {
             console.error('Error updating price_discount_promotion and promo_code:', error);
             return callback(error);
           }
           callback(null, results);
         });
-      },
+    },
 
     getGroupedMenu: (callback) => {
         const query = `
@@ -1415,6 +1416,22 @@ module.exports = {
         const query = 'SELECT * FROM list_menu WHERE id_table = ? AND zone_name = ?';
         connection.query(query, [tableId, zoneName], (error, results) => {
             if (error) {
+                return callback(error, null);
+            }
+            callback(null, results);
+        });
+    },
+
+    getMenuOptions: (num_list, callback) => {
+        const query = `
+            SELECT name_options, price_options_all
+            FROM list_menu_options
+            WHERE num_list = ?
+        `;
+
+        connection.query(query, [num_list], (error, results) => {
+            if (error) {
+                console.error('Error fetching menu options:', error);
                 return callback(error, null);
             }
             callback(null, results);

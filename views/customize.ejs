@@ -207,27 +207,29 @@
                     <input type="hidden" id="price_options_all" name="price_options_all" value="0">
         
                     <!-- Special options -->
-                    <div class="special-options">
-                        <label>เพิ่มเติม</label>
-                        <hr class="underline">
-                        <div class="checkbox-group">
+                    <% if (menuOptions.length > 0) { %>
+                        <div class="special-options">
+                          <label>เพิ่มเติม</label>
+                          <hr class="underline">
+                          <div class="checkbox-group">
                             <% menuOptions.forEach(option => { %>
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="<%= option.id_menu_options %>" name="special_options" value="<%= option.id_menu_options %>" data-price="<%= option.price %>" class="special-option-checkbox">
-                                    <label for="<%= option.id_menu_options %>">
-                                        <%= option.name_options %> +<%= option.price %>
-                                    </label>
-                                    <input type="hidden" name="name_options_<%= option.id_menu_options %>" value="<%= option.name_options %>">
-                                    <input type="hidden" name="options_price_<%= option.id_menu_options %>" value="<%= option.price %>">
-                                    <% option.ingredients.forEach((ingredient, index) => { %>
-                                        <input type="hidden" name="ingredient_<%= option.id_menu_options %>[]" value="<%= ingredient %>">
-                                        <input type="hidden" name="quantity_<%= option.id_menu_options %>[]" value="<%= option.quantities[index] %>">
-                                        <input type="hidden" name="unit_<%= option.id_menu_options %>[]" value="<%= option.unit_ids[index] %>">
-                                    <% }); %>
-                                </div>
+                              <div class="checkbox-item">
+                                <input type="checkbox" id="<%= option.id_menu_options %>" name="special_options" value="<%= option.id_menu_options %>" data-price="<%= option.price %>" class="special-option-checkbox">
+                                <label for="<%= option.id_menu_options %>">
+                                  <%= option.name_options %> +<%= option.price %>
+                                </label>
+                                <input type="hidden" name="name_options_<%= option.id_menu_options %>" value="<%= option.name_options %>">
+                                <input type="hidden" name="options_price_<%= option.id_menu_options %>" value="<%= option.price %>">
+                                <% option.ingredients.forEach((ingredient, index) => { %>
+                                  <input type="hidden" name="ingredient_<%= option.id_menu_options %>[]" value="<%= ingredient %>">
+                                  <input type="hidden" name="quantity_<%= option.id_menu_options %>[]" value="<%= option.quantities[index] %>">
+                                  <input type="hidden" name="unit_<%= option.id_menu_options %>[]" value="<%= option.unit_ids[index] %>">
+                                <% }); %>
+                              </div>
                             <% }); %>
+                          </div>
                         </div>
-                    </div>
+                      <% } %>
         
                     <!-- Where to eat options -->
                     <div class="where-eat">
@@ -236,11 +238,11 @@
                         <div class="radio-group">
                             <div class="radio-item">
                                 <input type="radio" id="restaurant" name="where_eat" value="Restaurant" checked>
-                                <label for="restaurant">ที่ร้าน</label>
+                                <label for="restaurant">กินที่ร้าน</label>
                             </div>
                             <div class="radio-item">
                                 <input type="radio" id="home" name="where_eat" value="Home">
-                                <label for="home">ที่บ้าน</label>
+                                <label for="home">สั่งกลับบ้าน</label>
                             </div>
                         </div>
                     </div>

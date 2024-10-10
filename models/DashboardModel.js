@@ -25,17 +25,27 @@ module.exports = {
         });
     },
 
-    getTotalAmountByMonth: (callback) => {
+    getTotalAmountByMonth: function(callback) {
         const query = `
-            SELECT DATE_FORMAT(created_at, '%Y-%m') as month, SUM(final_amount) as total_amount
-            FROM record_check_bill
-            GROUP BY DATE_FORMAT(created_at, '%Y-%m')
+            SELECT 
+                DATE_FORMAT(created_at, '%Y-%m') AS month, 
+                SUM(final_amount) AS total_amount 
+            FROM 
+                record_check_bill 
+            GROUP BY 
+                month
         `;
+        
         connection.query(query, (error, results) => {
+            console.log(results);
             if (error) {
                 return callback(error, null);
             }
-            callback(null, results);
+            const monthlyTotals = results.reduce((acc, row) => {
+                acc[row.month] = row.total_amount;
+                return acc;
+            }, {});
+            callback(null, monthlyTotals);
         });
     },
 
@@ -64,6 +74,18 @@ module.exports = {
         connection.query(query, (error, results) => {
             if (error) {
                 return callback(error, null);
+            }
+            callback(null, results);
+        });
+    },
+
+    resetDailyTotals: function(callback) {
+        const query = 'UPDATE daily_totals SET netSales = 0, totalSales = 0 WHERE date = CURDATE()';
+
+        connection.query(query, (error, results) => {
+            if (error) {
+                console.error('Error resetting daily totals:', error);
+                return callback(error);
             }
             callback(null, results);
         });

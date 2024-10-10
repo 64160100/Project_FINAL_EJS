@@ -68,6 +68,28 @@ th {
   background-color: #f2f2f2;
 }
 
+.scrollable-table-container {
+  max-height: 400px; /* Adjust the height as needed */
+  overflow-y: auto;
+}
+
+.scrollable-table-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.scrollable-table-container th, .scrollable-table-container td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.scrollable-table-container th {
+  background-color: #f2f2f2;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .chart-container, .stat-card, .flex-item {

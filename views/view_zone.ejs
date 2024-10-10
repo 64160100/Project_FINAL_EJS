@@ -13,7 +13,7 @@
     <!-- Styles  -->
     <link rel="shortcut icon" href="img/kxp_fav.png" type="image/x-icon">
     <link rel="stylesheet" href="../css/index.css">
-    <link rel="stylesheet" href="../css/table.css">
+    <link rel="stylesheet" href="../css/zone_view.css">
 </head>
 
 <body>
@@ -178,13 +178,19 @@
                 <% }); %>
                 <a href="/add_table" class="add-zone-btn">คลิกเพิ่มโซน</a>
             </div>
+            <hr class="divider">
             <% if (tables.length > 0) { %>
                 <div class="table-container">
                     <% tables.forEach(function(table) { %>
                         <a href="/zone/<%= zoneId %>/table/<%= table.id_table %>/order_food" class="table-link">
                             <div class="table-box">
-                                <p class="table-id">โต๊ะที่ <%= table.id_table %></p>
-                                <!-- Add more table details as needed -->
+                                <div class="table">
+                                    <p class="table-id">โต๊ะที่ <%= table.id_table %></p>
+                                </div>
+                                <div class="chair chair-top"></div>
+                                <div class="chair chair-bottom"></div>
+                                <div class="chair chair-left"></div>
+                                <div class="chair chair-right"></div>
                             </div>
                         </a>
                     <% }); %>
@@ -192,12 +198,10 @@
             <% } else { %>
                 <p>No tables found in this zone.</p>
             <% } %>
-            <!-- เพิ่มปุ่มที่มุมขวาล่าง -->
             <a href="/edit_table/<%= zoneId %>" class="edit-zone-btn">แก้ไขโซน</a>
         </div>
 
     </section>
-    <!-- Link JS -->
     <script src="../js/index.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {

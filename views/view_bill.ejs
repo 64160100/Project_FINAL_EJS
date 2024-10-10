@@ -191,7 +191,7 @@
                             <p><i class='bx bx-food-menu'> จำนวนเมนู :</i> <%= group.total_items %></p>
                         </div>
                         <div class="bill-section">
-                            <button onclick="handlePayment('<%= group.id_table %>')">ชำระเงิน</button>
+                            <button onclick="handlePayment('<%= group.id_table %>', '<%= group.zone_name %>')">ชำระเงิน</button>
                             <button onclick="handleViewBill('<%= group.zone_name %>', '<%= group.id_table %>')">ดูบิล</button>
 
                         </div>
@@ -214,9 +214,9 @@
             window.location = url;
         }
 
-        function handlePayment(tableId) {
-            // Redirect to the payment URL
-            window.location.href = `/payment?tableId=${tableId}`;
+        function handlePayment(tableId, zoneName) {
+            // Redirect to the new URL
+            window.location.href = `/zone/${zoneName}/table/${tableId}/view_checkbill`;
         }
 
         function handleViewBill(zoneName, tableId) {

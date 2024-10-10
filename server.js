@@ -39,7 +39,6 @@ app.get('/404', (req, res) => {
 // ===================== dashboard ===================== //
 app.get('/dashboard', require('./routes/dashboard'));
 
-
 // ===================== Login ===================== //
 app.get('/login', require('./routes/login'));
 app.get('/logout', require('./routes/login'));
