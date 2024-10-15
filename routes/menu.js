@@ -32,6 +32,4 @@ router.post('/delete_menu_category/:id', menu.menuCategoryDelete);
 router.post('/delete_menu_type/:id', menu.menuTypeDelete);
 router.post('/delete_menu_unit/:id', menu.menuUnitDelete);
 
-
-
 module.exports = router;

@@ -20,131 +20,144 @@
   <div class="sidebar close">
     <!-- ========== Logo ============  -->
     <a href="#" class="logo-box">
-      <i class='bx bxs-cat'></i>
-      <div class="logo-name">POS</div>
+        <i class='bx bxs-cat'></i>
+        <div class="logo-name">POS</div>
     </a>
 
     <!-- ========== List ============  -->
 
     <ul class="sidebar-list">
 
-      <!-- -------- Non Dropdown List Item ------- -->
-      <li>
-        <div class="title">
-          <a href="/" class="link">
-            <i class='bx bx-home'></i>
-            <span class="name">หน้าหลัก</span>
-          </a>
-          <!-- <i class='bx bxs-chevron-down'></i> -->
-        </div>
-        <div class="submenu">
-          <a href="/" class="link submenu-title">หน้าหลัก</a>
-          <!-- submenu links here  -->
-        </div>
-      </li>
+        <!-- -------- Non Dropdown List Item ------- -->
+        <li>
+            <div class="title">
+                <a href="/" class="link">
+                    <i class='bx bx-home'></i>
+                    <span class="name">หน้าหลัก</span>
+                </a>
+                <!-- <i class='bx bxs-chevron-down'></i> -->
+            </div>
+            <div class="submenu">
+                <a href="/" class="link submenu-title">หน้าหลัก</a>
+                <!-- submenu links here  -->
+            </div>
+        </li>
 
-      <!-- -------- Non Dropdown List Item ------- -->
-      <li>
-        <div class="title">
-          <a href="/dashboard" class="link">
-            <i class='bx bx-grid-alt'></i>
-            <span class="name">แดชบอร์ด</span>
-          </a>
-          <!-- <i class='bx bxs-chevron-down'></i> -->
-        </div>
-        <div class="submenu">
-          <a href="/dashboard" class="link submenu-title">แดชบอร์ด</a>
-          <!-- submenu links here  -->
-        </div>
-      </li>
+        <!-- -------- Non Dropdown List Item ------- -->
+        <% if (permissions && permissions.dashboard.dashboard_read==='Y' ) { %>
+            <li>
+                <div class="title">
+                    <a href="/dashboard" class="link">
+                        <i class='bx bx-grid-alt'></i>
+                        <span class="name">แดชบอร์ด</span>
+                    </a>
+                    <!-- <i class='bx bxs-chevron-down'></i> -->
+                </div>
+                <div class="submenu">
+                    <a href="/dashboard" class="link submenu-title">แดชบอร์ด</a>
+                    <!-- submenu links here  -->
+                </div>
+            </li>
+            <% } %>
 
 
+        <!-- -------- Dropdown List Item ------- -->
+        <% if (permissions && permissions.employee.employee_read==='Y' ) { %>
+            <li class="dropdown">
+                <div class="title">
+                    <a href="/employee" class="link">
+                        <i class='bx bx-collection'></i>
+                        <span class="name">ข้อมูลพนักงาน</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="/employee" class="link submenu-title">ข้อมูลพนักงาน</a>
+                    <a href="/employee" class="link">พนักงาน</a>
+                    <a href="/user" class="link">ผู้ใช้งาน</a>
+                    <a href="/permission" class="link">สิทธิ์ผู้ใช้งาน</a>
+                </div>
+            </li>
+            <% } %>
 
-      <!-- -------- Dropdown List Item ------- -->
-      <li class="dropdown">
-        <div class="title">
-          <a href="/employee" class="link">
-            <i class='bx bx-collection'></i>
-            <span class="name">ข้อมูลพนักงาน</span>
-          </a>
-          <i class='bx bxs-chevron-down'></i>
-        </div>
-        <div class="submenu">
-          <a href="/employee" class="link submenu-title">ข้อมูลพนักงาน</a>
-          <a href="/employee" class="link">พนักงาน</a>
-          <a href="/user" class="link">ผู้ใช้งาน</a>
-          <a href="/permission" class="link">สิทธิ์ผู้ใช้งาน</a>
-        </div>
-      </li>
+        <!-- -------- Dropdown List Item ------- -->
+        <% if (permissions && permissions.menu.menu_read==='Y' ) { %>
+            <li class="dropdown">
+                <div class="title">
+                    <a href="/menu" class="link">
+                        <i class='bx bxs-food-menu'></i>
+                        <span class="name">เมนูอาหารและบริการ</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="/menu" class="link submenu-title">เมนูอาหารและบริการ</a>
+                    <a href="/menu" class="link">เมนูอาหาร</a>
+                    <a href="/setting_menu_category" class="link">ตั้งค่าหมวดหมู่</a>
+                    <a href="/setting_menu_type" class="link">ตั้งค่าประเภท</a>
+                    <a href="/setting_menu_unit" class="link">ตั้งค่าหน่วยสินค้า</a>
+                </div>
+            </li>
+            <% } %>
 
-      <!-- -------- Dropdown List Item ------- -->
-      <li class="dropdown">
-        <div class="title">
-          <a href="/menu" class="link">
-            <i class='bx bxs-food-menu'></i>
-            <span class="name">เมนูอาหารและบริการ</span>
-          </a>
-          <i class='bx bxs-chevron-down'></i>
-        </div>
-        <div class="submenu">
-          <a href="/menu" class="link submenu-title">เมนูอาหารและบริการ</a>
-          <a href="/menu" class="link">เมนูอาหาร</a>
-          <a href="/setting_menu_category" class="link">ตั้งค่าหมวดหมู่</a>
-          <a href="/setting_menu_type" class="link">ตั้งค่าประเภท</a>
-          <a href="/setting_menu_unit" class="link">ตั้งค่าหน่วยสินค้า</a>
-        </div>
-      </li>
+        <!-- -------- Non Dropdown List Item ------- -->
+        <% if (permissions && permissions.table.table_read==='Y' ) { %>
+            <li class="dropdown">
+                <div class="title">
+                    <a href="table" class="link">
+                        <i class='bx bx-table'></i>
+                        <span class="name">โต๊ะอาหาร</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="/table" class="link submenu-title">โต๊ะอาหาร</a>
+                    <a href="/table" class="link">จัดโต๊ะอาหาร</a>
+                    <a href="/view_bill" class="link">บิลอาหาร</a>
+                </div>
+            </li>
+            <% } %>
 
-      <!-- -------- Non Dropdown List Item ------- -->
-      <li class="dropdown">
-        <div class="title">
-          <a href="table" class="link">
-            <i class='bx bx-table'></i>
-            <span class="name">โต๊ะอาหาร</span>
-          </a>
-          <i class='bx bxs-chevron-down'></i>
-        </div>
-        <div class="submenu">
-          <a href="/table" class="link submenu-title">โต๊ะอาหาร</a>
-          <a href="/table" class="link">จัดโต๊ะอาหาร</a>
-          <a href="/view_bill" class="link">บิลอาหาร</a>
-        </div>
-      </li>
+        <!-- -------- Non Dropdown List Item ------- -->
+        <% if (permissions && permissions.buying.buying_read==='Y' ) { %>
+            <li class="dropdown">
+                <div class="title">
+                    <a href="/buying" class="link">
+                        <i class='bx bx-cart-download'></i>
+                        <span class="name">รายการจัดซื้อและคงคลัง</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="/buying" class="link submenu-title">รายการจัดซื้อและคงคลัง</a>
+                    <a href="/buying" class="link">รายการจัดซื้อ</a>
+                    <a href="/warehouse" class="link">คงคลัง</a>
+                    <a href="/setting_type" class="link">ตั้งค่าประเภท</a>
+                    <a href="/setting_unit" class="link">ตั้งค่าปริมาณ</a>
+                </div>
+            </li>    
+            <% } %>
 
-      <!-- -------- Non Dropdown List Item ------- -->
-      <li class="dropdown">
-        <div class="title">
-          <a href="/buying" class="link">
-            <i class='bx bx-cart-download'></i>
-            <span class="name">รายการจัดซื้อและคงคลัง</span>
-          </a>
-          <i class='bx bxs-chevron-down'></i>
-        </div>
-        <div class="submenu">
-          <a href="/buying" class="link submenu-title">รายการจัดซื้อและคงคลัง</a>
-          <a href="/buying" class="link">รายการจัดซื้อ</a>
-          <a href="/warehouse" class="link">คงคลัง</a>
-          <a href="/setting_type" class="link">ตั้งค่าประเภท</a>
-          <a href="/setting_unit" class="link">ตั้งค่าปริมาณ</a>
-        </div>
-      </li>
-
-      <!-- -------- Non Dropdown List Item ------- -->
-      <li>
-        <div class="title">
-          <a href="/promotion" class="link">
-            <i class='bx bxs-dollar-circle'></i>
-            <span class="name">โปรโมชั่น</span>
-          </a>
-          <!-- <i class='bx bxs-chevron-down'></i> -->
-        </div>
-        <div class="submenu">
-          <a href="/promotion" class="link submenu-title">โปรโมชั่น</a>
-          <!-- submenu links here  -->
-        </div>
-      </li>
+        <!-- -------- Non Dropdown List Item ------- -->
+        <% if (permissions && permissions.promotion.promotion_read==='Y' ) {
+            %>
+            <li>
+                <div class="title">
+                    <a href="/promotion" class="link">
+                        <i class='bx bxs-dollar-circle'></i>
+                        <span class="name">โปรโมชั่น</span>
+                    </a>
+                    <!-- <i class='bx bxs-chevron-down'></i> -->
+                </div>
+                <div class="submenu">
+                    <a href="/promotion" class="link submenu-title">โปรโมชั่น</a>
+                    <!-- submenu links here  -->
+                </div>
+            </li>
+        </ul>
+            <% } %>
     </ul>
-  </div>
+</div>
 
   <!-- ============= Home Section =============== -->
   <section class="home">
@@ -155,23 +168,34 @@
       <nav>
         <div class="nav-content">
           <div class="profile-details">
-            <img src="../img/chef.png" alt="" class="profile-image">
-            <span class="user-id">ID1234</span>
+            <% if (user) { %>
+              <img src="../img/chef.png" alt="" class="profile-image">
+              <span class="user-id">ID: <%= user.tbl_employees %></span>
           </div>
-          <a href="/login" class="auth-link">เข้าสู่ระบบ</a>
+          <a href="/logout" class="auth-link">Logout</a>
+          <% } else { %>
+            <a href="/login" class="auth-link">เข้าสู่ระบบ</a>
+            <% } %>
         </div>
       </nav>
     </div>
 
     <!-- ============= Top Dashboard =============== -->
 
-    <div class="breadcrumbs">
-      <a href="/dashboard">หน้าหลัก</a> >
-      <a href="/zone/<%= zone_name %>/table/<%= table_id %>/order_food">สั่งเมนูอาหาร</a> >
-      <span>เช็คบิล</span>
-    </div>
-    <div class="topic"><a href="javascript:history.back()" style="text-decoration: none;">
-        <i class='bx bx-left-arrow-alt'></i></a> เช็คบิล </div>
+        <div class="breadcrumbs">
+          <% if (permissions.table.table_view === 'Y') { %>
+              <a href="/"> หน้าหลัก</a> >
+              <a href="/zone/<%= zone_name %>/table/<%= table_id %>/order_food">สั่งเมนูอาหาร</a> >
+              <span>เช็คบิล</span>
+          <% } %>
+      </div>
+      <div class="topic">
+          <% if (permissions.table.table_view === 'Y') { %>
+              <a href="javascript:history.back()" style="text-decoration: none;">
+                  <i class='bx bx-left-arrow-alt'></i>
+              <% } %>
+              </a> เช็คบิล
+      </div>
 
     <!-- ============= Center Dashboard =============== -->
 
@@ -190,7 +214,7 @@
               %>>ชำระเงินแบบสแกนคิวอาร์โค้ด</button>
             <input type="hidden" name="payment_method" id="payment_method_qr" value="qr">
             <input type="hidden" name="promo_code" value="<%= get_promo_code %>">
-            <input type="hidden" name="status_promotion" value="Y"> 
+            <input type="hidden" name="status_promotion" value="Y">
           </form>
 
           <form id="cash-form" action="/zone/<%= zone_name %>/table/<%= table_id %>/create_checkbill" method="POST">
@@ -199,7 +223,7 @@
               %>>ชำระเงินสด</button>
             <input type="hidden" name="payment_method" id="payment_method_cash" value="cash">
             <input type="hidden" name="promo_code" value="<%= get_promo_code %>">
-            <input type="hidden" name="status_promotion" value="Y"> 
+            <input type="hidden" name="status_promotion" value="Y">
           </form>
       </div>
     </div>
@@ -324,8 +348,8 @@
                 <div class="error-message">
                   <%= session.errorMessage %>
                 </div>
-              <% } %>
-              <button type="submit" id="apply-discount-button" class="apply-discount-button">ใช้ส่วนลด</button>
+                <% } %>
+                  <button type="submit" id="apply-discount-button" class="apply-discount-button">ใช้ส่วนลด</button>
             </form>
           </div>
           <div class="price-row">
@@ -349,19 +373,19 @@
         </div>
         <hr class="divider">
         <div class="sidebar-footer">
-          <% 
-          const itemsWithStatusN = menuItems.filter(item => item.status_bill === 'N');
-          const shouldDisableButton = itemsWithStatusN.length === 0;
-        %>
-        <button class="save-button <%= shouldDisableButton ? 'disabled-button' : '' %>" <%= shouldDisableButton ? 'disabled' : '' %>>บันทึก</button>
-          <button class="checkout-button"
-            onclick="window.location.href='/zone/<%= zone_name %>/table/<%= table_id %>/view_checkbill'">ชำระเงิน</button>
-          <div class="button-column">
-            <button class="toggle-discount-button" onclick="toggleDiscount()">ใช้รหัสส่วนลด</button>
-            <button class="print-qr-button">
-              <i class='bx bx-qr'></i> ปริ้นคิวอาร์โค้ด
-            </button>
-          </div>
+          <% const itemsWithStatusN=menuItems.filter(item=> item.status_bill === 'N');
+            const shouldDisableButton = itemsWithStatusN.length === 0;
+            %>
+            <button class="save-button <%= shouldDisableButton ? 'disabled-button' : '' %>" <%=shouldDisableButton
+              ? 'disabled' : '' %>>บันทึก</button>
+            <button class="checkout-button"
+              onclick="window.location.href='/zone/<%= zone_name %>/table/<%= table_id %>/view_checkbill'">ชำระเงิน</button>
+            <div class="button-column">
+              <button class="toggle-discount-button" onclick="toggleDiscount()">ใช้รหัสส่วนลด</button>
+              <button class="print-qr-button">
+                <i class='bx bx-qr'></i> ปริ้นคิวอาร์โค้ด
+              </button>
+            </div>
         </div>
       </ul>
     </div>
@@ -399,92 +423,98 @@
     }
   </script>
 
-  <script>
-    document.querySelector('.print-qr-button').addEventListener('click', function () {
-      const zoneId = '<%= zone_name %>'; // Replace with actual logic to get zone ID
-      const tableId = '<%= table_id %>'; // Replace with actual logic to get table ID
-      const url = `http://localhost:3000/zone/${zoneId}/table/${tableId}/order_food`;
+<script>
+  document.querySelector('.print-qr-button').addEventListener('click', function () {
+    const zoneId = '<%= zone_name %>'; // Replace with actual logic to get zone ID
+    const tableId = '<%= table_id %>'; // Replace with actual logic to get table ID
+    const token = generateUniqueToken(zoneId, tableId); // ฟังก์ชันเพื่อสร้างโทเค็นที่ไม่ซ้ำกัน
+    const url = `http://localhost:3000/zone/${zoneId}/table/${tableId}/order_food/auto_login?token=${token}`;
 
-      printqr(url, zoneId, tableId);
-    });
+    printqr(url, zoneId, tableId);
+  });
 
-    function printqr(url, zone, table) {
-      const printWindow = window.open('', '_blank');
-      printWindow.document.write(`
-        <!DOCTYPE html>
-        <html lang="th">
-        <head>
-          <meta charset="UTF-8">
-          <title>สแกนคิวอาร์โค้ดเพื่อสั่งเมนู</title>
-          <style>
-            @page {
-              size: 88mm 88mm;
-              margin: 0;
-            }
-            body {
-              font-family: 'Sarabun', sans-serif;
-              line-height: 1.6;
-              margin: 0;
-              padding: 0;
-              display: flex;ห
-              justify-content: center;
-              align-items: center;
-              height: 100vh;
-              background-color: #f8f8f8;
-            }
-            .receipt {
-              max-width: 300px;
-              margin: 0 auto;
-              border: 1px solid #ddd;
-              padding: 20px;
-              box-shadow: 0 0 10px rgba(0,0,0,0.1);
-              background-color: #fff;
-              text-align: center; /* Ensure text is centered */
-            }
-            .receipt-header {
-              margin-bottom: 20px;
-            }
-            .receipt-header h1 {
-              font-size: 16px;
-              margin: 0;
-            }
-            .receipt-header p {
-              margin: 5px 0;
-              font-size: 14px;
-            }
-            .qr-code {
-              margin-top: 20px;
-            }
-          </style>
-        </head>
-        <body>
-          <div class="receipt">
-            <div class="receipt-header">
-              <h1>สแกน QR-Code เพื่อสั่งเมนูอาหาร</h1>
-              <p>โซน: ${zone}</p>
-              <p>โต๊ะ: ${table}</p>
-            </div>
-            <div class="qr-code" id="qrcode"></div>
+  function generateUniqueToken(zoneId, tableId) {
+    // สร้างฟังก์ชันเพื่อสร้างโทเค็นที่ไม่ซ้ำกันตาม zoneId และ tableId
+    return btoa(`${zoneId}:${tableId}:${Date.now()}`); // ตัวอย่างการใช้ base64 encoding
+  }
+
+  function printqr(url, zone, table) {
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html lang="th">
+      <head>
+        <meta charset="UTF-8">
+        <title>สแกนคิวอาร์โค้ดเพื่อสั่งเมนู</title>
+        <style>
+          @page {
+            size: 88mm 88mm;
+            margin: 0;
+          }
+          body {
+            font-family: 'Sarabun', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8f8f8;
+          }
+          .receipt {
+            max-width: 300px;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            background-color: #fff;
+            text-align: center; /* Ensure text is centered */
+          }
+          .receipt-header {
+            margin-bottom: 20px;
+          }
+          .receipt-header h1 {
+            font-size: 16px;
+            margin: 0;
+          }
+          .receipt-header p {
+            margin: 5px 0;
+            font-size: 14px;
+          }
+          .qr-code {
+            margin-top: 20px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="receipt">
+          <div class="receipt-header">
+            <h1>สแกน QR-Code เพื่อสั่งเมนูอาหาร</h1>
+            <p>โซน: ${zone}</p>
+            <p>โต๊ะ: ${table}</p>
           </div>
-        </body>
-        </html>
-      `);
-      printWindow.document.close();
-      printWindow.onload = function () {
-        const script = printWindow.document.createElement('script');
-        script.src = "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js";
-        script.onload = function () {
-          new QRCode(printWindow.document.getElementById("qrcode"), {
-            text: url,
-            width: 128,
-            height: 128
-          });
-          printWindow.print();
-        };
-        printWindow.document.body.appendChild(script);
+          <div class="qr-code" id="qrcode"></div>
+        </div>
+      </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.onload = function () {
+      const script = printWindow.document.createElement('script');
+      script.src = "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js";
+      script.onload = function () {
+        new QRCode(printWindow.document.getElementById("qrcode"), {
+          text: url,
+          width: 128,
+          height: 128
+        });
+        printWindow.print();
       };
-    }
-  </script>
+      printWindow.document.body.appendChild(script);
+    };
+  }
+</script>
 
   <script>
     function generateReceipt() {
@@ -691,176 +721,215 @@
     };
   </script>
 
-  <script>
-    function submitSaveForm() {
-      const numListValues = Array.from(document.querySelectorAll('.menu-list .swipe-item'))
-        .filter(item => item.getAttribute('data-status-bill') === 'N')
-        .map(item => item.getAttribute('data-num-list'));
+<script>
+  function submitSaveForm() {
+    const numListValues = Array.from(document.querySelectorAll('.menu-list .swipe-item'))
+      .filter(item => item.getAttribute('data-status-bill') === 'N')
+      .map(item => item.getAttribute('data-num-list'));
 
-      if (numListValues.length === 0) {
-        alert('No items with status_bill as N to submit.');
-        return;
-      }
-
-      document.getElementById('num_list').value = numListValues.join(',');
-      sendToKitchen(); // Send order details to the kitchen
-      document.getElementById('save-form').submit();
+    if (numListValues.length === 0) {
+      alert('No items with status_bill as N to submit.');
+      return;
     }
 
-    // Send order details to the kitchen
-    function sendToKitchen() {
-      const zoneName = document.querySelector('.zone-button').innerText;
-      const tableId = document.querySelector('.table-button').innerText;
-      const orderDetailsHtml = Array.from(document.querySelectorAll('.menu-list .swipe-item'))
-        .filter(item => item.getAttribute('data-status-bill') === 'N')
-        .map(item => `
-      <div>
-        <span>${item.querySelector('.item-quantity').innerText}</span>
-        <span>${item.querySelector('.product-name').innerText}</span>
-      </div>
-    `).join('');
+    document.getElementById('num_list').value = numListValues.join(',');
+    sendToKitchen(); // Send order details to the kitchen
+    document.getElementById('save-form').submit();
+  }
 
-      const totalPrice = document.querySelector('.total-price').innerText;
-      const currentDate = new Date();
-      const formattedDate = currentDate.toLocaleString('th-TH', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric'
-      });
+  // Send order details to the kitchen
+  function sendToKitchen() {
+    const zoneName = document.querySelector('.zone-button').innerText;
+    const tableId = document.querySelector('.table-button').innerText;
+    const menuItems = Array.from(document.querySelectorAll('.menu-list .swipe-item'))
+      .filter(item => item.getAttribute('data-status-bill') === 'N')
+      .map(item => ({
+        product: item.querySelector('.product-name').innerText.split('+')[0].trim(), // Extract main product name
+        quantity: item.querySelector('.item-quantity').innerText,
+        price: parseFloat(item.querySelector('.item-price').innerText), // Parse price as float
+        whereEat: item.getAttribute('data-where-eat'), // Assuming this attribute exists
+        options: Array.from(item.querySelectorAll('.checkbox-item label')).map(option => option.innerText) // Extract options
+      }));
 
-      const printWindow = window.open('', '_blank');
-      printWindow.document.write('<html><head><title>Order for Kitchen</title><style>');
-      printWindow.document.write('@page { size: 88mm 88mm; margin: 0; }');
-      printWindow.document.write('body { font-family: Arial, sans-serif; }');
-      printWindow.document.write('.bill { width: 100%; }');
-      printWindow.document.write('.bill-header, .bill-footer { text-align: center; }');
-      printWindow.document.write('.bill-header h1 { font-size: 16px; }'); // Reduced size for "รายการอาหาร"
-      printWindow.document.write('.bill-header p { font-size: 20px; font-weight: bold; }'); // Increased size for zone and table
-      printWindow.document.write('.bill-body { border-top: 1px solid #000; border-bottom: 1px solid #000; margin: 10px 0; }');
-      printWindow.document.write('.bill-body div { display: flex; justify-content: space-between; }');
-      printWindow.document.write('</style></head><body>');
-      printWindow.document.write('<div class="bill">');
-      printWindow.document.write('<div class="bill-header">');
-      printWindow.document.write('<h1>รายการอาหาร</h1>');
-      printWindow.document.write(`<p>${zoneName}</p>`); // Increased size
-      printWindow.document.write(`<p>${tableId}</p>`); // Increased size
-      printWindow.document.write('</div>');
-      printWindow.document.write('<div class="bill-body">');
-      printWindow.document.write(orderDetailsHtml);
-      printWindow.document.write('</div>');
-      printWindow.document.write('<div class="bill-footer">');
-      printWindow.document.write(`<p>${formattedDate}</p>`);
-      printWindow.document.write('<p>------------------------------------</p>');
-      printWindow.document.write(`<p>ราคารวม ${totalPrice}</p>`);
-      printWindow.document.write('</div>');
-      printWindow.document.write('</div>');
-      printWindow.document.write('</body></html>');
-      printWindow.document.close();
-      printWindow.print();
-    }
+    const orderDetailsHtml = menuItems.map(item => {
+      const whereEatText = item.whereEat === 'Restaurant' ? 'กินที่ร้าน' : 'กินที่บ้าน';
+      const optionsHtml = item.options.length > 0 ? item.options.map(option => `${option}`).join('<br>') : '';
+      return `
+    <tr>
+      <td>${item.product}</td>
+      <td>${whereEatText}</td>
+      <td class="center">${item.quantity}</td>
+    </tr>
+    ${optionsHtml ? `<tr><td colspan="3">${optionsHtml}</td></tr>` : ''}
+    <tr><td colspan="3">--------------------------------------------------</td></tr>
+  `;
+    }).join('');
 
-    // Print bill
-    function printBill() {
-      const orderDetailsHtml = Array.from(document.querySelectorAll('.menu-list .swipe-item'))
-        .filter(item => item.getAttribute('data-status-bill') === 'N')
-        .map(item => `
-        <tr>
-          <td>${item.querySelector('.product-name').innerText}</td>
-          <td>${item.querySelector('.item-quantity').innerText}</td>
-          <td>${item.querySelector('.item-price').innerText}</td>
-        </tr>
-      `).join('');
+    // Calculate total price by summing up the prices of the menu items
+    const totalPrice = menuItems.reduce((sum, item) => sum + item.price, 0).toFixed(2); // Sum and format to 2 decimal places
 
-      const totalAmountHtml = document.getElementById('totalAmount').innerHTML;
-
-      const printWindow = window.open('', '_blank');
-      printWindow.document.write('<html><head><title>สรุปบิล</title></head><body>');
-      printWindow.document.write('<h1>สรุปบิล</h1>');
-      printWindow.document.write('<table><thead><tr><th>สินค้า</th><th>หน่วย</th><th>ราคา</th></tr></thead><tbody>');
-      printWindow.document.write(orderDetailsHtml);
-      printWindow.document.write('</tbody></table>');
-      printWindow.document.write(totalAmountHtml);
-      printWindow.document.write('</body></html>');
-      printWindow.document.close();
-      printWindow.print();
-    }
-
-    document.querySelector('.save-button').addEventListener('click', function () {
-      generateSummaryBill();
+    const currentDate = new Date();
+    const formattedDate = currentDate.toLocaleString('th-TH', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric'
     });
 
-    function generateSummaryBill() {
-      const zoneName = document.querySelector('.zone-button').innerText;
-      const tableId = document.querySelector('.table-button').innerText;
-      const menuItems = Array.from(document.querySelectorAll('.menu-list .swipe-item'))
-        .filter(item => item.getAttribute('data-status-bill') === 'N')
-        .map(item => ({
-          product: item.querySelector('.product-name').innerText.split('+')[0].trim(), // Extract main product name
-          quantity: item.querySelector('.item-quantity').innerText,
-          price: parseFloat(item.querySelector('.item-price').innerText), // Parse price as float
-          whereEat: item.getAttribute('data-where-eat'), // Assuming this attribute exists
-          options: Array.from(item.querySelectorAll('.checkbox-item label')).map(option => option.innerText) // Extract options
-        }));
-      
-      const totalPrice = menuItems.reduce((sum, item) => sum + item.price, 0).toFixed(2); // Sum and format to 2 decimal places
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write('<html><head><title>Order for Kitchen</title><style>');
+    printWindow.document.write('@page { size: 88mm 200mm; margin: 0; }'); // Set page size to 80mm width
+    printWindow.document.write('body { font-family: Arial, sans-serif; margin: 0; padding: 10px; }'); // Adjusted padding
+    printWindow.document.write('.bill { width: 100%; border: 1px solid #000; padding: 10px; box-sizing: border-box; }'); // Kept outer border
+    printWindow.document.write('.bill-header, .bill-footer { text-align: center; }');
+    printWindow.document.write('.bill-header h1 { font-size: 16px; }'); // Reduced size for "รายการอาหาร"
+    printWindow.document.write('.bill-header p { font-size: 20px; font-weight: bold; }'); // Increased size for zone and table
+    printWindow.document.write('.bill-body { margin: 10px 0; }'); // Removed inner border
+    printWindow.document.write('.bill-body table { width: 100%; border-collapse: collapse; }');
+    printWindow.document.write('.bill-body th, .bill-body td { padding: 5px; text-align: left; border: none; }'); // Removed inner border
+    printWindow.document.write('.bill-body td.center { text-align: center; }'); // Center align for quantity
+    printWindow.document.write('.underline { text-align: left; }'); // Added underline class
+    printWindow.document.write('</style></head><body>');
+    printWindow.document.write('<div class="bill">');
+    printWindow.document.write('<div class="bill-header">');
+    printWindow.document.write('<h1>รายการอาหาร</h1>');
+    printWindow.document.write(`<p>${zoneName}</p>`); // Increased size
+    printWindow.document.write(`<p>${tableId}</p>`); // Increased size
+    printWindow.document.write('</div>');
+    printWindow.document.write('<div class="bill-body">');
+    printWindow.document.write('<table>');
+    printWindow.document.write('<thead><tr><th>ชื่อสินค้า</th><th>สถานที่</th><th>จำนวนสินค้า</th></tr></thead>');
+    printWindow.document.write('<tbody>');
+    printWindow.document.write('<tr><td colspan="3" class="underline">--------------------------------------------------</td></tr>'); // Added underline
+    printWindow.document.write(orderDetailsHtml);
+    printWindow.document.write('</tbody>');
+    printWindow.document.write('</table>');
+    printWindow.document.write('</div>');
+    printWindow.document.write('<div class="bill-footer">');
+    printWindow.document.write(`<p>${formattedDate}</p>`);
+    printWindow.document.write('<p>------------------------------------</p>');
+    printWindow.document.write(`<p>ราคารวม ${totalPrice}</p>`);
+    printWindow.document.write('</div>');
+    printWindow.document.write('</div>');
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.print();
+  }
 
-      let orderDetailsHtml = `
-        <p>${zoneName}</p>
-        <p>${tableId}</p>
-        <table>
-          <thead>
-            <tr>
-              <th>สินค้า</th>
-              <th>สถานที่</th>
-              <th>หน่วย</th>
-              <th>ราคา</th>
-            </tr>
-          </thead>
-          <tbody>
-      `;
-      menuItems.forEach(item => {
-        const whereEatText = item.whereEat === 'Restaurant' ? 'กินที่ร้าน' : 'สั่งกลับบ้าน';
-        const optionsHtml = item.options.length > 0 ? item.options.map(option => `${option}`).join('<br>') : '';
-        orderDetailsHtml += `
+  // Print bill
+  function printBill() {
+    const orderDetailsHtml = Array.from(document.querySelectorAll('.menu-list .swipe-item'))
+      .filter(item => item.getAttribute('data-status-bill') === 'N')
+      .map(item => {
+        const productName = item.querySelector('.product-name').innerText;
+        const itemQuantity = item.querySelector('.item-quantity').innerText;
+        const itemPrice = item.querySelector('.item-price').innerText;
+        const whereEat = item.getAttribute('data-where-eat'); // Assuming this attribute exists
+
+        // Extract options if they exist
+        const options = Array.from(item.querySelectorAll('.checkbox-item label'))
+          .map(option => option.innerText)
+          .join('<br>+ ');
+
+        return `
           <tr>
             <td>
-              ${item.product}
-              ${optionsHtml ? `<br>${optionsHtml}` : ''}
+              ${productName}
+              ${options ? `<br>+ ${options}` : ''}
+              <br>
+              <small>${whereEat}</small>
             </td>
-            <td>${whereEatText}</td>
-            <td>${item.quantity}</td>
-            <td>${item.price.toFixed(2)}</td> <!-- Format price to 2 decimal places -->
+            <td>${itemQuantity}</td>
+            <td>${itemPrice}</td>
           </tr>
         `;
-      });
+      }).join('');
+
+    const totalAmountHtml = document.getElementById('totalAmount').innerHTML;
+
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write('<html><head><title>สรุปบิล</title></head><body>');
+    printWindow.document.write('<h1>สรุปบิล</h1>');
+    printWindow.document.write('<table><thead><tr><th>สินค้า</th><th>หน่วย</th><th>ราคา</th></tr></thead><tbody>');
+    printWindow.document.write(orderDetailsHtml);
+    printWindow.document.write('</tbody></table>');
+    printWindow.document.write(totalAmountHtml);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.print();
+  }
+
+  document.querySelector('.save-button').addEventListener('click', function () {
+    generateSummaryBill();
+  });
+
+  function generateSummaryBill() {
+    const zoneName = document.querySelector('.zone-button').innerText;
+    const tableId = document.querySelector('.table-button').innerText;
+    const menuItems = Array.from(document.querySelectorAll('.menu-list .swipe-item'))
+      .filter(item => item.getAttribute('data-status-bill') === 'N')
+      .map(item => ({
+        product: item.querySelector('.product-name').innerText.split('+')[0].trim(), // Extract main product name
+        quantity: item.querySelector('.item-quantity').innerText,
+        price: parseFloat(item.querySelector('.item-price').innerText), // Parse price as float
+        whereEat: item.getAttribute('data-where-eat'), // Assuming this attribute exists
+        options: Array.from(item.querySelectorAll('.checkbox-item label')).map(option => option.innerText) // Extract options
+      }));
+
+    const totalPrice = menuItems.reduce((sum, item) => sum + item.price, 0).toFixed(2); // Sum and format to 2 decimal places
+
+    let orderDetailsHtml = `
+      <p>${zoneName}</p>
+      <p>${tableId}</p>
+      <table>
+        <thead>
+          <tr>
+            <th>สินค้า</th>
+            <th>สถานที่</th>
+            <th>หน่วย</th>
+            <th>ราคา</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+    menuItems.forEach(item => {
+      const whereEatText = item.whereEat === 'Restaurant' ? 'กินที่ร้าน' : 'สั่งกลับบ้าน';
+      const optionsHtml = item.options.length > 0 ? item.options.map(option => `${option}`).join('<br>') : '';
       orderDetailsHtml += `
-          </tbody>
-        </table>
+        <tr>
+          <td>
+            ${item.product}
+            ${optionsHtml ? `<br>${optionsHtml}` : ''}
+          </td>
+          <td>${whereEatText}</td>
+          <td>${item.quantity}</td>
+          <td>${item.price.toFixed(2)}</td> <!-- Format price to 2 decimal places -->
+        </tr>
       `;
-      document.getElementById('orderDetails').innerHTML = orderDetailsHtml;
-      document.getElementById('totalAmount').innerHTML = `
-        <p>ราคารวม: ${totalPrice}</p>
-      `;
-      document.getElementById('summaryModal').style.display = 'block';
-    }
-
-    function confirmAndClose() {
-      document.getElementById('summaryModal').style.display = 'none';
-    }
-
-    document.querySelector('.close-button').addEventListener('click', function () {
-      document.getElementById('summaryModal').style.display = 'none';
     });
+    orderDetailsHtml += `
+        </tbody>
+      </table>
+    `;
+    document.getElementById('orderDetails').innerHTML = orderDetailsHtml;
+    document.getElementById('totalAmount').innerHTML = `
+      <p>ราคารวม: ${totalPrice}</p>
+    `;
+    document.getElementById('summaryModal').style.display = 'block';
+  }
 
-    window.onclick = function (event) {
-      if (event.target == document.getElementById('summaryModal')) {
-        document.getElementById('summaryModal').style.display = 'none';
-      }
+  document.querySelector('.close-button').addEventListener('click', function () {
+    document.getElementById('summaryModal').style.display = 'none';
+  });
+
+  window.onclick = function (event) {
+    if (event.target == document.getElementById('summaryModal')) {
+      document.getElementById('summaryModal').style.display = 'none';
     }
-  </script>
+  }
+</script>
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {

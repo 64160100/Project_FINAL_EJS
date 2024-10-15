@@ -214,7 +214,7 @@
 
 .sidebar.close~.home {
     left: 78px;
-    width: calc(100% - 78px);
+    width: calc(100% - 60px);
 }
 
 .home .toggle-sidebar {
@@ -341,51 +341,3 @@ nav .profile-details i {
 }
 
 /* ============ Responsive / Breakpoints ========== */
-@media (max-width: 1080px) {
-    /* Add styles for large devices */
-}
-
-/* For Medium Devices */
-@media (max-width: 774px) {
-
-    nav .profile-details,
-    nav .profile-details i {
-        display: none;
-    }
-
-    .home-section nav .profile-details {
-        height: 50px;
-        min-width: 40px;
-    }
-
-    /* Example: Adjusting font size */
-    body {
-        font-size: 1rem;
-    }
-}
-
-@media (max-width: 560px) {
-    .sidebar.active~.home-section nav .profile-details {
-        display: none;
-    }
-
-    /* Example: Adjusting layout */
-    .container {
-        display: flex;
-        flex-direction: column;
-    }
-}
-
-/* For Small Devices */
-@media (max-width: 360px) {
-    /* Example: Adjusting padding and margins */
-    .content {
-        padding: 10px;
-        margin: 5px;
-    }
-
-    /* Example: Adjusting font size */
-    body {
-        font-size: 0.875rem;
-    }
-}

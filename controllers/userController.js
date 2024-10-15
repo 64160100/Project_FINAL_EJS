@@ -1,6 +1,7 @@
 const UserModel = require('../models/UserModel.js');
 
 module.exports = {
+
     allUser: function (req, res) {
         if (!req.session.user) {
             return res.redirect('/login');

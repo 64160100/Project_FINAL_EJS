@@ -5,13 +5,21 @@ const menuController = require('../controllers/menuController.js');
 module.exports = {
 
 	tableView: (req, res) => {
+		if (!req.session.user) {
+			return res.redirect('/login');
+		}
+		const permissions = req.session.permissions;
+		// Check if the user has the required permissions
+		if (!permissions || permissions.table.table_read !== 'Y') {
+			return res.redirect('/404');
+		}
+	
 		TableModel.getTablesAndZones((error, results) => {
 			if (error) {
-
 				console.error('Error fetching data from database:', error);
 				return res.status(500).send('Error fetching data from database');
 			}
-
+	
 			if (results.tables.length > 0 || results.zones.length > 0) {
 				if (results.zones.length > 0) {
 					console.log('Redirecting to /view_zone/:id with zone ID:', results.zones[0].zone_name);
@@ -23,48 +31,74 @@ module.exports = {
 						tables: results.tables,
 						zones: [],
 						message: 'No zones found, but tables are available',
+						user: req.session.user,
+						permissions: permissions
 					});
 				}
 			} else {
 				res.render('table', {
 					title: 'Table View',
-					tables: [], 
-					zones: [], 
+					tables: [],
+					zones: [],
 					message: 'No tables or zones found',
+					user: req.session.user,
+					permissions: permissions
 				});
 			}
 		});
 	},
 
 	viewZone: (req, res) => {
+		if (!req.session.user) {
+			return res.redirect('/login');
+		}
+		const permissions = req.session.permissions;
+		// Check if the user has the required permissions
+		if (!permissions || permissions.table.table_read !== 'Y') {
+			return res.redirect('/404');
+		}
+	
 		const zoneId = req.params.id;
-
+	
 		TableModel.getTablesAndZones((error, zones) => {
 			if (error) {
 				console.error('Error fetching zones from database:', error);
 				return res.status(500).send('Error fetching zones from database');
 			}
-
+	
 			TableModel.getTablesByZone(zoneId, (error, results) => {
 				if (error) {
 					console.error('Error fetching tables from database:', error);
 					return res.status(500).send('Error fetching tables from database');
 				}
-
+	
 				// Render the view_zone template with both tables and zones data
 				res.render('view_zone', {
 					title: `Tables in Zone ${zoneId}`,
 					zoneId: zoneId,
 					tables: results.tables, // Pass the tables to the view
 					zones: results.zones, // Assuming zones is fetched correctly
+					user: req.session.user,
+					permissions: permissions
 				});
 			});
 		});
 	},
 
 	addTableView: (req, res) => {
+		if (!req.session.user) {
+			return res.redirect('/login');
+		}
+		const permissions = req.session.permissions;
+		// Check if the user has the required permissions
+		if (!permissions || permissions.table.table_read !== 'Y') {
+			return res.redirect('/404');
+		}
+	
 		res.render('add_table', {
 			title: 'Add Table',
+			user: req.session.user,
+			permissions: permissions
 		});
 	},
 
@@ -73,14 +107,29 @@ module.exports = {
 			id_table: req.body.id_table,
 			zone_name: req.body.zone_name,
 		};
-
-		TableModel.createTable(tableData, (error, result) => {
+	
+		// Check if the zone_name already exists
+		TableModel.getZoneByName(tableData.zone_name, (error, existingZone) => {
 			if (error) {
-				console.error(error);
-				res.status(500).send("An error occurred");
-			} else {
-				res.redirect(`/view_zone/${req.body.zone_name}`);
+				console.error('Error fetching zone from database:', error);
+				return res.status(500).send('Error fetching zone from database');
 			}
+	
+			if (existingZone) {
+				const createTableError = `ไม่สามารถสร้างโซน ${tableData.zone_name} ได้เนื่องจากมีอยู่แล้ว`;
+				return res.redirect(`/view_zone/${tableData.zone_name}?createTableError=${encodeURIComponent(createTableError)}`);
+			}
+	
+			// Proceed to create the table if the zone_name does not exist
+			TableModel.createTable(tableData, (error, result) => {
+				if (error) {
+					console.error(error);
+					const createTableError = 'An error occurred while creating the table';
+					return res.redirect(`/view_zone/${tableData.zone_name}?createTableError=${encodeURIComponent(createTableError)}`);
+				} else {
+					res.redirect(`/view_zone/${req.body.zone_name}`);
+				}
+			});
 		});
 	},
 
@@ -162,186 +211,199 @@ module.exports = {
 	},
 
 	zoneOrderFood: (req, res) => {
+		if (!req.session.user) {
+			return res.redirect('/login');
+		}
+		const permissions = req.session.permissions;
+		// Check if the user has the required permissions
+		if (!permissions || permissions.table.table_read !== 'Y') {
+			return res.redirect('/404');
+		}
+		
 		const zoneName = req.params.zone;
 		const tableId = req.params.table;
-	  
+	
 		TableModel.getZoneAndTableDetails(zoneName, tableId, (error, results) => {
-		  if (error) {
-			console.error('Error fetching data from database:', error);
-			return res.status(500).send('Error fetching data from database');
-		  }
-	  
-		  TableModel.getOrderFood((error, menu) => {
 			if (error) {
-			  console.error(error);
-			  return res.status(500).send("An error occurred");
+				console.error('Error fetching data from database:', error);
+				return res.status(500).send('Error fetching data from database');
 			}
-			TableModel.getFoodRecipesMenu((error, foodRecipes) => {
-			  if (error) {
-				console.error('Error fetching food recipes: ', error);
-				return res.status(500).send('Internal Server Error');
-			  } else {
-				TableModel.getWarehouse((error, warehouse) => {
-				  if (error) {
-					console.error('Error fetching warehouse: ', error);
-					return res.status(500).send('Internal Server Error');
-				  } else {
-					// Aggregate results by id_warehouse
-					const aggregatedResults = warehouse.reduce((acc, current) => {
-					  // Ensure unit_quantity_all is treated as a number for summation
-					  current.unit_quantity_all = parseFloat(current.unit_quantity_all) || 0;
-	  
-					  // If the id_warehouse already exists, sum up the unit_quantity_all and append tbl_buying_id
-					  if (acc[current.id_warehouse]) {
-						acc[current.id_warehouse].unit_quantity_all += current.unit_quantity_all;
-						acc[current.id_warehouse].tbl_buying_ids.push(current.tbl_buying_id);
-					  } else {
-						// Otherwise, add the entry to the accumulator
-						acc[current.id_warehouse] = {
-						  ...current,
-						  tbl_buying_ids: [current.tbl_buying_id] // Initialize tbl_buying_ids array
-						};
-					  }
-					  return acc;
-					}, {});
-					// Convert the aggregated results back to an array
-					const aggregatedArray = Object.values(aggregatedResults);
-					// Aggregate warehouse quantities by name_product
-					const aggregatedWarehouse = aggregatedArray.reduce((acc, item) => {
-					  if (!acc[item.name_product]) {
-						acc[item.name_product] = 0;
-					  }
-					  acc[item.name_product] += item.unit_quantity_all;
-					  return acc;
-					}, {});
-					// Calculate the number of menus that can be created
-					const menuCounts = menu.map(menuItem => {
-					  const ingredients = foodRecipes.filter(recipe => recipe.tbl_menu_id === menuItem.id);
-					  const minMenus = ingredients.reduce((min, ingredient) => {
-						const totalQuantity = aggregatedWarehouse[ingredient.name_ingredient] || 0;
-						const possibleMenus = Math.floor(totalQuantity / ingredient.unit_quantity);
-						return Math.min(min, possibleMenus);
-					  }, Infinity);
-					  // If minMenus is Infinity, set it to 0
-					  const remainMenus = minMenus === Infinity ? 0 : minMenus;
-					  return {
-						...menuItem,
-						remain: remainMenus,
-						status: remainMenus === 0 ? 'OFF' : 'ON'
-					  };
-					});
-					// Update remain and status in the database
-					const updatePromises = menuCounts.map(menuItem => {
-					  return new Promise((resolve, reject) => {
-						TableModel.updateMenuRemainAndStatus(menuItem.id, menuItem.remain, menuItem.status, (error, results) => {
-						  if (error) {
-							reject(error);
-						  } else {
-							resolve(results);
-						  }
-						});
-					  });
-					});
-	  
-					// Wait for all updates to complete
-					Promise.all(updatePromises)
-					  .then(() => {
-						// Step 3: Fetch specific columns from list_menu
-						TableModel.getSpecificMenuItems(tableId, zoneName, (error, menuItems) => {
-						  if (error) {
-							console.error('Error fetching specific menu items:', error);
-							return res.status(500).send('Error fetching specific menu items');
-						  }
-	  
-						  // Step 4: Fetch menu options from list_menu_options table
-						  TableModel.getListMenuOptions((error, listMenuOptions) => {
+	
+			TableModel.getOrderFood((error, menu) => {
+				if (error) {
+					console.error(error);
+					return res.status(500).send("An error occurred");
+				}
+				TableModel.getFoodRecipesMenu((error, foodRecipes) => {
+					if (error) {
+						console.error('Error fetching food recipes: ', error);
+						return res.status(500).send('Internal Server Error');
+					} else {
+						TableModel.getWarehouse((error, warehouse) => {
 							if (error) {
-							  console.error('Error fetching menu options:', error);
-							  return res.status(500).send('Error fetching menu options');
-							}
-	  
-							// Step 5: Fetch promotions from tbl_promotion table
-							TableModel.getPromotions((error, promotions) => {
-							  if (error) {
-								console.error('Error fetching promotions:', error);
-								return res.status(500).send('Error fetching promotions');
-							  }
-	  
-							  // Step 6: Fetch price_discount_promotion from list_menu table
-							  TableModel.getPriceDiscountPromotion((error, priceDiscountPromotion) => {
-								if (error) {
-								  console.error('Error fetching price discount promotion:', error);
-								  return res.status(500).send('Error fetching price discount promotion');
-								}
-								
-								const availablePromotions = promotions.filter(promotion => promotion.status_promotion !== 'Y');
-
-								// Group menu items by category
-								const groupedMenu = menu.reduce((acc, item) => {
-								  if (!acc[item.category]) {
-									acc[item.category] = [];
-								  }
-								  acc[item.category].push(item);
-								  return acc;
+								console.error('Error fetching warehouse: ', error);
+								return res.status(500).send('Internal Server Error');
+							} else {
+								// Aggregate results by id_warehouse
+								const aggregatedResults = warehouse.reduce((acc, current) => {
+									// Ensure unit_quantity_all is treated as a number for summation
+									current.unit_quantity_all = parseFloat(current.unit_quantity_all) || 0;
+	
+									// If the id_warehouse already exists, sum up the unit_quantity_all and append tbl_buying_id
+									if (acc[current.id_warehouse]) {
+										acc[current.id_warehouse].unit_quantity_all += current.unit_quantity_all;
+										acc[current.id_warehouse].tbl_buying_ids.push(current.tbl_buying_id);
+									} else {
+										// Otherwise, add the entry to the accumulator
+										acc[current.id_warehouse] = {
+											...current,
+											tbl_buying_ids: [current.tbl_buying_id] // Initialize tbl_buying_ids array
+										};
+									}
+									return acc;
 								}, {});
-	  
-								// Group listMenuOptions by num_list
-								const groupedOptions = listMenuOptions.reduce((acc, option) => {
-								  if (!acc[option.num_list]) {
-									acc[option.num_list] = [];
-								  }
-								  acc[option.num_list].push(option);
-								  return acc;
+								// Convert the aggregated results back to an array
+								const aggregatedArray = Object.values(aggregatedResults);
+								// Aggregate warehouse quantities by name_product
+								const aggregatedWarehouse = aggregatedArray.reduce((acc, item) => {
+									if (!acc[item.name_product]) {
+										acc[item.name_product] = 0;
+									}
+									acc[item.name_product] += item.unit_quantity_all;
+									return acc;
 								}, {});
-	  
-								const menuItemsWithTotalPrice = menuItems.map(item => {
-								  let totalPrice = parseFloat(item.price_all);
-								  const options = groupedOptions[item.num_list];
-								  if (options) {
-									options.forEach(option => {
-									  if (option.price_options_all) {
-										totalPrice += parseFloat(option.price_options_all);
-									  }
+								// Calculate the number of menus that can be created
+								const menuCounts = menu.map(menuItem => {
+									const ingredients = foodRecipes.filter(recipe => recipe.tbl_menu_id === menuItem.id);
+									const minMenus = ingredients.reduce((min, ingredient) => {
+										const totalQuantity = aggregatedWarehouse[ingredient.name_ingredient] || 0;
+										const possibleMenus = Math.floor(totalQuantity / ingredient.unit_quantity);
+										return Math.min(min, possibleMenus);
+									}, Infinity);
+									// If minMenus is Infinity, set it to 0
+									const remainMenus = minMenus === Infinity ? 0 : minMenus;
+									return {
+										...menuItem,
+										remain: remainMenus,
+										status: remainMenus === 0 ? 'OFF' : 'ON'
+									};
+								});
+								// Update remain and status in the database
+								const updatePromises = menuCounts.map(menuItem => {
+									return new Promise((resolve, reject) => {
+										TableModel.updateMenuRemainAndStatus(menuItem.id, menuItem.remain, menuItem.status, (error, results) => {
+											if (error) {
+												reject(error);
+											} else {
+												resolve(results);
+											}
+										});
 									});
-								  }
-								  return {
-									...item,
-									totalPrice: totalPrice
-								  };
 								});
-	  
-								const totalPrice = menuItemsWithTotalPrice.reduce((acc, item) => acc + item.totalPrice, 0);
-								req.session.totalPrice = totalPrice;
-								
-								const basket = req.session.basket || [];
-								res.render('order_food', {
-								  groupedMenu: groupedMenu,
-								  basket: basket,
-								  zone_name: zoneName,
-								  table_id: tableId,
-								  menuItems: menuItemsWithTotalPrice,
-								  groupedOptions: groupedOptions,
-								  promotions: availablePromotions, 
-								  totalPrice: totalPrice.toFixed(2),
-								  finalPrice: (totalPrice - (priceDiscountPromotion || 0)).toFixed(2), 
-								  discountPrice: (priceDiscountPromotion || 0).toFixed(2),
-								});
-							  });
-							});
-						  });
+	
+								// Wait for all updates to complete
+								Promise.all(updatePromises)
+									.then(() => {
+										// Step 3: Fetch specific columns from list_menu
+										TableModel.getSpecificMenuItems(tableId, zoneName, (error, menuItems) => {
+											if (error) {
+												console.error('Error fetching specific menu items:', error);
+												return res.status(500).send('Error fetching specific menu items');
+											}
+	
+											// Step 4: Fetch menu options from list_menu_options table
+											TableModel.getListMenuOptions((error, listMenuOptions) => {
+												if (error) {
+													console.error('Error fetching menu options:', error);
+													return res.status(500).send('Error fetching menu options');
+												}
+	
+												// Step 5: Fetch promotions from tbl_promotion table
+												TableModel.getPromotions((error, promotions) => {
+													if (error) {
+														console.error('Error fetching promotions:', error);
+														return res.status(500).send('Error fetching promotions');
+													}
+	
+													// Step 6: Fetch price_discount_promotion from list_menu table
+													TableModel.getPriceDiscountPromotions(tableId, zoneName, (error, priceDiscountPromotion) => {
+														if (error) {
+															console.error('Error fetching price discount promotion:', error);
+															return res.status(500).send(`Error fetching price discount promotion for Zone: ${zoneName}, Table: ${tableId}`);
+														}
+	
+														const availablePromotions = promotions.filter(promotion => promotion.status_promotion !== 'Y');
+	
+														// Group menu items by category
+														const groupedMenu = menu.reduce((acc, item) => {
+															if (!acc[item.category]) {
+																acc[item.category] = [];
+															}
+															acc[item.category].push(item);
+															return acc;
+														}, {});
+	
+														// Group listMenuOptions by num_list
+														const groupedOptions = listMenuOptions.reduce((acc, option) => {
+															if (!acc[option.num_list]) {
+																acc[option.num_list] = [];
+															}
+															acc[option.num_list].push(option);
+															return acc;
+														}, {});
+	
+														const menuItemsWithTotalPrice = menuItems.map(item => {
+															let totalPrice = parseFloat(item.price_all);
+															const options = groupedOptions[item.num_list];
+															if (options) {
+																options.forEach(option => {
+																	if (option.price_options_all) {
+																		totalPrice += parseFloat(option.price_options_all);
+																	}
+																});
+															}
+															return {
+																...item,
+																totalPrice: totalPrice
+															};
+														});
+	
+														const totalPrice = menuItemsWithTotalPrice.reduce((acc, item) => acc + item.totalPrice, 0);
+														const get_promo_code = menuItems.length > 0 ? menuItems[0].promo_code : '';
+														req.session.totalPrice = totalPrice;
+														
+														const basket = req.session.basket || [];
+														res.render('order_food', {
+															groupedMenu: groupedMenu,
+															basket: basket,
+															zone_name: zoneName,
+															table_id: tableId,
+															menuItems: menuItemsWithTotalPrice,
+															groupedOptions: groupedOptions,
+															promotions: availablePromotions,
+															totalPrice: totalPrice.toFixed(2),
+															finalPrice: (totalPrice - (priceDiscountPromotion || 0)).toFixed(2),
+															discountPrice: (priceDiscountPromotion || 0).toFixed(2),
+															get_promo_code: get_promo_code,
+															user: req.session.user,
+															permissions: permissions
+														});
+													});
+												});
+											});
+										});
+									})
+									.catch(updateError => {
+										console.error('Error updating menu remain and status:', updateError);
+										res.status(500).send('Error updating menu remain and status');
+									});
+							}
 						});
-					  })
-					  .catch(updateError => {
-						console.error('Error updating menu remain and status:', updateError);
-						res.status(500).send('Error updating menu remain and status');
-					  });
-				  }
+					}
 				});
-			  }
 			});
-		  });
 		});
-	  },
+	},
 
 	  applyDiscount: (req, res) => {
 		const { discount_code } = req.body;
@@ -421,45 +483,54 @@ module.exports = {
 
 	// เพิ่มฟังก์ชัน zoneCustomize
 	zoneCustomize: (req, res) => {
+		if (!req.session.user) {
+			return res.redirect('/login');
+		}
+		const permissions = req.session.permissions;
+		// Check if the user has the required permissions
+		if (!permissions || permissions.table.table_read !== 'Y') {
+			return res.redirect('/404');
+		}
+	
 		const zoneName = req.params.zone;
 		const tableId = req.params.table;
 		const itemId = req.params.id;
-
+	
 		TableModel.getMenuItemById(itemId, (error, item) => {
 			if (error) {
 				console.error('Error fetching item:', error);
 				return res.status(500).send("An error occurred");
 			}
-
+	
 			if (!item) {
 				return res.status(404).send("Item not found");
 			}
-
+	
 			TableModel.getMenuOptionsByMenuId(itemId, (error, menuOptions) => {
 				if (error) {
 					console.error('Error fetching menu options:', error);
 					return res.status(500).send("An error occurred");
 				}
-
+	
 				TableModel.getFoodRecipesByMenuId(itemId, (error, foodRecipes) => {
 					if (error) {
 						console.error('Error fetching food recipes:', error);
 						return res.status(500).send("An error occurred");
 					}
-
+	
 					const insufficientProducts = foodRecipes.filter(recipe => recipe.unit_quantity > item.remain);
 					let errorMessage = null;
 					if (insufficientProducts.length > 0) {
 						const productNames = insufficientProducts.map(product => product.name_ingredient).join(', ');
 						errorMessage = `Insufficient quantity for products: ${productNames}.`;
 					}
-
+	
 					const numUnit = req.body.quantity || 1;
 					menuOptions.forEach(option => {
 						option.num_unit = numUnit;
 						option.price_options_all = option.price * numUnit;
 					});
-
+	
 					res.render('customize', {
 						item: item,
 						menuOptions: menuOptions,
@@ -467,6 +538,8 @@ module.exports = {
 						zone_name: zoneName,
 						table_id: tableId,
 						errorMessage: errorMessage,
+						user: req.session.user,
+						permissions: permissions
 					});
 				});
 			});
@@ -965,38 +1038,53 @@ module.exports = {
 	},
 
 	editTable: (req, res) => {
+		if (!req.session.user) {
+			return res.redirect('/login');
+		}
+		const permissions = req.session.permissions;
+		// Check if the user has the required permissions
+		if (!permissions || permissions.table.table_read !== 'Y') {
+			return res.redirect('/404');
+		}
+	
 		const zoneId = req.params.id;
-		const errorMessage = req.query.errorMessage || null; // Get errorMessage from query parameters if it exists
-
+		const deleteZoneError = req.query.deleteZoneError || null; // Get deleteZoneError from query parameters if it exists
+		const deleteTableError = req.query.deleteTableError || null; // Get deleteTableError from query parameters if it exists
+		const createTableError = req.query.createTableError || null; // Get createTableError from query parameters if it exists
+	
 		TableModel.getTablesAndZones((error, zones) => {
 			if (error) {
 				console.error('Error fetching zones from database:', error);
 				return res.status(500).send('Error fetching zones from database');
 			}
-
+	
 			if (!Array.isArray(zones)) {
 				zones = [];
 			}
-
+	
 			TableModel.getTablesByZone(zoneId, (error, results) => {
 				if (error) {
 					console.error('Error fetching tables from database:', error);
 					return res.status(500).send('Error fetching tables from database');
 				}
-
+	
 				TableModel.getLockZone(zoneId, (error, lockZone) => {
 					if (error) {
 						console.error('Error fetching lock zone from database:', error);
 						return res.status(500).send('Error fetching lock zone from database');
 					}
-
+	
 					res.render('edit_table', {
 						title: `Tables in Zone ${zoneId}`,
 						zoneId: zoneId,
 						tables: results.tables, // Pass the tables to the view
 						zones: zones, // Pass all zones to the view
 						lockZone: lockZone, // Pass the lock zone to the view
-						errorMessage: errorMessage // Pass the error message to the view
+						deleteZoneError: deleteZoneError, // Pass the delete zone error message to the view
+						deleteTableError: deleteTableError, // Pass the delete table error message to the view
+						createTableError: createTableError, // Pass the create table error message to the view
+						user: req.session.user,
+						permissions: permissions
 					});
 				});
 			});
@@ -1022,49 +1110,81 @@ module.exports = {
 	deleteTable: (req, res) => {
 		const tableId = req.body.id_table;
 		const zoneId = req.body.zoneId;
-
+	
 		// Fetch the zone name using the zoneId
 		TableModel.getZoneNameById(zoneId, (error, zoneName) => {
 			if (error) {
 				console.error('Error fetching zone name from database:', error);
 				return res.status(500).send('Error fetching zone name from database');
 			}
-
+	
 			TableModel.deleteTableByIdAndZone(tableId, zoneName, (error) => {
 				if (error) {
-					console.error('Error deleting table from database:', error);
-					return res.status(500).send('Error deleting table from database');
+					if (error.code === 'ER_ROW_IS_REFERENCED_2') {
+						// Fetch the table and zone details to include in the error message
+						TableModel.getTablesByZone(zoneId, (fetchError, results) => {
+							if (fetchError) {
+								console.error('Error fetching tables from database:', fetchError);
+								return res.status(500).send('Error fetching tables from database');
+							}
+	
+							const table = results.tables.find(t => t.id_table === tableId);
+							const deleteTableError = `ไม่สามารถลบโต๊ะ ${tableId} ในโซน ${zoneName} ได้เนื่องจากยังมีเมนูตกค้างอยู่`;
+
+							return res.redirect(`/edit_table/${zoneId}?deleteTableError=${encodeURIComponent(deleteTableError)}`);
+						});
+					} else {
+						console.error('Error deleting table from database:', error);
+						return res.status(500).send('Error deleting table from database');
+					}
+				} else {
+					res.redirect(`/edit_table/${zoneId}`);
 				}
-				console.log('Redirecting to /edit_table/:id with zone ID:', zoneId);
-				res.redirect(`/edit_table/${zoneId}`);
 			});
 		});
 	},
 
 	deleteZone: (req, res) => {
 		const zoneId = req.params.id;
-
 		TableModel.deleteZone(zoneId, (error) => {
 			if (error) {
-				console.error('Error deleting zone from database:', error);
-				return res.status(500).send('Error deleting zone from database');
-			}
-
-			// Find a remaining zone to redirect to
-			TableModel.findRemainingZone((error, remainingZoneId) => {
-				if (error) {
-					console.error('Error finding remaining zone:', error);
-					return res.status(500).send('Error finding remaining zone');
-				}
-
-				if (remainingZoneId) {
-					// Redirect to the remaining zone
-					res.redirect(`/view_zone/${remainingZoneId}`);
+				if (error.code === 'ER_ROW_IS_REFERENCED_2') {
+					// Fetch the zone details to include in the error message
+					TableModel.getTablesByZone(zoneId, (fetchError, results) => {
+						if (fetchError) {
+							console.error('Error fetching tables from database:', fetchError);
+							return res.status(500).send('Error fetching tables from database');
+						}
+	
+						// Find the specific table causing the issue
+						const problematicTable = results.tables.length > 0 ? results.tables[0] : null;
+						const deleteZoneError = problematicTable
+						? `ไม่สามารถลบโซน ${zoneId} ได้เนื่องจากโต๊ะ ${problematicTable.id_table} ยังคงมีเมนูตกค้างอยู่`
+						: `ไม่สามารถลบโซน ${zoneId} ได้เนื่องจากยังมีเมนูตกค้างอยู่`;
+	
+						return res.redirect(`/edit_table/${zoneId}?deleteZoneError=${encodeURIComponent(deleteZoneError)}`);
+					});
 				} else {
-					// No remaining zones, redirect to a default page or show a message
-					res.redirect('/table');
+					console.error('Error deleting zone from database:', error);
+					return res.status(500).send('Error deleting zone from database');
 				}
-			});
+			} else {
+				// Find a remaining zone to redirect to
+				TableModel.findRemainingZone((error, remainingZoneId) => {
+					if (error) {
+						console.error('Error finding remaining zone:', error);
+						return res.status(500).send('Error finding remaining zone');
+					}
+	
+					if (remainingZoneId) {
+						// Redirect to the remaining zone
+						res.redirect(`/view_zone/${remainingZoneId}`);
+					} else {
+						// No remaining zones, redirect to a default page or show a message
+						res.redirect('/table');
+					}
+				});
+			}
 		});
 	},
 
@@ -1085,18 +1205,27 @@ module.exports = {
 	insertTable: (req, res) => {
 		const zoneId = req.params.id;
 		const { table_id } = req.body;
-
+	
+		if (!req.session.user) {
+			return res.redirect('/login');
+		}
+		const permissions = req.session.permissions;
+		// Check if the user has the required permissions
+		if (!permissions || permissions.table.table_read !== 'Y') {
+			return res.redirect('/404');
+		}
+	
 		// Check if the zoneId exists in tbl_zones
 		TableModel.checkZoneExists(zoneId, (error, exists) => {
 			if (error) {
 				console.error('Error checking zone existence:', error);
 				return res.status(500).send('Error checking zone existence');
 			}
-
+	
 			if (!exists) {
 				return res.status(400).send('Zone does not exist');
 			}
-
+	
 			// Proceed to insert the table
 			TableModel.insertTable(zoneId, table_id, (error, results) => {
 				if (error) {
@@ -1107,30 +1236,34 @@ module.exports = {
 								console.error('Error fetching zones from database:', error);
 								return res.status(500).send('Error fetching zones from database');
 							}
-
+	
 							if (!Array.isArray(zones)) {
 								zones = [];
 							}
-
+	
 							TableModel.getTablesByZone(zoneId, (error, results) => {
 								if (error) {
 									console.error('Error fetching tables from database:', error);
 									return res.status(500).send('Error fetching tables from database');
 								}
-
+	
 								TableModel.getLockZone(zoneId, (error, lockZone) => {
 									if (error) {
 										console.error('Error fetching lock zone from database:', error);
 										return res.status(500).send('Error fetching lock zone from database');
 									}
-
+	
 									res.render('edit_table', {
 										title: `Tables in Zone ${zoneId}`,
 										zoneId: zoneId,
 										tables: results.tables, // Pass the tables to the view
 										zones: zones, // Pass all zones to the view
 										lockZone: lockZone, // Pass the lock zone to the view
-										errorMessage: 'โต๊ะอาหารนี้มีอยู่แล้ว' // Pass the error message to the view
+										createTableError: 'โต๊ะอาหารนี้มีอยู่แล้ว', // Pass the error message to the view
+										deleteZoneError: '', // Pass an empty deleteZoneError to the view
+										deleteTableError: '', // Pass an empty deleteTableError to the view
+										user: req.session.user, // Pass the user to the view
+										permissions: permissions // Pass the permissions to the view
 									});
 								});
 							});
@@ -1148,12 +1281,21 @@ module.exports = {
 	},
 
 	viewBill: (req, res) => {
+		if (!req.session.user) {
+			return res.redirect('/login');
+		}
+		const permissions = req.session.permissions;
+		// Check if the user has the required permissions
+		if (!permissions || permissions.table.table_read !== 'Y') {
+			return res.redirect('/404');
+		}
+	
 		TableModel.getBill((error, results) => {
 			if (error) {
 				console.error('Error fetching bill from database:', error);
 				return res.status(500).send('Error fetching bill from database');
 			}
-
+	
 			// Group the results by Table ID and Zone Name
 			const groupedResults = results.reduce((acc, item) => {
 				const key = `${item.id_table}-${item.zone_name}`;
@@ -1171,7 +1313,7 @@ module.exports = {
 				acc[key].total_items += 1;
 				return acc;
 			}, {});
-
+	
 			// Convert the grouped results to an array
 			const groupedArray = Object.values(groupedResults).map(group => {
 				return {
@@ -1179,111 +1321,121 @@ module.exports = {
 					where_eat: group.items[0].Where_eat // Assuming the first item's Where_eat value is representative
 				};
 			});
-
+	
 			TableModel.getZones((error, results) => {
 				if (error) {
 					// Handle error (e.g., render an error page or send an error response)
 					console.error('Error fetching data from database:', error);
 					return res.status(500).send('Error fetching data from database');
 				}
-
+	
 				const firstZoneName = results[0].zone_name;
-
-				console.log('Grouped Array:', groupedArray);
-				console.log('First Zone Name:', firstZoneName);
-
+	
 				res.render('view_bill', {
 					title: 'View Bill',
 					bill: groupedArray,
-					firstZoneName: firstZoneName
+					firstZoneName: firstZoneName,
+					user: req.session.user,
+					permissions: permissions
 				});
 			});
 		});
 	},
 
 	zoneViewCheckBill: (req, res) => {
+		if (!req.session.user) {
+			return res.redirect('/login');
+		}
+		const permissions = req.session.permissions;
+		// Check if the user has the required permissions
+		if (!permissions || permissions.table.table_read !== 'Y') {
+			return res.redirect('/404');
+		}
+	
 		const zoneName = req.params.zone;
 		const tableId = req.params.table;
-	  
+	
 		// Step 1: Query the database for the specific zone and its table
 		TableModel.getZoneAndTableDetails(zoneName, tableId, (error, results) => {
-		  if (error) {
-			console.error('Error fetching data from database:', error);
-			return res.status(500).send('Error fetching data from database');
-		  }
-	  
-		  // Load basket items from session
-		  const basket = req.session.basket || [];
-	  
-		  // Step 2: Fetch specific columns from list_menu
-		  TableModel.getSpecificMenuItems(tableId, zoneName, (error, menuItems) => {
 			if (error) {
-			  console.error('Error fetching specific menu items:', error);
-			  return res.status(500).send('Error fetching specific menu items');
+				console.error('Error fetching data from database:', error);
+				return res.status(500).send('Error fetching data from database');
 			}
-	  
-			// Step 3: Fetch menu options from list_menu_options table
-			TableModel.getListMenuOptions((error, listMenuOptions) => {
-			  if (error) {
-				console.error('Error fetching menu options:', error);
-				return res.status(500).send('Error fetching menu options');
-			  }
-	  
-			  // Step 4: Fetch price_discount_promotion from list_menu table
-			  TableModel.getPriceDiscountPromotion((error, priceDiscountPromotion) => {
+	
+			// Load basket items from session
+			const basket = req.session.basket || [];
+	
+			// Step 2: Fetch specific columns from list_menu
+			TableModel.getSpecificMenuItems(tableId, zoneName, (error, menuItems) => {
 				if (error) {
-				  console.error('Error fetching price discount promotion:', error);
-				  return res.status(500).send('Error fetching price discount promotion');
+					console.error('Error fetching specific menu items:', error);
+					return res.status(500).send('Error fetching specific menu items');
 				}
-	  
-				// Group listMenuOptions by num_list
-				const groupedOptions = listMenuOptions.reduce((acc, option) => {
-				  if (!acc[option.num_list]) {
-					acc[option.num_list] = [];
-				  }
-				  acc[option.num_list].push(option);
-				  return acc;
-				}, {});
-	  
-				const menuItemsWithTotalPrice = menuItems.map(item => {
-				  let totalPrice = parseFloat(item.price_all);
-				  const options = groupedOptions[item.num_list];
-				  if (options) {
-					options.forEach(option => {
-					  if (option.price_options_all) {
-						totalPrice += parseFloat(option.price_options_all);
-					  }
+	
+				// Step 3: Fetch menu options from list_menu_options table
+				TableModel.getListMenuOptions((error, listMenuOptions) => {
+					if (error) {
+						console.error('Error fetching menu options:', error);
+						return res.status(500).send('Error fetching menu options');
+					}
+	
+					// Step 4: Fetch price_discount_promotion from list_menu table
+					TableModel.getPriceDiscountPromotions(zoneName, tableId, (error, priceDiscountPromotion) => {
+						if (error) {
+							console.error('Error fetching price discount promotion:', error);
+							return res.status(500).send(`Error fetching price discount promotion for Zone: ${zoneName}, Table: ${tableId}`);
+						}
+	
+						// Group listMenuOptions by num_list
+						const groupedOptions = listMenuOptions.reduce((acc, option) => {
+							if (!acc[option.num_list]) {
+								acc[option.num_list] = [];
+							}
+							acc[option.num_list].push(option);
+							return acc;
+						}, {});
+	
+						const menuItemsWithTotalPrice = menuItems.map(item => {
+							let totalPrice = parseFloat(item.price_all);
+							const options = groupedOptions[item.num_list];
+							if (options) {
+								options.forEach(option => {
+									if (option.price_options_all) {
+										totalPrice += parseFloat(option.price_options_all);
+									}
+								});
+							}
+							return {
+								...item,
+								totalPrice: totalPrice
+							};
+						});
+	
+						const totalPrice = menuItemsWithTotalPrice.reduce((acc, item) => acc + item.totalPrice, 0);
+						req.session.totalPrice = totalPrice;
+	
+						// Extract promo_code from menuItems
+						const get_promo_code = menuItems.length > 0 ? menuItems[0].promo_code : '';
+						
+						res.render('view_checkbill', {
+							basket: basket,
+							zone_name: zoneName,
+							table_id: tableId,
+							menuItems: menuItemsWithTotalPrice,
+							groupedOptions: groupedOptions,
+							totalPrice: totalPrice.toFixed(2),
+							finalPrice: (totalPrice - (priceDiscountPromotion || 0)).toFixed(2),
+							discountPrice: (priceDiscountPromotion || 0).toFixed(2),
+							get_promo_code: get_promo_code,
+							session: req.session,
+							user: req.session.user,
+							permissions: permissions
+						});
 					});
-				  }
-				  return {
-					...item,
-					totalPrice: totalPrice
-				  };
 				});
-	  
-				const totalPrice = menuItemsWithTotalPrice.reduce((acc, item) => acc + item.totalPrice, 0);
-				req.session.totalPrice = totalPrice;
-	  
-				// Extract promo_code from menuItems
-				const get_promo_code = menuItems.length > 0 ? menuItems[0].promo_code : '';
-				
-				res.render('view_checkbill', {
-				  basket: basket,
-				  zone_name: zoneName,
-				  table_id: tableId,
-				  menuItems: menuItemsWithTotalPrice,
-				  groupedOptions: groupedOptions,
-				  totalPrice: totalPrice.toFixed(2),
-				  finalPrice: (totalPrice - (priceDiscountPromotion || 0)).toFixed(2), 
-				  discountPrice: (priceDiscountPromotion || 0).toFixed(2), 
-				  get_promo_code: get_promo_code, 
-				  session: req.session 
-				});
-			  });
 			});
-		  });
 		});
-	  },
+	},
 
 	  createCheckBill: (req, res) => {
 		const zoneName = req.params.zone;
@@ -1502,5 +1654,22 @@ module.exports = {
 				});
 			}
 		});
-	}
+	},
+
+	getIndex: (req, res) => {
+		if (!req.session.user) {
+			return res.redirect('/login');
+		}
+
+		const permissions = req.session.permissions;
+		const zoneName = req.params.zone;
+		const tableId = req.params.table;
+	
+		res.render('menuindex', { 
+			user: req.session.user, 
+			permissions: permissions,
+			zone_name: zoneName, // ส่ง zone_name ไปยัง EJS
+			table_id: tableId // ส่ง table_id ไปยัง EJS
+		});		
+	},
 };

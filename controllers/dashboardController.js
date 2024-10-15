@@ -3,19 +3,28 @@ const moment = require('moment-timezone');
 
 module.exports = {
     deshboardview: function (req, res) {
+        if (!req.session.user) {
+            return res.redirect('/login');
+        }
+        const permissions = req.session.permissions;
+        // Check if the user has the required permissions
+        if (!permissions || permissions.dashboard.dashboard_read !== 'Y') {
+            return res.redirect('/404');
+        }
+    
         DashboardModel.getAllRecords((error, allRecords) => {
             if (error) {
                 console.error('Error fetching data from record_check_bill:', error);
                 return res.status(500).send('Error fetching data from record_check_bill');
             }
-
+    
             const uniqueRecords = Object.values(allRecords.reduce((acc, record) => {
                 if (!acc[record.bill_number]) {
                     acc[record.bill_number] = record;
                 }
                 return acc;
             }, {}));
-
+    
             const dailyTotals = uniqueRecords.reduce((acc, record) => {
                 // Convert created_at to Thai time
                 const date = moment(record.created_at).tz('Asia/Bangkok').format('YYYY-MM-DD');
@@ -25,7 +34,7 @@ module.exports = {
                 acc[date] += record.final_amount;
                 return acc;
             }, {});
-
+    
             // Group records by month and sum the final_amount for each month
             const monthlyTotals = uniqueRecords.reduce((acc, record) => {
                 // Convert created_at to Thai time and format as YYYY-MM
@@ -36,7 +45,7 @@ module.exports = {
                 acc[month] += record.final_amount;
                 return acc;
             }, {});
-
+    
             // Group records by year and sum the final_amount for each year
             const yearlyTotals = uniqueRecords.reduce((acc, record) => {
                 // Convert created_at to Thai time and format as YYYY
@@ -47,13 +56,13 @@ module.exports = {
                 acc[year] += record.final_amount;
                 return acc;
             }, {});
-
+    
             DashboardModel.getTopMenuItems((error, topMenuItems) => {
                 if (error) {
                     console.error('Error fetching top menu items:', error);
                     return res.status(500).send('Error fetching top menu items');
                 }
-
+    
                 const combinedTopMenuItems = Object.values(topMenuItems.reduce((acc, item) => {
                     if (!acc[item.product_list]) {
                         acc[item.product_list] = { ...item };
@@ -62,14 +71,14 @@ module.exports = {
                     }
                     return acc;
                 }, {}));
-
+    
                 const totalSales = uniqueRecords.reduce((sum, record) => sum + record.total_amount, 0);
                 const netSales = uniqueRecords.reduce((sum, record) => sum + record.final_amount, 0);
                 const totalBills = uniqueRecords.length;
                 const averageSalesPerBill = (netSales / totalBills).toFixed(2);
-
+    
                 console.log('uniqueRecords:', totalSales);
-
+    
                 res.render('dashboard', {
                     allRecords: uniqueRecords,
                     dailyTotals: dailyTotals,
@@ -79,7 +88,9 @@ module.exports = {
                     totalSales: totalSales,
                     netSales: netSales,
                     totalBills: totalBills,
-                    averageSalesPerBill: averageSalesPerBill
+                    averageSalesPerBill: averageSalesPerBill,
+                    user: req.session.user,
+                    permissions: permissions
                 });
             });
         });

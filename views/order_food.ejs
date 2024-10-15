@@ -16,191 +16,241 @@
 </head>
 
 <body>
-  <div class="sidebar close">
-    <!-- ========== Logo ============  -->
-    <a href="#" class="logo-box">
-      <i class='bx bxs-cat'></i>
-      <div class="logo-name">POS</div>
-    </a>
+    <div class="sidebar close">
+      <!-- ========== Logo ============  -->
+      <a href="#" class="logo-box">
+        <i class='bx bxs-cat'></i>
+        <div class="logo-name">POS</div>
+      </a>
+  
+      <!-- ========== List ============  -->
+  
+      <ul class="sidebar-list">
+  
+        <!-- -------- Non Dropdown List Item ------- -->
+        <li>
+          <div class="title">
+            <% if (permissions.table.table_view === 'Y') { %>
+              <a href="/" class="link">
+                <i class='bx bx-home'></i>
+                <span class="name">หน้าหลัก</span>
+              </a>
+            <% } else { %>
+              <a href="/zone/<%= zone_name %>/table/<%= table_id %>/menuindex" class="link">
+                <i class='bx bx-home'></i>
+                <span class="name">หน้าหลัก</span>
+              </a>
+            <% } %>
+            <!-- <i class='bx bxs-chevron-down'></i> -->
+          </div>
+          <div class="submenu">
+            <% if (permissions.table.table_view === 'Y') { %>
+              <a href="/" class="link submenu-title">หน้าหลัก</a>
+            <% } else { %>
+              <a href="/zone/<%= zone_name %>/table/<%= table_id %>/menuindex" class="link submenu-title">หน้าหลัก</a>
+            <% } %>
+            <!-- submenu links here  -->
+          </div>
+        </li>
 
-    <!-- ========== List ============  -->
-
-    <ul class="sidebar-list">
-
-      <!-- -------- Non Dropdown List Item ------- -->
-      <li>
-        <div class="title">
-          <a href="/" class="link">
-            <i class='bx bx-home'></i>
-            <span class="name">หน้าหลัก</span>
-          </a>
-          <!-- <i class='bx bxs-chevron-down'></i> -->
-        </div>
-        <div class="submenu">
-          <a href="/" class="link submenu-title">หน้าหลัก</a>
-          <!-- submenu links here  -->
-        </div>
-      </li>
-
-      <!-- -------- Non Dropdown List Item ------- -->
-      <li>
-        <div class="title">
-          <a href="/dashboard" class="link">
-            <i class='bx bx-grid-alt'></i>
-            <span class="name">แดชบอร์ด</span>
-          </a>
-          <!-- <i class='bx bxs-chevron-down'></i> -->
-        </div>
-        <div class="submenu">
-          <a href="/dashboard" class="link submenu-title">แดชบอร์ด</a>
-          <!-- submenu links here  -->
-        </div>
-      </li>
-
-
-
-      <!-- -------- Dropdown List Item ------- -->
-      <li class="dropdown">
-        <div class="title">
-          <a href="/employee" class="link">
-            <i class='bx bx-collection'></i>
-            <span class="name">ข้อมูลพนักงาน</span>
-          </a>
-          <i class='bx bxs-chevron-down'></i>
-        </div>
-        <div class="submenu">
-          <a href="/employee" class="link submenu-title">ข้อมูลพนักงาน</a>
-          <a href="/employee" class="link">พนักงาน</a>
-          <a href="/user" class="link">ผู้ใช้งาน</a>
-          <a href="/permission" class="link">สิทธิ์ผู้ใช้งาน</a>
-        </div>
-      </li>
-
-      <!-- -------- Dropdown List Item ------- -->
-      <li class="dropdown">
-        <div class="title">
-          <a href="/menu" class="link">
-            <i class='bx bxs-food-menu'></i>
-            <span class="name">เมนูอาหารและบริการ</span>
-          </a>
-          <i class='bx bxs-chevron-down'></i>
-        </div>
-        <div class="submenu">
-          <a href="/menu" class="link submenu-title">เมนูอาหารและบริการ</a>
-          <a href="/menu" class="link">เมนูอาหาร</a>
-          <a href="/setting_menu_category" class="link">ตั้งค่าหมวดหมู่</a>
-          <a href="/setting_menu_type" class="link">ตั้งค่าประเภท</a>
-          <a href="/setting_menu_unit" class="link">ตั้งค่าหน่วยสินค้า</a>
-        </div>
-      </li>
-
-      <!-- -------- Non Dropdown List Item ------- -->
-      <li class="dropdown">
-        <div class="title">
-          <a href="table" class="link">
-            <i class='bx bx-table'></i>
-            <span class="name">โต๊ะอาหาร</span>
-          </a>
-          <i class='bx bxs-chevron-down'></i>
-        </div>
-        <div class="submenu">
-          <a href="/table" class="link submenu-title">โต๊ะอาหาร</a>
-          <a href="/table" class="link">จัดโต๊ะอาหาร</a>
-          <a href="/view_bill" class="link">บิลอาหาร</a>
-        </div>
-      </li>
-
-      <!-- -------- Non Dropdown List Item ------- -->
-      <li class="dropdown">
-        <div class="title">
-          <a href="/buying" class="link">
-            <i class='bx bx-cart-download'></i>
-            <span class="name">รายการจัดซื้อและคงคลัง</span>
-          </a>
-          <i class='bx bxs-chevron-down'></i>
-        </div>
-        <div class="submenu">
-          <a href="/buying" class="link submenu-title">รายการจัดซื้อและคงคลัง</a>
-          <a href="/buying" class="link">รายการจัดซื้อ</a>
-          <a href="/warehouse" class="link">คงคลัง</a>
-          <a href="/setting_type" class="link">ตั้งค่าประเภท</a>
-          <a href="/setting_unit" class="link">ตั้งค่าปริมาณ</a>
-        </div>
-      </li>
-
-      <!-- -------- Non Dropdown List Item ------- -->
-      <li>
-        <div class="title">
-          <a href="/promotion" class="link">
-            <i class='bx bxs-dollar-circle'></i>
-            <span class="name">โปรโมชั่น</span>
-          </a>
-          <!-- <i class='bx bxs-chevron-down'></i> -->
-        </div>
-        <div class="submenu">
-          <a href="/promotion" class="link submenu-title">โปรโมชั่น</a>
-          <!-- submenu links here  -->
-        </div>
-      </li>
-    </ul>
-  </div>
+        <!-- -------- Non Dropdown List Item ------- -->
+        <% if (permissions && permissions.dashboard.dashboard_read === 'Y') { %>
+          <li>
+            <div class="title">
+              <a href="/dashboard" class="link">
+                <i class='bx bx-grid-alt'></i>
+                <span class="name">แดชบอร์ด</span>
+              </a>
+              <!-- <i class='bx bxs-chevron-down'></i> -->
+            </div>
+            <div class="submenu">
+              <a href="/dashboard" class="link submenu-title">แดชบอร์ด</a>
+              <!-- submenu links here  -->
+            </div>
+          </li>
+        <% } %>
+  
+        <!-- -------- Dropdown List Item ------- -->
+        <% if (permissions && permissions.employee.employee_read === 'Y') { %>
+          <li class="dropdown">
+            <div class="title">
+              <a href="/employee" class="link">
+                <i class='bx bx-collection'></i>
+                <span class="name">ข้อมูลพนักงาน</span>
+              </a>
+              <i class='bx bxs-chevron-down'></i>
+            </div>
+            <div class="submenu">
+              <a href="/employee" class="link submenu-title">ข้อมูลพนักงาน</a>
+              <a href="/employee" class="link">พนักงาน</a>
+              <a href="/user" class="link">ผู้ใช้งาน</a>
+              <a href="/permission" class="link">สิทธิ์ผู้ใช้งาน</a>
+            </div>
+          </li>
+        <% } %>
+  
+        <!-- -------- Dropdown List Item ------- -->
+        <% if (permissions && permissions.menu.menu_read === 'Y') { %>
+          <li class="dropdown">
+            <div class="title">
+              <a href="/menu" class="link">
+                <i class='bx bxs-food-menu'></i>
+                <span class="name">เมนูอาหารและบริการ</span>
+              </a>
+              <i class='bx bxs-chevron-down'></i>
+            </div>
+            <div class="submenu">
+              <a href="/menu" class="link submenu-title">เมนูอาหารและบริการ</a>
+              <a href="/menu" class="link">เมนูอาหาร</a>
+              <a href="/setting_menu_category" class="link">ตั้งค่าหมวดหมู่</a>
+              <a href="/setting_menu_type" class="link">ตั้งค่าประเภท</a>
+              <a href="/setting_menu_unit" class="link">ตั้งค่าหน่วยสินค้า</a>
+            </div>
+          </li>
+        <% } %>
+  
+        <!-- -------- Non Dropdown List Item ------- -->
+        <% if (permissions && permissions.table.table_read === 'Y') { %>
+          <li class="dropdown">
+            <div class="title">
+              <% if (permissions.table.table_view === 'Y') { %>
+                <a href="table" class="link">
+                  <i class='bx bx-table'></i>
+                  <span class="name">โต๊ะอาหาร</span>
+                </a>
+              <% } else { %>
+                <a href="/zone/<%= zone_name %>/table/<%= table_id %>/order_food" class="link">
+                  <i class='bx bx-table'></i>
+                  <span class="name">โต๊ะอาหาร</span>
+                </a>
+              <% } %>
+              <i class='bx bxs-chevron-down'></i>
+            </div>
+            <div class="submenu">
+              <% if (permissions.table.table_view === 'Y') { %>
+                <a href="/table" class="link submenu-title">โต๊ะอาหาร</a>
+                <a href="/table" class="link">จัดโต๊ะอาหาร</a>
+                <a href="/view_bill" class="link">บิลอาหาร</a>
+              <% } else { %>
+                <a href="/zone/<%= zone_name %>/table/<%= table_id %>/order_food" class="link submenu-title">สั่งอาหาร</a>
+              <% } %>
+            </div>
+          </li>
+        <% } %>
+  
+        <!-- -------- Non Dropdown List Item ------- -->
+        <% if (permissions && permissions.buying.buying_read === 'Y') { %>
+          <li class="dropdown">
+            <div class="title">
+              <a href="/buying" class="link">
+                <i class='bx bx-cart-download'></i>
+                <span class="name">รายการจัดซื้อและคงคลัง</span>
+              </a>
+              <i class='bx bxs-chevron-down'></i>
+            </div>
+            <div class="submenu">
+              <a href="/buying" class="link submenu-title">รายการจัดซื้อและคงคลัง</a>
+              <a href="/buying" class="link">รายการจัดซื้อ</a>
+              <a href="/warehouse" class="link">คงคลัง</a>
+              <a href="/setting_type" class="link">ตั้งค่าประเภท</a>
+              <a href="/setting_unit" class="link">ตั้งค่าปริมาณ</a>
+            </div>
+          </li>
+        <% } %>
+  
+        <!-- -------- Non Dropdown List Item ------- -->
+        <% if (permissions && permissions.promotion.promotion_read === 'Y') { %>
+          <li>
+            <div class="title">
+              <a href="/promotion" class="link">
+                <i class='bx bxs-dollar-circle'></i>
+                <span class="name">โปรโมชั่น</span>
+              </a>
+              <!-- <i class='bx bxs-chevron-down'></i> -->
+            </div>
+            <div class="submenu">
+              <a href="/promotion" class="link submenu-title">โปรโมชั่น</a>
+              <!-- submenu links here  -->
+            </div>
+          </li>
+        <% } %>
+      </ul>
+    </div>
 
   <!-- ============= Home Section =============== -->
-
   <section class="home">
     <div class="nav">
-      <div class="toggle-sidebar">
-        <i class='bx bx-menu'></i>
-      </div>
+      <% if (permissions.table.table_view === 'Y') { %>
+        <div class="toggle-sidebar">
+            <i class='bx bx-menu'></i>
+        </div>
+      <% } %>
       <nav>
         <div class="nav-content">
           <div class="profile-details">
-            <img src="/img/chef.png" alt="" class="profile-image">
-            <span class="user-id">ID1234</span>
+              <% if (user) { %>
+                  <img src="/img/chef.png" alt="" class="profile-image">
+                  <% if (user.tbl_employees) { %>
+                      <span class="user-id">ID: <%= user.tbl_employees %></span>
+                  <% } else if (user.username) { %>
+                      <span class="username">Username: <%= user.username %></span>
+                  <% } %>
+              </div>
+              <a href="/logout" class="auth-link">Logout</a>
+              <% } else { %>
+                  <a href="/login" class="auth-link">เข้าสู่ระบบ</a>
+              <% } %>
           </div>
-          <a href="/login" class="auth-link">เข้าสู่ระบบ</a>
-        </div>
       </nav>
     </div>
+
     <!-- ============= Top Dashboard =============== -->
 
     <div class="breadcrumbs">
-      <a href="/dashboard"> หน้าหลัก</a> > <span>สั่งเมนูอาหาร</span>
+        <% if (permissions.table.table_view === 'Y') { %>
+            <a href="/"> หน้าหลัก</a> >
+            <span>สั่งเมนูอาหาร</span>
+        <% } %>
     </div>
-    <div class="topic"><a href="javascript:history.back()" style="text-decoration: none;">
-        <i class='bx bx-left-arrow-alt'></i></a> สั่งเมนูอาหาร</div>
+    <div class="topic">
+        <% if (permissions.table.table_view === 'Y') { %>
+            <a href="javascript:history.back()" style="text-decoration: none;">
+                <i class='bx bx-left-arrow-alt'></i>
+            <% } %>
+            </a> สั่งเมนูอาหาร
+    </div>
     <!-- ============= Center Dashboard =============== -->
 
     <div class="centered-content">
-      <% for (let category in groupedMenu) { %>
-        <div class="category">
-          <h3>
-            <%= category %>
-          </h3>
-          <div class="menu-items">
-            <% groupedMenu[category].forEach(menuItem=> { %>
-              <form class="menu-item" action="/order" method="POST">
-                <input type="hidden" name="id" value="<%= menuItem.id %>">
-                <input type="hidden" name="name" value="<%= menuItem.name %>">
-                <input type="hidden" name="price" value="<%= menuItem.price %>">
-                <input type="hidden" name="category" value="<%= menuItem.category %>">
-                <a href="<%= menuItem.status === 'OFF' ? '#' : '/zone/' + zone_name + '/table/' + table_id + '/customize/' + menuItem.id %>"
-                  class="<%= menuItem.status === 'OFF' ? 'disabled-link' : '' %>">
-                  <div class="image-container">
-                    <img class="menu-item-image <%= menuItem.status === 'OFF' ? 'grayscale' : '' %>"
-                      src="/img/<%= menuItem.picture %>" alt="<%= menuItem.name %>">
-                  </div>
-                  <h4 class="<%= menuItem.status === 'OFF' ? 'text-muted' : '' %>">
-                    <%= menuItem.name %>
-                  </h4>
-                  <p class="<%= menuItem.status === 'OFF' ? 'text-muted' : '' %>">
-                    <%= menuItem.price %> บาท
-                  </p>
-                </a>
-              </form>
-              <% }); %>
-          </div>
-        </div>
+        <% for (let category in groupedMenu) { %>
+            <div class="category">
+                <h3>
+                    <%= category %>
+                </h3>
+                <div class="menu-items">
+                    <% groupedMenu[category].forEach(menuItem => { %>
+                        <form class="menu-item" action="/order" method="POST">
+                            <input type="hidden" name="id" value="<%= menuItem.id %>">
+                            <input type="hidden" name="name" value="<%= menuItem.name %>">
+                            <input type="hidden" name="price" value="<%= menuItem.price %>">
+                            <input type="hidden" name="category" value="<%= menuItem.category %>">
+                            <a href="<%= menuItem.status === 'OFF' ? '#' : '/zone/' + zone_name + '/table/' + table_id + '/customize/' + menuItem.id %>"
+                                class="<%= menuItem.status === 'OFF' ? 'disabled-link' : '' %>">
+                                <div class="image-container">
+                                    <img class="menu-item-image <%= menuItem.status === 'OFF' ? 'grayscale' : '' %>"
+                                        src="/img/<%= menuItem.picture %>" alt="<%= menuItem.name %>">
+                                </div>
+                                <h4 class="<%= menuItem.status === 'OFF' ? 'text-muted' : '' %>">
+                                    <%= menuItem.name %>
+                                </h4>
+                                <p class="<%= menuItem.status === 'OFF' ? 'text-muted' : '' %>">
+                                    <%= menuItem.price %> บาท
+                                </p>
+                            </a>
+                        </form>
+                    <% }); %>
+                </div>
+            </div>
         <% } %>
     </div>
 
@@ -290,42 +340,45 @@
               <div class="price-row discount-section" style="display: none;">
               </div>
               <div class="price-row">
-                <span>ราคารวม:</span>
+                <span>ราคารวม :</span>
                 <span class="total-price" id="totalPrice">
                   <%= totalPrice %>
                 </span>
               </div>
+              <% if (permissions.table.table_view === 'Y') { %>
               <div class="price-row">
-                <span>ราคาส่วนลด:</span>
+                <span>ราคาส่วนลด :</span>
                 <span class="discount-price" id="discountPrice">
                   <%= discountPrice || '0.00' %>
                 </span>
               </div>
               <div class="price-row">
-                <span>ราคารวมแบบสรุป:</span>
+                <span>ราคารวมแบบสรุป :</span>
                 <span class="final-price" id="finalPrice">
                   <%= finalPrice < 0 ? 0 : finalPrice %>
                 </span>
               </div>
+              <% } %>
             </div>
             <hr class="divider">
             <div class="sidebar-footer">
-              <% const itemsWithStatusN=menuItems.filter(item=> item.status_bill === 'N');
-                const shouldDisableButton = itemsWithStatusN.length === 0;
-                %>
-                <button class="save-button <%= shouldDisableButton ? 'disabled-button' : '' %>" <%=shouldDisableButton
-                  ? 'disabled' : '' %>>บันทึก</button>
-                <button class="checkout-button"
-                  onclick="window.location.href='/zone/<%= zone_name %>/table/<%= table_id %>/view_checkbill'">ชำระเงิน</button>
-                <div class="button-column">
+              <% const itemsWithStatusN = menuItems.filter(item => item.status_bill === 'N');
+              const shouldDisableButton = itemsWithStatusN.length === 0;
+              %>
+                <button class="save-button <%= shouldDisableButton ? 'disabled-button' : '' %>" <%= shouldDisableButton ? 'disabled' : '' %> style="width: auto; font-size: 1.2em; padding: 10px 20px;">บันทึก</button>
+                <% if (permissions.table.table_view === 'Y') { %>
+              <button class="checkout-button"
+                  onclick="window.location.href='/zone/<%= zone_name %>/table/<%= table_id %>/view_checkbill'">ชำระเงิน</button>             
+              <div class="button-column">
                   <button class="toggle-discount-button"
-                    onclick="window.location.href='/zone/<%= zone_name %>/table/<%= table_id %>/view_checkbill'">ใช้รหัสส่วนลด
+                      onclick="window.location.href='/zone/<%= zone_name %>/table/<%= table_id %>/view_checkbill'">ใช้รหัสส่วนลด
                   </button>
                   <button class="print-qr-button">
-                    <i class='bx bx-qr'></i> ปริ้นคิวอาร์โค้ด
+                      <i class='bx bx-qr'></i> ปริ้นคิวอาร์โค้ด
                   </button>
-                </div>
-            </div>
+              </div>
+              <% } %>
+          </div>
       </ul>
     </div>
 
@@ -353,10 +406,16 @@
     document.querySelector('.print-qr-button').addEventListener('click', function () {
       const zoneId = '<%= zone_name %>'; // Replace with actual logic to get zone ID
       const tableId = '<%= table_id %>'; // Replace with actual logic to get table ID
-      const url = `http://localhost:3000/zone/${zoneId}/table/${tableId}/order_food`;
+      const token = generateUniqueToken(zoneId, tableId); // ฟังก์ชันเพื่อสร้างโทเค็นที่ไม่ซ้ำกัน
+      const url = `http://localhost:3000/zone/${zoneId}/table/${tableId}/order_food/auto_login?token=${token}`;
 
       printqr(url, zoneId, tableId);
     });
+
+    function generateUniqueToken(zoneId, tableId) {
+      // สร้างฟังก์ชันเพื่อสร้างโทเค็นที่ไม่ซ้ำกันตาม zoneId และ tableId
+      return btoa(`${zoneId}:${tableId}:${Date.now()}`); // ตัวอย่างการใช้ base64 encoding
+    }
 
     function printqr(url, zone, table) {
       const printWindow = window.open('', '_blank');
@@ -376,7 +435,7 @@
               line-height: 1.6;
               margin: 0;
               padding: 0;
-              display: flex;ห
+              display: flex;
               justify-content: center;
               align-items: center;
               height: 100vh;

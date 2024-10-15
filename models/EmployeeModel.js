@@ -84,6 +84,16 @@ module.exports = {
         });
     },
 
+    getLastEmployeeIds: function (callback) {
+        connection.query('SELECT employee_id FROM tbl_employees ORDER BY employee_id DESC LIMIT 1', (error, results) => {
+            if (error) {
+                return callback(error);
+            }
+            console.log(results);
+            return callback(null, results);
+        });
+    },
+
     deleteEmployeeById: function (employeeId, callback) {
         // Start a transaction
         connection.beginTransaction(function(err) {

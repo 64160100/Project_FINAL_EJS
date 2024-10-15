@@ -12,6 +12,15 @@ function generatePromoCode(length) {
 
 module.exports = {
 	promotionView: (req, res) => {
+		if (!req.session.user) {
+			return res.redirect('/login');
+		}
+		const permissions = req.session.permissions;
+		// Check if the user has the required permissions
+		if (!permissions || permissions.promotion.promotion_read !== 'Y') {
+			return res.redirect('/404');
+		}
+	
 		PromotionModel.getAllPromotions((err, promotions) => {
 			if (err) {
 				return res.status(500).json({
@@ -39,18 +48,41 @@ module.exports = {
 					seenSumPromotionIds.add(promotion.sum_promotion_id);
 				}
 			});
-			console.log(uniquePromotions);
-			res.render('promotion', { promotions: uniquePromotions });
+			res.render('promotion', {
+				promotions: uniquePromotions,
+				user: req.session.user,
+				permissions: permissions
+			});
 		});
 	},
 
 	addPromotionView: (req, res) => {
+		if (!req.session.user) {
+			return res.redirect('/login');
+		}
+		const permissions = req.session.permissions;
+		// Check if the user has the required permissions
+		if (!permissions || permissions.promotion.promotion_read !== 'Y') {
+			return res.redirect('/404');
+		}
+	
 		res.render('add_promotion', {
 			title: 'Add a new promotion',
+			user: req.session.user,
+			permissions: permissions
 		});
 	},
 
 	viewPromotionView: (req, res) => {
+		if (!req.session.user) {
+			return res.redirect('/login');
+		}
+		const permissions = req.session.permissions;
+		// Check if the user has the required permissions
+		if (!permissions || permissions.promotion.promotion_read !== 'Y') {
+			return res.redirect('/404');
+		}
+	
 		const sumPromotionId = req.params.id;
 		const page = parseInt(req.query.page) || 1;
 		const limit = 10;
@@ -69,23 +101,9 @@ module.exports = {
 				title: 'View promotion',
 				promotions: results,
 				currentPage: page,
-				totalPages: totalPages
-			});
-		});
-	},
-
-	editPromotionView: (req, res) => {
-		const id = req.params.id;
-		PromotionModel.getPromotionById(id, (err, result) => {
-			if (err) {
-				return res.status(500).json({
-					message: 'Database error!',
-					error: err
-				});
-			}
-			res.render('edit_promotion', {
-				title: 'Edit promotion',
-				promotion: result[0]
+				totalPages: totalPages,
+				user: req.session.user,
+				permissions: permissions
 			});
 		});
 	},

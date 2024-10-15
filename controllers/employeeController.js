@@ -65,18 +65,33 @@ module.exports = {
         if (!req.session.user) {
             return res.redirect('/login');
         }
-
+    
         const permissions = req.session.permissions;
-
+    
         if (!permissions || permissions.employee.employee_read !== 'Y') {
-            res.redirect('/404');
+            return res.redirect('/404');
         } else {
-
-            res.render('add_employee', {
-                error: req.flash('error'),
-                formData: req.body || {},
-                user: req.session.user,
-                permissions: permissions
+            // Fetch existing employee IDs from the tbl_employees table
+            EmployeeModel.getLastEmployeeIds((err, lastCode) => {
+                if (err) {
+                    console.error("Error fetching last product code:", err);
+                    return res.status(500).send("Error fetching last product code");
+                }
+    
+                let nextCode = 'BKB001'; // Default code if no previous code is found
+                if (lastCode && lastCode.length > 0 && lastCode[0].employee_id) {
+                    const codeNumber = parseInt(lastCode[0].employee_id.substring(3)) + 1;
+                    nextCode = 'BKB' + codeNumber.toString().padStart(3, '0');
+                }
+                
+                console.log('id',nextCode);
+                res.render('add_employee', {
+                    error: req.flash('error'),
+                    formData: req.body || {},
+                    user: req.session.user,
+                    permissions: permissions,
+                    employee_id: nextCode
+                });
             });
         }
     },

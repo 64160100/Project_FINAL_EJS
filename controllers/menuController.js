@@ -15,6 +15,16 @@ var upload = multer({ storage: storage });
 module.exports = {
 
     menuView: function (req, res) {
+		// Check if the user is logged in
+		if (!req.session.user) {
+			return res.redirect('/login');
+		}
+		const permissions = req.session.permissions;
+		// Check if the user has the required permissions
+		if (!permissions || permissions.menu.menu_read !== 'Y') {
+			return res.redirect('/404');
+		}
+	
 		MenuModel.getMenu((error, menu) => {
 			if (error) {
 				console.error('Error fetching menu: ', error);
@@ -70,7 +80,7 @@ module.exports = {
 									// If minMenus is Infinity, set it to 0
 									const remainMenus = minMenus === Infinity ? 0 : minMenus;
 									
-									return {	
+									return {    
 										...menuItem,
 										remain: remainMenus,
 										status: remainMenus === 0 ? 'OFF' : 'ON'
@@ -92,7 +102,7 @@ module.exports = {
 	
 								Promise.all(updatePromises)
 									.then(() => {
-										res.render('menu', { menu: menuCounts });
+										res.render('menu', { menu: menuCounts, user: req.session.user, permissions: permissions });
 									})
 									.catch(error => {
 										console.error('Error updating menu remain and status: ', error);
@@ -107,97 +117,119 @@ module.exports = {
 	},
 
 	menuAdd: function (req, res) {
-        MenuModel.getMenu((error, menu) => {
-            if (error) {
-                console.error('Error fetching menu: ', error);
-                res.status(500).send('Internal Server Error');
-            } else {
-                MenuModel.viewSettingType((error, settingType) => {
-                    if (error) {
-                        console.error('Error fetching setting type: ', error);
-                        res.status(500).send('Internal Server Error');
-                    } else {
-                        MenuModel.viewSettingUnit((error, settingUnit) => {
-                            if (error) {
-                                console.error('Error fetching setting unit: ', error);
-                                res.status(500).send('Internal Server Error');
-                            } else {
-                                MenuModel.viewSettingCategory((error, settingCategory) => {
-                                    if (error) {
-                                        console.error('Error fetching setting category: ', error);
-                                        res.status(500).send('Internal Server Error');
-                                    } else {
-                                        MenuModel.getMenuFormbuying((error, menuFormbuying) => {
-                                            if (error) {
-                                                console.error('Error fetching menu form buying: ', error);
-                                                res.status(500).send('Internal Server Error');
-                                            } else {
-                                                // Aggregate results by id_warehouse
-                                                const aggregatedResults = menuFormbuying.reduce((acc, current) => {
-                                                    // Ensure unit_quantity_all is treated as a number for summation
-                                                    current.unit_quantity_all = parseFloat(current.unit_quantity_all) || 0;
-
-                                                    // If the id_warehouse already exists, sum up the unit_quantity_all
-                                                    if (acc[current.id_warehouse]) {
-                                                        acc[current.id_warehouse].unit_quantity_all += current.unit_quantity_all;
-                                                    } else {
-                                                        // Otherwise, add the entry to the accumulator
-                                                        acc[current.id_warehouse] = {
-                                                            ...current,
-                                                            unit_quantity_all: current.unit_quantity_all // Initialize unit_quantity_all
-                                                        };
-                                                    }
-                                                    return acc;
-                                                }, {});
-
-                                                // Convert the aggregated results back to an array
-                                                const aggregatedArray = Object.values(aggregatedResults);
-
-                                                // Generate the product code
-                                                const generateProductCode = () => {
-                                                    // Fetch the existing product codes from the menu
-                                                    const existingCodes = menu.map(item => item.id_menu);
-
-                                                    // Find the highest existing code and increment it
-                                                    let maxCode = 0;
-                                                    existingCodes.forEach(code => {
-                                                        const numericPart = parseInt(code.substring(1), 10);
-                                                        if (numericPart > maxCode) {
-                                                            maxCode = numericPart;
-                                                        }
-                                                    });
-
-                                                    // Generate the new code
-                                                    const newCode = 'R' + String(maxCode + 1).padStart(3, '0');
-                                                    return newCode;
-                                                };
-
-                                                const newProductCode = generateProductCode();
-
-                                                console.log('menuFormbuying:', aggregatedArray);
-
-                                                res.render('add_menu', {
-                                                    menu: menu,
-                                                    settingType: settingType,
-                                                    settingUnit: settingUnit,
-                                                    settingCategory: settingCategory,
-                                                    menuFormbuying: aggregatedArray,
-                                                    newProductCode: newProductCode // Pass the new product code to the view
-                                                });
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    },
+		// Check if the user is logged in
+		if (!req.session.user) {
+			return res.redirect('/login');
+		}
+		const permissions = req.session.permissions;
+		// Check if the user has the required permissions
+		if (!permissions || permissions.menu.menu_read !== 'Y') {
+			return res.redirect('/404');
+		}
+	
+		MenuModel.getMenu((error, menu) => {
+			if (error) {
+				console.error('Error fetching menu: ', error);
+				res.status(500).send('Internal Server Error');
+			} else {
+				MenuModel.viewSettingType((error, settingType) => {
+					if (error) {
+						console.error('Error fetching setting type: ', error);
+						res.status(500).send('Internal Server Error');
+					} else {
+						MenuModel.viewSettingUnit((error, settingUnit) => {
+							if (error) {
+								console.error('Error fetching setting unit: ', error);
+								res.status(500).send('Internal Server Error');
+							} else {
+								MenuModel.viewSettingCategory((error, settingCategory) => {
+									if (error) {
+										console.error('Error fetching setting category: ', error);
+										res.status(500).send('Internal Server Error');
+									} else {
+										MenuModel.getMenuFormbuying((error, menuFormbuying) => {
+											if (error) {
+												console.error('Error fetching menu form buying: ', error);
+												res.status(500).send('Internal Server Error');
+											} else {
+												// Aggregate results by id_warehouse
+												const aggregatedResults = menuFormbuying.reduce((acc, current) => {
+													// Ensure unit_quantity_all is treated as a number for summation
+													current.unit_quantity_all = parseFloat(current.unit_quantity_all) || 0;
+	
+													// If the id_warehouse already exists, sum up the unit_quantity_all
+													if (acc[current.id_warehouse]) {
+														acc[current.id_warehouse].unit_quantity_all += current.unit_quantity_all;
+													} else {
+														// Otherwise, add the entry to the accumulator
+														acc[current.id_warehouse] = {
+															...current,
+															unit_quantity_all: current.unit_quantity_all // Initialize unit_quantity_all
+														};
+													}
+													return acc;
+												}, {});
+	
+												// Convert the aggregated results back to an array
+												const aggregatedArray = Object.values(aggregatedResults);
+	
+												// Generate the product code
+												const generateProductCode = () => {
+													// Fetch the existing product codes from the menu
+													const existingCodes = menu.map(item => item.id_menu);
+	
+													// Find the highest existing code and increment it
+													let maxCode = 0;
+													existingCodes.forEach(code => {
+														const numericPart = parseInt(code.substring(1), 10);
+														if (numericPart > maxCode) {
+															maxCode = numericPart;
+														}
+													});
+	
+													// Generate the new code
+													const newCode = 'R' + String(maxCode + 1).padStart(3, '0');
+													return newCode;
+												};
+	
+												const newProductCode = generateProductCode();
+	
+												console.log('menuFormbuying:', aggregatedArray);
+	
+												res.render('add_menu', {
+													menu: menu,
+													settingType: settingType,
+													settingUnit: settingUnit,
+													settingCategory: settingCategory,
+													menuFormbuying: aggregatedArray,
+													newProductCode: newProductCode, // Pass the new product code to the view
+													user: req.session.user,
+													permissions: permissions
+												});
+											}
+										});
+									}
+								});
+							}
+						});
+					}
+				});
+			}
+		});
+	},
 
 	menuViewId: function (req, res) {
 		const menuId = req.params.id;
+
+		if (!req.session.user) {
+			return res.redirect('/login');
+		}
+		const permissions = req.session.permissions;
+		// Check if the user has the required permissions
+		if (!permissions || permissions.menu.menu_read !== 'Y') {
+			return res.redirect('/404');
+		}
+
 		MenuModel.getMenuById(menuId, (error, menu) => {
 			if (error) {
 				console.error('Error fetching menu: ', error);
@@ -228,8 +260,7 @@ module.exports = {
 									acc[option.name_options].push(option);
 									return acc;
 								}, {});
-								console.log('groupedMenuOptions:', groupedMenuOptions);
-								res.render('view_menu', { menu: menu, groupedMenuOptions: groupedMenuOptions });
+								res.render('view_menu', { menu: menu, groupedMenuOptions: groupedMenuOptions, user: req.session.user, permissions: permissions });
 							}
 						});
 					}
@@ -240,6 +271,16 @@ module.exports = {
 
 	menuEdit: function (req, res) {
         const id = req.params.id;
+
+		if (!req.session.user) {
+			return res.redirect('/login');
+		}
+		const permissions = req.session.permissions;
+		// Check if the user has the required permissions
+		if (!permissions || permissions.menu.menu_read !== 'Y') {
+			return res.redirect('/404');
+		}
+
         MenuModel.getMenuById(id, (error, menu) => {
             if (error) {
                 console.error('Error fetching menu: ', error);
@@ -324,7 +365,9 @@ module.exports = {
                                                                         ingredients: ingredients,
                                                                         groupedMenuOptions: groupedMenuOptions,
                                                                         menuFormbuying: aggregatedArray,
-                                                                        existingImagePath: existingImagePath // Send the existing image path to the view
+                                                                        existingImagePath: existingImagePath,
+																		user: req.session.user, 
+																		permissions: permissions
                                                                     });
                                                                 }
                                                             }
@@ -646,61 +689,114 @@ module.exports = {
 	},
 
 	menuCategoryView: (req, res) => {
+		if (!req.session.user) {
+			return res.redirect('/login');
+		}
+		const permissions = req.session.permissions;
+		// Check if the user has the required permissions
+		if (!permissions || permissions.menu.menu_read !== 'Y') {
+			return res.redirect('/404');
+		}
 		MenuModel.viewSettingCategory((error, results) => {
 			if (error) {
 				console.log(error);
 			} else {
-				res.render('setting_menu_category', { results });
+				res.render('setting_menu_category', { results, user: req.session.user, permissions: permissions });
 			}
 		});
 	},
 
 	menuTypeView: (req, res) => {
+		if (!req.session.user) {
+			return res.redirect('/login');
+		}
+		const permissions = req.session.permissions;
+		// Check if the user has the required permissions
+		if (!permissions || permissions.menu.menu_read !== 'Y') {
+			return res.redirect('/404');
+		}
 		MenuModel.viewSettingType((error, results) => {
 			if (error) {
 				console.log(error);
 			} else {
-				res.render('setting_menu_type', { results });
+				res.render('setting_menu_type', { results, user: req.session.user, permissions: permissions });
 			}
 		});
 	},
 
 	menuUnitView: (req, res) => {
+		if (!req.session.user) {
+			return res.redirect('/login');
+		}
+		const permissions = req.session.permissions;
+		// Check if the user has the required permissions
+		if (!permissions || permissions.menu.menu_read !== 'Y') {
+			return res.redirect('/404');
+		}
 		MenuModel.viewSettingUnit((error, results) => {
 			if (error) {
 				console.log(error);
 			} else {
-				res.render('setting_menu_unit', { results });
+				res.render('setting_menu_unit', { results, user: req.session.user, permissions: permissions });
 			}
 		});
 	},
 
 	menuCategoryAdd: (req, res) => {
+
+		if (!req.session.user) {
+			return res.redirect('/login');
+		}
+		const permissions = req.session.permissions;
+		// Check if the user has the required permissions
+		if (!permissions || permissions.menu.menu_read !== 'Y') {
+			return res.redirect('/404');
+		}
+
 		MenuModel.viewSettingCategory((error, results) => {
 			if (error) {
 				console.log(error);
 			} else {
-				res.render('setting_add_menu_category', { results });
+				res.render('setting_add_menu_category', { results, user: req.session.user, permissions: permissions });
 			}
 		});
 	},
 
 	menuTypeAdd: (req, res) => {
+
+		if (!req.session.user) {
+			return res.redirect('/login');
+		}
+		const permissions = req.session.permissions;
+		// Check if the user has the required permissions
+		if (!permissions || permissions.menu.menu_read !== 'Y') {
+			return res.redirect('/404');
+		}
+
 		MenuModel.viewSettingType((error, results) => {
 			if (error) {
 				console.log(error);
 			} else {
-				res.render('setting_add_menu_type', { results });
+				res.render('setting_add_menu_type', { results, user: req.session.user, permissions: permissions });
 			}
 		});
 	},
 
 	menuUnitAdd: (req, res) => {
+		if (!req.session.user) {
+			return res.redirect('/login');
+		}
+		const permissions = req.session.permissions;
+		// Check if the user has the required permissions
+		if (!permissions || permissions.menu.menu_read !== 'Y') {
+			return res.redirect('/404');
+		}
+
 		MenuModel.viewSettingUnit((error, results) => {
 			if (error) {
 				console.log(error);
 			} else {
-				res.render('setting_add_menu_unit', { results });
+				res.render('setting_add_menu_unit', { results, user: req.session.user, permissions: permissions });
 			}
 		});
 	},
@@ -781,7 +877,16 @@ module.exports = {
 
 	menuOptions: function (req, res) {
 		const menuId = req.params.id; // Assuming the id is passed as a URL parameter
-	
+
+			if (!req.session.user) {
+			return res.redirect('/login');
+		}
+		const permissions = req.session.permissions;
+		// Check if the user has the required permissions
+		if (!permissions || permissions.menu.menu_read !== 'Y') {
+			return res.redirect('/404');
+		}
+
 		MenuModel.getMenu((error, menu) => {
 			if (error) {
 				console.error('Error fetching menu: ', error);
@@ -822,7 +927,9 @@ module.exports = {
 															menuFormbuying: menuFormbuying,
 															menuId: menuId, // Pass menuId to the template
 															menuOptions: menuOptions, // Pass menuOptions to the template
-															errorMessages: req.flash('errorMessages') || {} // Add this line to pass errorMessages
+															errorMessages: req.flash('errorMessages') || {},
+															user: req.session.user, 
+															permissions: permissions
 														});
 													}
 												});
@@ -925,7 +1032,15 @@ module.exports = {
 	},
 
 	menuOptionsEdit: function (req, res) {
-		const menuOptionsId = req.params.id; // Assuming the id is passed as a URL parameter
+		const menuOptionsId = req.params.id; 
+		if (!req.session.user) {
+			return res.redirect('/login');
+		}
+		const permissions = req.session.permissions;
+		// Check if the user has the required permissions
+		if (!permissions || permissions.menu.menu_read !== 'Y') {
+			return res.redirect('/404');
+		}
 		console.log('menuOptionsId:', menuOptionsId);
 		MenuModel.getMenuOptionsById(menuOptionsId, (error, menuOptions) => {
 			if (error) {
@@ -968,7 +1083,9 @@ module.exports = {
 															settingUnit: settingUnit,
 															settingCategory: settingCategory,
 															menuFormbuying: menuFormbuying,
-															menuId: menuId // Pass menuId to the template
+															menuId: menuId,
+															user: req.session.user, 
+															permissions: permissions
 														});
 													}
 												});

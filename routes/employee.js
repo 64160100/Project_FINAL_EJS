@@ -10,7 +10,4 @@ router.post('/create_employee', employee.addEmployee);
 router.post('/delete_employee/:id', employee.deleteEmployee);
 router.post('/update_employee', employee.updateEmployee);
 
-// router.get('/add_employee', viewemployee.addEmployee);
-// router.post('/edit_employee:id', viewemployee.editEmployee);
-
 module.exports = router;

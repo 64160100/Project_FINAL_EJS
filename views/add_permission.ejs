@@ -84,18 +84,18 @@
             <% if (permissions && permissions.menu.menu_read==='Y' ) { %>
                 <li class="dropdown">
                     <div class="title">
-                        <a href="#" class="link">
+                        <a href="/menu" class="link">
                             <i class='bx bxs-food-menu'></i>
-                            <span class="name">เมนูอาหาร</span>
+                            <span class="name">เมนูอาหารและบริการ</span>
                         </a>
                         <i class='bx bxs-chevron-down'></i>
                     </div>
                     <div class="submenu">
-                        <a href="#" class="link submenu-title">เมนูอาหาร</a>
-                        <a href="#" class="link">เมนูอาหาร</a>
-                        <a href="#" class="link">ตั้งค่าหมวดหมู่</a>
-                        <a href="#" class="link">ตั้งค่าหน่วยสินค้า</a>
-                        <a href="#" class="link">ตั้งค่าประเภท</a>
+                        <a href="/menu" class="link submenu-title">เมนูอาหารและบริการ</a>
+                        <a href="/menu" class="link">เมนูอาหาร</a>
+                        <a href="/setting_menu_category" class="link">ตั้งค่าหมวดหมู่</a>
+                        <a href="/setting_menu_type" class="link">ตั้งค่าประเภท</a>
+                        <a href="/setting_menu_unit" class="link">ตั้งค่าหน่วยสินค้า</a>
                     </div>
                 </li>
                 <% } %>
@@ -104,16 +104,16 @@
             <% if (permissions && permissions.table.table_read==='Y' ) { %>
                 <li class="dropdown">
                     <div class="title">
-                        <a href="#" class="link">
+                        <a href="table" class="link">
                             <i class='bx bx-table'></i>
                             <span class="name">โต๊ะอาหาร</span>
                         </a>
                         <i class='bx bxs-chevron-down'></i>
                     </div>
                     <div class="submenu">
-                        <a href="#" class="link submenu-title">โต๊ะอาหาร</a>
-                        <a href="#" class="link">จัดโต๊ะอาหาร</a>
-                        <a href="#" class="link">สั่งเมนู</a>
+                        <a href="/table" class="link submenu-title">โต๊ะอาหาร</a>
+                        <a href="/table" class="link">จัดโต๊ะอาหาร</a>
+                        <a href="/view_bill" class="link">บิลอาหาร</a>
                     </div>
                 </li>
                 <% } %>
@@ -122,20 +122,20 @@
             <% if (permissions && permissions.buying.buying_read==='Y' ) { %>
                 <li class="dropdown">
                     <div class="title">
-                        <a href="#" class="link">
+                        <a href="/buying" class="link">
                             <i class='bx bx-cart-download'></i>
-                            <span class="name">รายการจัดซื้อ</span>
+                            <span class="name">รายการจัดซื้อและคงคลัง</span>
                         </a>
                         <i class='bx bxs-chevron-down'></i>
                     </div>
                     <div class="submenu">
-                        <a href="#" class="link submenu-title">รายการจัดซื้อ</a>
-                        <a href="#" class="link">รายการจัดซื้อ</a>
-                        <a href="#" class="link">คงคลัง</a>
-                        <a href="#" class="link">ตั้งค่าประเภท</a>
-                        <a href="#" class="link">ตั้งค่าปริมาณ</a>
+                        <a href="/buying" class="link submenu-title">รายการจัดซื้อและคงคลัง</a>
+                        <a href="/buying" class="link">รายการจัดซื้อ</a>
+                        <a href="/warehouse" class="link">คงคลัง</a>
+                        <a href="/setting_type" class="link">ตั้งค่าประเภท</a>
+                        <a href="/setting_unit" class="link">ตั้งค่าปริมาณ</a>
                     </div>
-                </li>
+                </li>    
                 <% } %>
 
             <!-- -------- Non Dropdown List Item ------- -->
@@ -143,17 +143,18 @@
                 %>
                 <li>
                     <div class="title">
-                        <a href="#" class="link">
+                        <a href="/promotion" class="link">
                             <i class='bx bxs-dollar-circle'></i>
                             <span class="name">โปรโมชั่น</span>
                         </a>
                         <!-- <i class='bx bxs-chevron-down'></i> -->
                     </div>
                     <div class="submenu">
-                        <a href="#" class="link submenu-title">โปรโมชั่น</a>
+                        <a href="/promotion" class="link submenu-title">โปรโมชั่น</a>
                         <!-- submenu links here  -->
                     </div>
                 </li>
+            </ul>
                 <% } %>
         </ul>
     </div>
@@ -182,7 +183,7 @@
         <!-- ============= Top Dashboard =============== -->
 
         <div class="breadcrumbs">
-            <a href="/dashboard"> หน้าหลัก</a> > <a href="/permission">สิทธิ์ผู้ใช้งาน</a> >
+            <a href="/"> หน้าหลัก</a> > <a href="/permission">สิทธิ์ผู้ใช้งาน</a> >
             <span>สร้างสิทธิ์ผู้ใช้งาน</span>
         </div>
         <div class="topic"><a href="javascript:history.back()" style="text-decoration: none;">

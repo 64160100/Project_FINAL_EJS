@@ -53,6 +53,20 @@ module.exports = {
         });
     },
 
+    getZoneByName: (zoneName, callback) => {
+        const query = 'SELECT * FROM tbl_zones WHERE zone_name = ?';
+        connection.query(query, [zoneName], (error, results) => {
+            if (error) {
+                return callback(error, null);
+            }
+            if (results.length > 0) {
+                return callback(null, results[0]); // Zone exists
+            } else {
+                return callback(null, null); // Zone does not exist
+            }
+        });
+    },
+
     getAllTables: function (callback) {
         connection.query('SELECT * FROM tbl_table', (error, results) => {
             if (error) {
@@ -88,15 +102,16 @@ module.exports = {
                 insertTables();
             }
         });
-
+    
         function insertTables() {
             let insertionsCompleted = 0;
             const totalInsertions = parseInt(tableData.id_table); // Assuming this is the user input for the number of tables to create
-
+    
             for (let i = 1; i <= totalInsertions; i++) {
                 // Insert each id_table entry with the specified zone_name
                 connection.query('INSERT INTO tbl_table (id_table, zone_name) VALUES (?, ?)', [i, tableData.zone_name], (error, results) => {
                     if (error) {
+                        // Send error back to the controller for each failed insertion
                         return callback(error, null);
                     }
                     insertionsCompleted++;
@@ -368,14 +383,15 @@ module.exports = {
         });
     },
 
-    getPriceDiscountPromotion: (callback) => {
+      getPriceDiscountPromotions: (zoneName, tableId, callback) => {
         const query = `
           SELECT price_discount_promotion
           FROM list_menu
+          WHERE zone_name = ? AND id_table = ?
           LIMIT 1
         `;
     
-        connection.query(query, (error, results) => {
+        connection.query(query, [zoneName, tableId], (error, results) => {
           if (error) {
             console.error('Error fetching price discount promotion:', error);
             return callback(error);
@@ -383,7 +399,7 @@ module.exports = {
           const priceDiscountPromotion = results[0] ? parseFloat(results[0].price_discount_promotion) : 0;
           callback(null, priceDiscountPromotion);
         });
-      },
+    },
 
     getMenuWithRemainAndStatus: function (callback) {
         const query = 'SELECT id_menu, name_product, price, menu_picture, remain, status, menu_category, menu_type FROM tbl_menu';
@@ -1052,7 +1068,6 @@ module.exports = {
             if (error) {
                 return callback(error, null);
             }
-            console.log(results);
             callback(null, results);
         });
     },

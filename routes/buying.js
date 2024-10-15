@@ -27,6 +27,4 @@ router.get('/warehouse', buying.warehouseView);
 router.get('/view_warehouse/:id', buying.viewWarehouseView);
 router.post('/update_warehouse', buying.createWarehouse);
 
-
-
 module.exports = router;

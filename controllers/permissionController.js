@@ -139,54 +139,55 @@ module.exports = {
         if (!req.session.user) {
             return res.redirect('/login');
         }
-
+    
         const permissions = req.session.permissions;
-
+    
         if (!permissions || permissions.employee.employee_read !== 'Y') {
-            res.redirect('/404');
+            return res.redirect('/404');
         } 
-            const permissionId = req.body.permission_id;
-            const Permissions = {
-                dashboard_read: req.body.dashboard_read ? 'Y' : 'N',
-                dashboard_create: req.body.dashboard_create ? 'Y' : 'N',
-                dashboard_update: req.body.dashboard_update ? 'Y' : 'N',
-                dashboard_delete: req.body.dashboard_delete ? 'Y' : 'N',
-                dashboard_confirm: req.body.dashboard_confirm ? 'Y' : 'N',
-                employee_read: req.body.employee_read ? 'Y' : 'N',
-                employee_create: req.body.employee_create ? 'Y' : 'N',
-                employee_update: req.body.employee_update ? 'Y' : 'N',
-                employee_delete: req.body.employee_delete ? 'Y' : 'N',
-                employee_confirm: req.body.employee_confirm ? 'Y' : 'N',
-                menu_read: req.body.menu_read ? 'Y' : 'N',
-                menu_create: req.body.menu_create ? 'Y' : 'N',
-                menu_update: req.body.menu_update ? 'Y' : 'N',
-                menu_delete: req.body.menu_delete ? 'Y' : 'N',
-                menu_confirm: req.body.menu_confirm ? 'Y' : 'N',
-                table_read: req.body.table_read ? 'Y' : 'N',
-                table_create: req.body.table_create ? 'Y' : 'N',
-                table_update: req.body.table_update ? 'Y' : 'N',
-                table_delete: req.body.table_delete ? 'Y' : 'N',
-                table_confirm: req.body.table_confirm ? 'Y' : 'N',
-                buying_read: req.body.buying_read ? 'Y' : 'N',
-                buying_create: req.body.buying_create ? 'Y' : 'N',
-                buying_update: req.body.buying_update ? 'Y' : 'N',
-                buying_delete: req.body.buying_delete ? 'Y' : 'N',
-                buying_confirm: req.body.buying_confirm ? 'Y' : 'N',
-                promotion_read: req.body.promotion_read ? 'Y' : 'N',
-                promotion_create: req.body.promotion_create ? 'Y' : 'N',
-                promotion_update: req.body.promotion_update ? 'Y' : 'N',
-                promotion_delete: req.body.promotion_delete ? 'Y' : 'N',
-                promotion_confirm: req.body.promotion_confirm ? 'Y' : 'N',
-            };
-
-            PermissionModel.updatePermission(permissionId, Permissions, (error, message) => {
-                if (error) {
-                    console.error("Error updating permissions:", error);
-                    res.status(500).send("Error updating permissions");
-                    return;
-                }
-                res.redirect('/view_permission/' + permissionId); // Redirect using permissionId
-            });
+    
+        const permissionId = req.body.permission_id;
+        const Permissions = {
+            dashboard_read: req.body.dashboard_read ? 'Y' : 'N',
+            dashboard_create: req.body.dashboard_create ? 'Y' : 'N',
+            dashboard_update: req.body.dashboard_update ? 'Y' : 'N',
+            dashboard_delete: req.body.dashboard_delete ? 'Y' : 'N',
+            dashboard_view: req.body.dashboard_view ? 'Y' : 'N', // Changed from "dashboard_edit" to "dashboard_view"
+            employee_read: req.body.employee_read ? 'Y' : 'N',
+            employee_create: req.body.employee_create ? 'Y' : 'N',
+            employee_update: req.body.employee_update ? 'Y' : 'N',
+            employee_delete: req.body.employee_delete ? 'Y' : 'N',
+            employee_view: req.body.employee_view ? 'Y' : 'N', // Changed from "employee_edit" to "employee_view"
+            menu_read: req.body.menu_read ? 'Y' : 'N',
+            menu_create: req.body.menu_create ? 'Y' : 'N',
+            menu_update: req.body.menu_update ? 'Y' : 'N',
+            menu_delete: req.body.menu_delete ? 'Y' : 'N',
+            menu_view: req.body.menu_view ? 'Y' : 'N', // Changed from "menu_edit" to "menu_view"
+            table_read: req.body.table_read ? 'Y' : 'N',
+            table_create: req.body.table_create ? 'Y' : 'N',
+            table_update: req.body.table_update ? 'Y' : 'N',
+            table_delete: req.body.table_delete ? 'Y' : 'N',
+            table_view: req.body.table_view ? 'Y' : 'N', // Changed from "table_edit" to "table_view"
+            buying_read: req.body.buying_read ? 'Y' : 'N',
+            buying_create: req.body.buying_create ? 'Y' : 'N',
+            buying_update: req.body.buying_update ? 'Y' : 'N',
+            buying_delete: req.body.buying_delete ? 'Y' : 'N',
+            buying_view: req.body.buying_view ? 'Y' : 'N', // Changed from "buying_edit" to "buying_view"
+            promotion_read: req.body.promotion_read ? 'Y' : 'N',
+            promotion_create: req.body.promotion_create ? 'Y' : 'N',
+            promotion_update: req.body.promotion_update ? 'Y' : 'N',
+            promotion_delete: req.body.promotion_delete ? 'Y' : 'N',
+            promotion_view: req.body.promotion_view ? 'Y' : 'N', // Changed from "promotion_edit" to "promotion_view"
+        };
+    
+        PermissionModel.updatePermission(permissionId, Permissions, (error, message) => {
+            if (error) {
+                console.error("Error updating permissions:", error);
+                res.status(500).send("Error updating permissions");
+                return;
+            }
+            res.redirect('/view_permission/' + permissionId); // Redirect using permissionId
+        });
     },
 
 };

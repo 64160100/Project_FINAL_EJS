@@ -5,14 +5,12 @@ const path = require('path');
 const flash = require('express-flash');
 const session = require('express-session');
 const { spawn } = require('child_process');
-const cors = require('cors');
-const ejs = require('ejs');
 
 app.use(session({
-    secret: 'keyboard',
+    secret: 'your_secret_key',
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 60 * 60 * 1000 }
+    cookie: { secure: false } // Set to true if using HTTPS
 }));
 app.use(flash());
 
@@ -35,6 +33,7 @@ app.get('/', (req, res) => {
 app.get('/404', (req, res) => {
     res.status(404).render('404_not_found'); // Adjust the render target to your 404 page template
 });
+
 
 // ===================== dashboard ===================== //
 app.get('/dashboard', require('./routes/dashboard'));
@@ -125,6 +124,10 @@ app.post('/zone/:zone/table/:table/app_promotion', require('./routes/table'));
 app.get('/zone/:zone/table/:table/view_checkbill', require('./routes/table'));
 app.post('/zone/:zone/table/:table/create_checkbill', require('./routes/table'));
 
+app.get('/zone/:zone/table/:table/menuindex', require('./routes/table'));
+
+app.get('/zone/:zone/table/:table/order_food/auto_login', require('./routes/table'));
+
 // ===================== Buying ===================== // 
 app.get('/buying', require('./routes/buying'));
 app.get('/add_buying', require('./routes/buying'));
@@ -154,7 +157,6 @@ app.post('/update_warehouse', require('./routes/buying'));
 app.get('/promotion', require('./routes/promotion'));
 app.get('/view_promotion/:id', require('./routes/promotion'));
 app.get('/add_promotion', require('./routes/promotion'));
-app.get('/edit_promotion/:id', require('./routes/promotion'));
 app.post('/create_promotion', require('./routes/promotion'));
 app.post('/delete_promotion/:id', require('./routes/promotion'));
 app.post('/update_promotion', require('./routes/promotion'));
@@ -162,7 +164,6 @@ app.post('/update_promotion', require('./routes/promotion'));
 app.get('/test', (req, res) => {
     res.render('Test', { message: 'Test route is working!' });
 });
-
 
 app.listen(3000, () => {
     console.log('Server has started with port 3000');

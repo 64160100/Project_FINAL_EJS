@@ -20,131 +20,144 @@
   <div class="sidebar close">
     <!-- ========== Logo ============  -->
     <a href="#" class="logo-box">
-      <i class='bx bxs-cat'></i>
-      <div class="logo-name">POS</div>
+        <i class='bx bxs-cat'></i>
+        <div class="logo-name">POS</div>
     </a>
 
     <!-- ========== List ============  -->
 
     <ul class="sidebar-list">
 
-      <!-- -------- Non Dropdown List Item ------- -->
-      <li>
-        <div class="title">
-          <a href="/" class="link">
-            <i class='bx bx-home'></i>
-            <span class="name">หน้าหลัก</span>
-          </a>
-          <!-- <i class='bx bxs-chevron-down'></i> -->
-        </div>
-        <div class="submenu">
-          <a href="/" class="link submenu-title">หน้าหลัก</a>
-          <!-- submenu links here  -->
-        </div>
-      </li>
+        <!-- -------- Non Dropdown List Item ------- -->
+        <li>
+            <div class="title">
+                <a href="/" class="link">
+                    <i class='bx bx-home'></i>
+                    <span class="name">หน้าหลัก</span>
+                </a>
+                <!-- <i class='bx bxs-chevron-down'></i> -->
+            </div>
+            <div class="submenu">
+                <a href="/" class="link submenu-title">หน้าหลัก</a>
+                <!-- submenu links here  -->
+            </div>
+        </li>
 
-      <!-- -------- Non Dropdown List Item ------- -->
-      <li>
-        <div class="title">
-          <a href="/dashboard" class="link">
-            <i class='bx bx-grid-alt'></i>
-            <span class="name">แดชบอร์ด</span>
-          </a>
-          <!-- <i class='bx bxs-chevron-down'></i> -->
-        </div>
-        <div class="submenu">
-          <a href="/dashboard" class="link submenu-title">แดชบอร์ด</a>
-          <!-- submenu links here  -->
-        </div>
-      </li>
+        <!-- -------- Non Dropdown List Item ------- -->
+        <% if (permissions && permissions.dashboard.dashboard_read==='Y' ) { %>
+            <li>
+                <div class="title">
+                    <a href="/dashboard" class="link">
+                        <i class='bx bx-grid-alt'></i>
+                        <span class="name">แดชบอร์ด</span>
+                    </a>
+                    <!-- <i class='bx bxs-chevron-down'></i> -->
+                </div>
+                <div class="submenu">
+                    <a href="/dashboard" class="link submenu-title">แดชบอร์ด</a>
+                    <!-- submenu links here  -->
+                </div>
+            </li>
+            <% } %>
 
 
+        <!-- -------- Dropdown List Item ------- -->
+        <% if (permissions && permissions.employee.employee_read==='Y' ) { %>
+            <li class="dropdown">
+                <div class="title">
+                    <a href="/employee" class="link">
+                        <i class='bx bx-collection'></i>
+                        <span class="name">ข้อมูลพนักงาน</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="/employee" class="link submenu-title">ข้อมูลพนักงาน</a>
+                    <a href="/employee" class="link">พนักงาน</a>
+                    <a href="/user" class="link">ผู้ใช้งาน</a>
+                    <a href="/permission" class="link">สิทธิ์ผู้ใช้งาน</a>
+                </div>
+            </li>
+            <% } %>
 
-      <!-- -------- Dropdown List Item ------- -->
-      <li class="dropdown">
-        <div class="title">
-          <a href="/employee" class="link">
-            <i class='bx bx-collection'></i>
-            <span class="name">ข้อมูลพนักงาน</span>
-          </a>
-          <i class='bx bxs-chevron-down'></i>
-        </div>
-        <div class="submenu">
-          <a href="/employee" class="link submenu-title">ข้อมูลพนักงาน</a>
-          <a href="/employee" class="link">พนักงาน</a>
-          <a href="/user" class="link">ผู้ใช้งาน</a>
-          <a href="/permission" class="link">สิทธิ์ผู้ใช้งาน</a>
-        </div>
-      </li>
+        <!-- -------- Dropdown List Item ------- -->
+        <% if (permissions && permissions.menu.menu_read==='Y' ) { %>
+            <li class="dropdown">
+                <div class="title">
+                    <a href="/menu" class="link">
+                        <i class='bx bxs-food-menu'></i>
+                        <span class="name">เมนูอาหารและบริการ</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="/menu" class="link submenu-title">เมนูอาหารและบริการ</a>
+                    <a href="/menu" class="link">เมนูอาหาร</a>
+                    <a href="/setting_menu_category" class="link">ตั้งค่าหมวดหมู่</a>
+                    <a href="/setting_menu_type" class="link">ตั้งค่าประเภท</a>
+                    <a href="/setting_menu_unit" class="link">ตั้งค่าหน่วยสินค้า</a>
+                </div>
+            </li>
+            <% } %>
 
-      <!-- -------- Dropdown List Item ------- -->
-      <li class="dropdown">
-        <div class="title">
-          <a href="/menu" class="link">
-            <i class='bx bxs-food-menu'></i>
-            <span class="name">เมนูอาหารและบริการ</span>
-          </a>
-          <i class='bx bxs-chevron-down'></i>
-        </div>
-        <div class="submenu">
-          <a href="/menu" class="link submenu-title">เมนูอาหารและบริการ</a>
-          <a href="/menu" class="link">เมนูอาหาร</a>
-          <a href="/setting_menu_category" class="link">ตั้งค่าหมวดหมู่</a>
-          <a href="/setting_menu_type" class="link">ตั้งค่าประเภท</a>
-          <a href="/setting_menu_unit" class="link">ตั้งค่าหน่วยสินค้า</a>
-        </div>
-      </li>
+        <!-- -------- Non Dropdown List Item ------- -->
+        <% if (permissions && permissions.table.table_read==='Y' ) { %>
+            <li class="dropdown">
+                <div class="title">
+                    <a href="table" class="link">
+                        <i class='bx bx-table'></i>
+                        <span class="name">โต๊ะอาหาร</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="/table" class="link submenu-title">โต๊ะอาหาร</a>
+                    <a href="/table" class="link">จัดโต๊ะอาหาร</a>
+                    <a href="/view_bill" class="link">บิลอาหาร</a>
+                </div>
+            </li>
+            <% } %>
 
-      <!-- -------- Non Dropdown List Item ------- -->
-      <li class="dropdown">
-        <div class="title">
-          <a href="table" class="link">
-            <i class='bx bx-table'></i>
-            <span class="name">โต๊ะอาหาร</span>
-          </a>
-          <i class='bx bxs-chevron-down'></i>
-        </div>
-        <div class="submenu">
-          <a href="/table" class="link submenu-title">โต๊ะอาหาร</a>
-          <a href="/table" class="link">จัดโต๊ะอาหาร</a>
-          <a href="/view_bill" class="link">บิลอาหาร</a>
-        </div>
-      </li>
+        <!-- -------- Non Dropdown List Item ------- -->
+        <% if (permissions && permissions.buying.buying_read==='Y' ) { %>
+            <li class="dropdown">
+                <div class="title">
+                    <a href="/buying" class="link">
+                        <i class='bx bx-cart-download'></i>
+                        <span class="name">รายการจัดซื้อและคงคลัง</span>
+                    </a>
+                    <i class='bx bxs-chevron-down'></i>
+                </div>
+                <div class="submenu">
+                    <a href="/buying" class="link submenu-title">รายการจัดซื้อและคงคลัง</a>
+                    <a href="/buying" class="link">รายการจัดซื้อ</a>
+                    <a href="/warehouse" class="link">คงคลัง</a>
+                    <a href="/setting_type" class="link">ตั้งค่าประเภท</a>
+                    <a href="/setting_unit" class="link">ตั้งค่าปริมาณ</a>
+                </div>
+            </li>    
+            <% } %>
 
-      <!-- -------- Non Dropdown List Item ------- -->
-      <li class="dropdown">
-        <div class="title">
-          <a href="/buying" class="link">
-            <i class='bx bx-cart-download'></i>
-            <span class="name">รายการจัดซื้อและคงคลัง</span>
-          </a>
-          <i class='bx bxs-chevron-down'></i>
-        </div>
-        <div class="submenu">
-          <a href="/buying" class="link submenu-title">รายการจัดซื้อและคงคลัง</a>
-          <a href="/buying" class="link">รายการจัดซื้อ</a>
-          <a href="/warehouse" class="link">คงคลัง</a>
-          <a href="/setting_type" class="link">ตั้งค่าประเภท</a>
-          <a href="/setting_unit" class="link">ตั้งค่าปริมาณ</a>
-        </div>
-      </li>
-
-      <!-- -------- Non Dropdown List Item ------- -->
-      <li>
-        <div class="title">
-          <a href="/promotion" class="link">
-            <i class='bx bxs-dollar-circle'></i>
-            <span class="name">โปรโมชั่น</span>
-          </a>
-          <!-- <i class='bx bxs-chevron-down'></i> -->
-        </div>
-        <div class="submenu">
-          <a href="/promotion" class="link submenu-title">โปรโมชั่น</a>
-          <!-- submenu links here  -->
-        </div>
-      </li>
+        <!-- -------- Non Dropdown List Item ------- -->
+        <% if (permissions && permissions.promotion.promotion_read==='Y' ) {
+            %>
+            <li>
+                <div class="title">
+                    <a href="/promotion" class="link">
+                        <i class='bx bxs-dollar-circle'></i>
+                        <span class="name">โปรโมชั่น</span>
+                    </a>
+                    <!-- <i class='bx bxs-chevron-down'></i> -->
+                </div>
+                <div class="submenu">
+                    <a href="/promotion" class="link submenu-title">โปรโมชั่น</a>
+                    <!-- submenu links here  -->
+                </div>
+            </li>
+        </ul>
+            <% } %>
     </ul>
-  </div>
+</div>
 
   <!-- ============= Home Section =============== -->
   <section class="home">
@@ -155,10 +168,14 @@
       <nav>
         <div class="nav-content">
           <div class="profile-details">
-            <img src="../img/chef.png" alt="" class="profile-image">
-            <span class="user-id">1234</span>
+            <% if (user) { %>
+              <img src="../img/chef.png" alt="" class="profile-image">
+              <span class="user-id">ID: <%= user.tbl_employees %></span>
           </div>
-          <a href="/login" class="auth-link">เข้าสู่ระบบ</a>
+          <a href="/logout" class="auth-link">Logout</a>
+          <% } else { %>
+            <a href="/login" class="auth-link">เข้าสู่ระบบ</a>
+            <% } %>
         </div>
       </nav>
     </div>
@@ -323,41 +340,42 @@
     });
   </script>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    // Retrieve the yearlyTotals data from the hidden input field
-    const yearlyTotals = JSON.parse(document.getElementById('yearlyTotalsData').value);
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Retrieve the yearlyTotals data from the hidden input field
+      const yearlyTotals = JSON.parse(document.getElementById('yearlyTotalsData').value);
 
-    // Extract years and amounts from the yearlyTotals object
-    const years = Object.keys(yearlyTotals);
-    const amounts = Object.values(yearlyTotals);
+      // Extract years and amounts from the yearlyTotals object
+      const years = Object.keys(yearlyTotals);
+      const amounts = Object.values(yearlyTotals);
 
-    const yearlyTotalsCtx = document.getElementById('yearlyTotalsChart').getContext('2d');
-    const yearlyTotalsChart = new Chart(yearlyTotalsCtx, {
-      type: 'line',
-      data: {
-        labels: years, // Use the years as labels
-        datasets: [{
-          label: 'Total Amount',
-          data: amounts, // Use the amounts as data
-          borderColor: 'rgba(255, 159, 64, 1)', // Change border color to orange
-          backgroundColor: 'rgba(255, 159, 64, 0.2)', // Change background color to orange
-          borderWidth: 1,
-          fill: true
-        }]
-      },
-      options: {
-        scales: {
-          x: {
-            beginAtZero: true
-          },
-          y: {
-            beginAtZero: true
+      const yearlyTotalsCtx = document.getElementById('yearlyTotalsChart').getContext('2d');
+      const yearlyTotalsChart = new Chart(yearlyTotalsCtx, {
+        type: 'line',
+        data: {
+          labels: years, // Use the years as labels
+          datasets: [{
+            label: 'Total Amount',
+            data: amounts, // Use the amounts as data
+            borderColor: 'rgba(255, 159, 64, 1)', // Change border color to orange
+            backgroundColor: 'rgba(255, 159, 64, 0.2)', // Change background color to orange
+            borderWidth: 1,
+            fill: true
+          }]
+        },
+        options: {
+          scales: {
+            x: {
+              beginAtZero: true
+            },
+            y: {
+              beginAtZero: true
+            }
           }
         }
-      }
+      });
     });
-  });
-</script>
+  </script>
 </body>
+
 </html>

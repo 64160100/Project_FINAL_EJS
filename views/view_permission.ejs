@@ -84,18 +84,18 @@
             <% if (permissions && permissions.menu.menu_read==='Y' ) { %>
                 <li class="dropdown">
                     <div class="title">
-                        <a href="#" class="link">
+                        <a href="/menu" class="link">
                             <i class='bx bxs-food-menu'></i>
-                            <span class="name">เมนูอาหาร</span>
+                            <span class="name">เมนูอาหารและบริการ</span>
                         </a>
                         <i class='bx bxs-chevron-down'></i>
                     </div>
                     <div class="submenu">
-                        <a href="#" class="link submenu-title">เมนูอาหาร</a>
-                        <a href="#" class="link">เมนูอาหาร</a>
-                        <a href="#" class="link">ตั้งค่าหมวดหมู่</a>
-                        <a href="#" class="link">ตั้งค่าหน่วยสินค้า</a>
-                        <a href="#" class="link">ตั้งค่าประเภท</a>
+                        <a href="/menu" class="link submenu-title">เมนูอาหารและบริการ</a>
+                        <a href="/menu" class="link">เมนูอาหาร</a>
+                        <a href="/setting_menu_category" class="link">ตั้งค่าหมวดหมู่</a>
+                        <a href="/setting_menu_type" class="link">ตั้งค่าประเภท</a>
+                        <a href="/setting_menu_unit" class="link">ตั้งค่าหน่วยสินค้า</a>
                     </div>
                 </li>
                 <% } %>
@@ -104,16 +104,16 @@
             <% if (permissions && permissions.table.table_read==='Y' ) { %>
                 <li class="dropdown">
                     <div class="title">
-                        <a href="#" class="link">
+                        <a href="table" class="link">
                             <i class='bx bx-table'></i>
                             <span class="name">โต๊ะอาหาร</span>
                         </a>
                         <i class='bx bxs-chevron-down'></i>
                     </div>
                     <div class="submenu">
-                        <a href="#" class="link submenu-title">โต๊ะอาหาร</a>
-                        <a href="#" class="link">จัดโต๊ะอาหาร</a>
-                        <a href="#" class="link">สั่งเมนู</a>
+                        <a href="/table" class="link submenu-title">โต๊ะอาหาร</a>
+                        <a href="/table" class="link">จัดโต๊ะอาหาร</a>
+                        <a href="/view_bill" class="link">บิลอาหาร</a>
                     </div>
                 </li>
                 <% } %>
@@ -122,20 +122,20 @@
             <% if (permissions && permissions.buying.buying_read==='Y' ) { %>
                 <li class="dropdown">
                     <div class="title">
-                        <a href="#" class="link">
+                        <a href="/buying" class="link">
                             <i class='bx bx-cart-download'></i>
-                            <span class="name">รายการจัดซื้อ</span>
+                            <span class="name">รายการจัดซื้อและคงคลัง</span>
                         </a>
                         <i class='bx bxs-chevron-down'></i>
                     </div>
                     <div class="submenu">
-                        <a href="#" class="link submenu-title">รายการจัดซื้อ</a>
-                        <a href="#" class="link">รายการจัดซื้อ</a>
-                        <a href="#" class="link">คงคลัง</a>
-                        <a href="#" class="link">ตั้งค่าประเภท</a>
-                        <a href="#" class="link">ตั้งค่าปริมาณ</a>
+                        <a href="/buying" class="link submenu-title">รายการจัดซื้อและคงคลัง</a>
+                        <a href="/buying" class="link">รายการจัดซื้อ</a>
+                        <a href="/warehouse" class="link">คงคลัง</a>
+                        <a href="/setting_type" class="link">ตั้งค่าประเภท</a>
+                        <a href="/setting_unit" class="link">ตั้งค่าปริมาณ</a>
                     </div>
-                </li>
+                </li>    
                 <% } %>
 
             <!-- -------- Non Dropdown List Item ------- -->
@@ -143,17 +143,18 @@
                 %>
                 <li>
                     <div class="title">
-                        <a href="#" class="link">
+                        <a href="/promotion" class="link">
                             <i class='bx bxs-dollar-circle'></i>
                             <span class="name">โปรโมชั่น</span>
                         </a>
                         <!-- <i class='bx bxs-chevron-down'></i> -->
                     </div>
                     <div class="submenu">
-                        <a href="#" class="link submenu-title">โปรโมชั่น</a>
+                        <a href="/promotion" class="link submenu-title">โปรโมชั่น</a>
                         <!-- submenu links here  -->
                     </div>
                 </li>
+            </ul>
                 <% } %>
         </ul>
     </div>
@@ -168,7 +169,7 @@
                 <div class="nav-content">
                     <div class="profile-details">
                         <% if (user) { %>
-                            <img src="../img/cat.jpg" alt="" class="profile-image">
+                            <img src="../img/chef.png" alt="" class="profile-image">
                             <span class="user-id">ID: <%= user.tbl_employees %></span>
                         </div>
                         <a href="/logout" class="auth-link">Logout</a>
@@ -182,7 +183,7 @@
         <!-- ============= Top Dashboard =============== -->
          
         <div class="breadcrumbs">
-            <a href="/dashboard"> หน้าหลัก</a> > <a href="/permission">สิทธิ์ผู้ใช้งาน</a> >
+            <a href="/"> หน้าหลัก</a> > <a href="/permission">สิทธิ์ผู้ใช้งาน</a> >
             <span>รายละเอียดสิทธิ์ผู้ใช้งาน</span>
         </div>
         <div class="topic"><a href="javascript:history.back()" style="text-decoration: none;">
@@ -203,18 +204,18 @@
                 <input type="text" name="permission_name" id="permission_name"
                     value="<%= permission[0].permission_name %>" readonly aria-label="ชื่อสิทธิ์ผู้ใช้งาน">
             </div>
-
+        
             <div class="input-field">
                 <table class="permissions-table">
                     <thead>
                         <tr>
                             <th>สิทธิ์การใช้งาน</th>
                             <th>ทั้งหมด</th>
-                            <th>อ่าน</th>
+                            <th>เข้าถึงหน้า</th>
                             <th>สร้าง</th>
-                            <th>แก้ไข</th>
+                            <th>อัปเดต</th>
                             <th>ลบ</th>
-                            <th>ยืนยัน</th>
+                            <th>ดูข้อมูล</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -223,14 +224,13 @@
                                 <hr class="underline">
                             </td>
                         </tr>
-                    <tbody>
                         <tr>
                             <td>แดชบอร์ด</td>
                             <td><input type="checkbox" id="dashboard_all" <%=permission[0].dashboard_read==='Y' &&
                                 permission[0].dashboard_create==='Y' && permission[0].dashboard_update==='Y' &&
-                                permission[0].dashboard_delete==='Y' && permission[0].dashboard_confirm==='Y'
+                                permission[0].dashboard_delete==='Y' && permission[0].dashboard_view==='Y'
                                 ? 'checked' : '' %> disabled>
-                        </td>
+                            </td>
                             <td><input type="checkbox" name="dashboard_read" <%=permission[0].dashboard_read==='Y'
                                     ? 'checked' : '' %> disabled></td>
                             <td><input type="checkbox" name="dashboard_create" <%=permission[0].dashboard_create==='Y'
@@ -239,13 +239,14 @@
                                     ? 'checked' : '' %> disabled></td>
                             <td><input type="checkbox" name="dashboard_delete" <%=permission[0].dashboard_delete==='Y'
                                     ? 'checked' : '' %> disabled></td>
-                            <td><input type="checkbox" name="dashboard_confirm" <%=permission[0].dashboard_confirm==='Y'
-                                    ? 'checked' : '' %> disabled></td>
+                            <td><input type="checkbox" name="dashboard_view" <%=permission[0].dashboard_view==='Y'
+                                    ? 'checked' : '' %> disabled></td> <!-- Changed from "dashboard_edit" to "dashboard_view" -->
+                        </tr>
                         <tr>
                             <td>ข้อมูลพนักงาน</td>
                             <td><input type="checkbox" id="employee_all" <%=permission[0].employee_read==='Y' &&
                                 permission[0].employee_create==='Y' && permission[0].employee_update==='Y' &&
-                                permission[0].employee_delete==='Y' && permission[0].employee_confirm==='Y'
+                                permission[0].employee_delete==='Y' && permission[0].employee_view==='Y'
                                 ? 'checked' : '' %> disabled>
                             </td>
                             <td><input type="checkbox" <%=permission[0].employee_read==='Y' ? 'checked' : '' %>
@@ -256,14 +257,14 @@
                                 disabled></td>
                             <td><input type="checkbox" <%=permission[0].employee_delete==='Y' ? 'checked' : '' %>
                                 disabled></td>
-                            <td><input type="checkbox" <%=permission[0].employee_confirm==='Y' ? 'checked' : '' %>
-                                disabled></td>
+                            <td><input type="checkbox" <%=permission[0].employee_view==='Y' ? 'checked' : '' %>
+                                disabled></td> <!-- Changed from "employee_edit" to "employee_view" -->
                         </tr>
                         <tr>
                             <td>เมนูอาหาร</td>
                             <td><input type="checkbox" id="menu_all" <%=permission[0].menu_read==='Y' &&
                                 permission[0].menu_create==='Y' && permission[0].menu_update==='Y' &&
-                                permission[0].menu_delete==='Y' && permission[0].menu_confirm==='Y'
+                                permission[0].menu_delete==='Y' && permission[0].menu_view==='Y'
                                 ? 'checked' : '' %> disabled>
                             </td>
                             <td><input type="checkbox" <%=permission[0].menu_read==='Y' ? 'checked' : '' %> disabled>
@@ -274,14 +275,14 @@
                             </td>
                             <td><input type="checkbox" <%=permission[0].menu_delete==='Y' ? 'checked' : '' %> disabled>
                             </td>
-                            <td><input type="checkbox" <%=permission[0].menu_confirm==='Y' ? 'checked' : '' %> disabled>
-                            </td>
+                            <td><input type="checkbox" <%=permission[0].menu_view==='Y' ? 'checked' : '' %> disabled>
+                            </td> <!-- Changed from "menu_edit" to "menu_view" -->
                         </tr>
                         <tr>
                             <td>โต๊ะอาหาร</td>
                             <td><input type="checkbox" id="table_all" <%=permission[0].table_read==='Y' &&
                                 permission[0].table_create==='Y' && permission[0].table_update==='Y' &&
-                                permission[0].table_delete==='Y' && permission[0].table_confirm==='Y'
+                                permission[0].table_delete==='Y' && permission[0].table_view==='Y'
                                 ? 'checked' : '' %> disabled>
                             </td>
                             <td><input type="checkbox" <%=permission[0].table_read==='Y' ? 'checked' : '' %> disabled>
@@ -292,14 +293,14 @@
                             </td>
                             <td><input type="checkbox" <%=permission[0].table_delete==='Y' ? 'checked' : '' %> disabled>
                             </td>
-                            <td><input type="checkbox" <%=permission[0].table_confirm==='Y' ? 'checked' : '' %>
-                                disabled>
+                            <td><input type="checkbox" <%=permission[0].table_view==='Y' ? 'checked' : '' %> disabled>
+                            </td> <!-- Changed from "table_edit" to "table_view" -->
                         </tr>
                         <tr>
                             <td>รายการจัดซื้อ</td>
                             <td><input type="checkbox" id="buying_all" <%=permission[0].buying_read==='Y' &&
                                 permission[0].buying_create==='Y' && permission[0].buying_update==='Y' &&
-                                permission[0].buying_delete==='Y' && permission[0].buying_confirm==='Y'
+                                permission[0].buying_delete==='Y' && permission[0].buying_view==='Y'
                                 ? 'checked' : '' %> disabled>
                             </td>
                             <td><input type="checkbox" <%=permission[0].buying_read==='Y' ? 'checked' : '' %> disabled>
@@ -313,14 +314,15 @@
                             <td><input type="checkbox" <%=permission[0].buying_delete==='Y' ? 'checked' : '' %>
                                 disabled>
                             </td>
-                            <td><input type="checkbox" <%=permission[0].buying_confirm==='Y' ? 'checked' : '' %>
+                            <td><input type="checkbox" <%=permission[0].buying_view==='Y' ? 'checked' : '' %>
                                 disabled>
+                            </td> <!-- Changed from "buying_edit" to "buying_view" -->
                         </tr>
                         <tr>
                             <td>โปรโมชั่น</td>
                             <td><input type="checkbox" id="promotion_all" <%=permission[0].promotion_read==='Y' &&
                                 permission[0].promotion_create==='Y' && permission[0].promotion_update==='Y' &&
-                                permission[0].promotion_delete==='Y' && permission[0].promotion_confirm==='Y'
+                                permission[0].promotion_delete==='Y' && permission[0].promotion_view==='Y'
                                 ? 'checked' : '' %> disabled>
                             </td>
                             <td><input type="checkbox" <%=permission[0].promotion_read==='Y' ? 'checked' : '' %>
@@ -335,8 +337,9 @@
                             <td><input type="checkbox" <%=permission[0].promotion_delete==='Y' ? 'checked' : '' %>
                                 disabled>
                             </td>
-                            <td><input type="checkbox" <%=permission[0].promotion_confirm==='Y' ? 'checked' : '' %>
+                            <td><input type="checkbox" <%=permission[0].promotion_view==='Y' ? 'checked' : '' %>
                                 disabled>
+                            </td> <!-- Changed from "promotion_edit" to "promotion_view" -->
                         </tr>
                     </tbody>
                 </table>
@@ -344,7 +347,6 @@
             <div class="input-field">
                 <a href="/edit_permission/<%= permission[0].permission_id %>" class="edit-button">แก้ไข</a>
             </div>
-            </form>
         </div>
     </section>
 

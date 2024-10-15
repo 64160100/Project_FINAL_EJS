@@ -1,5 +1,5 @@
 const UserModel = require('../models/LoginModel');
-const bcypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 
 module.exports = {
 	loginView: (req, res) => {
@@ -34,19 +34,20 @@ module.exports = {
 					req.flash('error', 'Invalid password');
 					return res.render('login', { messages: req.flash('error') });
 				}
-				if (bcypt.compare(inputData.password, result.password)) {
+				if (bcrypt.compare(inputData.password, result.password)) {
+					// Store user and permissions directly in the session
 					req.session.user = result;
-					// console.log('Session user:', result.password);
-					
+	
 					UserModel.getUserPermissions(result.tbl_user_permission, (permError, permissions) => {
 						if (permError) {
 							console.error('Error fetching permissions:', permError);
 							return res.status(500).json({ message: 'Failed to fetch user permissions' });
 						}
 						req.session.permissions = permissions;
-						// console.log('permissions:', permissions);
 						console.log('Session permissions:', permissions);
 						console.log('Session logged in');
+	
+						// Debug statement before redirect
 						return res.redirect('/');
 					});
 				} else {
@@ -56,6 +57,7 @@ module.exports = {
 			});
 		});
 	},
+	
 	logoutView: (req, res) => {
 		req.session.destroy();
 		console.log('Session logged out');
