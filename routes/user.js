@@ -7,9 +7,7 @@ router.get('/edit_user/:id', user.editUser);
 router.get('/add_user_password/:id', user.addUserPassword);
 router.post('/create_password/:id', user.createPassword);
 router.post('/create_user/:id', user.createUser);
+router.post('/update-user-status', user.updateUserStatus);
 
-
-// router.get('/add_employee', viewemployee.addEmployee);
-// router.post('/edit_employee:id', viewemployee.editEmployee);
 
 module.exports = router;

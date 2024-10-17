@@ -193,9 +193,7 @@ module.exports = {
 												};
 	
 												const newProductCode = generateProductCode();
-	
-												console.log('menuFormbuying:', aggregatedArray);
-	
+		
 												res.render('add_menu', {
 													menu: menu,
 													settingType: settingType,
@@ -408,7 +406,6 @@ module.exports = {
 				menu_picture: req.file ? `${req.file.filename}` : null,
 				remain: 0
 			};
-
 
 			let name_ingredients = req.body.name_ingredient;
 			let unit_quantity = req.body.quantity;

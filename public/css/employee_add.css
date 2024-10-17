@@ -169,3 +169,8 @@ textarea:focus {
     align-items: center;
     text-decoration: none; /* Removes underline from the link */
 }
+
+#charCount {
+    font-size: 0.9em;
+    color: #555;
+}

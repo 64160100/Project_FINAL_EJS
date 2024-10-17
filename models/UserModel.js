@@ -62,8 +62,8 @@ module.exports = {
                     id: employee.employee_id,
                     name: `${employee.first_name} ${employee.last_name}`,
                     userPermission: employee.tbl_user_permission, 
-                    password: employee.password || '--',
-                    username: employee.username || '--',
+                    password: employee.password || '',
+                    username: employee.username || '',
                     status: employee.status || 'ไม่พร้อมใช้งาน' 
                 }));
                 return callback(null, employees);
@@ -97,6 +97,20 @@ module.exports = {
         });
     },
 
+    findUserByUsername: function(username, callback) {
+        const query = 'SELECT * FROM tbl_user WHERE username = ?';
+        connection.query(query, [username], (error, results) => {
+            if (error) {
+                return callback(error, null);
+            }
+            if (results.length > 0) {
+                return callback(null, results[0]);
+            } else {
+                return callback(null, null);
+            }
+        });
+    },
+
     updateUser: (employeeId, userData, callback) => {
         // Assuming userData contains { user_id: 'some_id', username: 'admin', permission: 'xxx', status: 'ON' }
         let { permission, status, username } = userData;
@@ -124,5 +138,14 @@ module.exports = {
         });
     },
 
-
+    updateUserStatus: function(userId, status, callback) {
+        const query = 'UPDATE tbl_user SET status = ? WHERE tbl_employees = ?';
+        connection.query(query, [status, userId], (error, results) => {
+            if (error) {
+                return callback(error, null);
+            } else {
+                return callback(null, results);
+            }
+        });
+    }
 };

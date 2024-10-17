@@ -204,6 +204,10 @@
                 <input type="text" name="permission_name" id="permission_name"
                     value="<%= permission[0].permission_name %>" readonly aria-label="ชื่อสิทธิ์ผู้ใช้งาน">
             </div>
+            <div class="input-field">
+                <label for="create_by">สร้างโดย</label>
+                <input type="text" name="create_by" id="create_by" value="<%= permission[0].create_by %>" readonly aria-label="สร้างโดย">
+            </div>
         
             <div class="input-field">
                 <table class="permissions-table">

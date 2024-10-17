@@ -89,6 +89,18 @@ module.exports = {
             }
             callback(null, results);
         });
-    }
+    },
+
+    getWarehouseData: function(callback) {
+        const query = 'SELECT id_warehouse, name_product, unit_quantity_all, unit_quantity_max FROM tbl_warehouse';
+
+        connection.query(query, (error, results) => {
+            if (error) {
+                console.error('Error fetching warehouse data:', error);
+                return callback(error);
+            }
+            callback(null, results);
+        });
+    },
 
 };

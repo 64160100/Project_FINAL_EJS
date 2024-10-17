@@ -209,8 +209,11 @@
 
                             <div class="form-group">
                                 <label for="username">ผู้ใช้งาน</label>
-                                <input type="text" id="username" name="username" value="<%= User.username %>" required
-                                    aria-label="username">
+                                <input type="text" id="username" name="username" value="<%= User.username %>" required aria-label="username">
+                                <input type="hidden" id="original_username" name="original_username" value="<%= User.username %>">
+                                <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
+                                    <div class="error-message"><%= errorMessage %></div>
+                                <% } %>
                             </div>
 
                             <div class="form-group">
@@ -237,17 +240,28 @@
                                     <% }); %>
                                 </select>
                             </div>
-
+                            
                             <div class="form-group">
-                                <label>สถานะการใช้งาน:
-                                    <select name="status">
-                                        <option value="OFF" <% if (User.status==='OFF' ) { %> selected <% } %>
-                                                >ไม่พร้อมใช้งาน</option>
-                                        <option value="ON" <% if (User.status==='ON' ) { %> selected <% } %>
-                                                >พร้อมใช้งาน</option>
-                                    </select>
-                                </label>
+                                <label>สถานะการใช้งาน</label>
+                                <% 
+                                let missingFields = [];
+                                if (!User.userPermission) missingFields.push('สิทธิ์ผู้ใช้');
+                                if (!User.username) missingFields.push('ชื่อผู้ใช้');
+                                if (!User.password || User.password === '--') missingFields.push('รหัสผ่าน');
+                            
+                                let isReady = missingFields.length === 0;
+                                let statusText = isReady ? 'พร้อมใช้งาน' : 'ไม่พร้อมใช้งาน';
+                                let statusClass = isReady ? 'status-ready' : 'status-not-ready';
+                                %>
+                                <div class="status-display <%= statusClass %>"><%= statusText %></div>
+                                <input type="hidden" name="status" value="<%= isReady ? 'ON' : 'OFF' %>">
+                                <% if (!isReady) { %>
+                                    <div class="error-message">
+                                        ขาดข้อมูล: <%= missingFields.join(', ') %>
+                                    </div>
+                                <% } %>
                             </div>
+
                         </div>
                     </div>
                     <button type="submit">บันทึกการเปลี่ยนแปลง</button>
@@ -259,6 +273,53 @@
 
     <!-- Link JS -->
     <script src="../js/index.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const statusDisplay = document.getElementById('statusDisplay');
+            const statusInput = document.getElementById('statusInput');
+            const userId = '<%= User.id %>'; // ใส่ ID ของผู้ใช้ที่กำลังแก้ไข
+        
+            function updateStatus(isReady) {
+                const status = isReady ? 'ON' : 'OFF';
+                statusInput.value = status;
+                statusDisplay.textContent = isReady ? 'พร้อมใช้งาน' : 'ไม่พร้อมใช้งาน';
+                statusDisplay.className = `status-display ${isReady ? 'status-ready' : 'status-not-ready'}`;
+        
+                // ส่งข้อมูลไปยัง backend
+                fetch('/update-user-status', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ userId: userId, status: status }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log('Status updated successfully');
+                    } else {
+                        console.error('Failed to update status');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            }
+        
+            // เพิ่ม event listeners สำหรับการเปลี่ยนแปลงที่อาจส่งผลต่อสถานะ
+            document.getElementById('permission').addEventListener('change', checkReadyStatus);
+            document.getElementById('username').addEventListener('input', checkReadyStatus);
+        
+            function checkReadyStatus() {
+                const permission = document.getElementById('permission').value;
+                const username = document.getElementById('username').value;
+                const password = '<%= User.password %>'; // ใช้ค่าจาก server
+        
+                const isReady = permission && username && password && password !== '--';
+                updateStatus(isReady);
+            }
+        });
+        </script>
 </body>
 
 </html>

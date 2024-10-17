@@ -10,6 +10,7 @@ module.exports = {
 
         if (!permissions || permissions.employee.employee_read !== 'Y') {
             res.redirect('/404');
+            
         } else {
             EmployeeModel.getAllEmployees((error, employees) => {
                 if (error) {

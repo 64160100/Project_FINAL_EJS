@@ -7,15 +7,37 @@ module.exports = {
             if (error) {
                 return callback(error, null);
             } else {
-
-                const permission = results.map(permission => ({
+                const permissions = results.map(permission => ({
                     id: permission.permission_id,
                     name: permission.permission_name
                 }));
-                return callback(null, permission);
+    
+                // ตรวจสอบการใช้งาน permissions
+                const query = `
+                    SELECT DISTINCT tbl_user_permission
+                    FROM tbl_user
+                    WHERE tbl_user_permission IN (?)
+                `;
+                const permissionIds = permissions.map(p => p.id);
+    
+                connection.query(query, [permissionIds], (error, usageResults) => {
+                    if (error) {
+                        return callback(error, null);
+                    }
+    
+                    const usedPermissions = new Set(usageResults.map(r => r.tbl_user_permission));
+    
+                    const updatedPermissions = permissions.map(p => ({
+                        ...p,
+                        isInUse: usedPermissions.has(p.id)
+                    }));
+    
+                    return callback(null, updatedPermissions);
+                });
             }
         });
     },
+
 
     createPermission: function (permissionData, callback) {
         const query = `
@@ -73,6 +95,7 @@ module.exports = {
         SELECT 
             up.permission_id, 
             up.permission_name, 
+            up.create_by,
             COALESCE(d.dashboard_read, 'N') as dashboard_read, 
             COALESCE(d.dashboard_create, 'N') as dashboard_create, 
             COALESCE(d.dashboard_update, 'N') as dashboard_update, 

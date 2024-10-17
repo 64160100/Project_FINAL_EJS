@@ -26,11 +26,11 @@ module.exports = {
             return res.redirect('/login');
         }
         const permissions = req.session.permissions;
-
+    
         if (!permissions || permissions.employee.employee_read !== 'Y') {
             return res.redirect('/404');
         }
-
+    
         const userId = req.params.id;
         UserModel.getUserById(userId, (error, userResults) => {
             if (error) {
@@ -43,7 +43,9 @@ module.exports = {
                         console.error('Error fetching permissions: ', error);
                         res.status(500).send('Internal Server Error');
                     } else {
-                        res.render('edit_user', { User: User, Permissions: Permissions, user: req.session.user, permissions: permissions });
+                        const errorMessage = req.session.errorMessage;
+                        delete req.session.errorMessage;
+                        res.render('edit_user', { User: User, Permissions: Permissions, user: req.session.user, permissions: permissions, errorMessage: errorMessage });
                     }
                 });
             } else {
@@ -110,19 +112,53 @@ module.exports = {
         if (!req.session.user) {
             return res.redirect('/login');
         }
-
+    
         const userId = req.params.id;
         const user = req.body;
-
+        const originalUsername = req.body.original_username;
+    
         console.log('Creating user:', user);
-
-        UserModel.updateUser(userId, user, (error, results) => {
+    
+        // ตรวจสอบว่าผู้ใช้ซ้ำกันหรือไม่
+        UserModel.findUserByUsername(user.username, (error, existingUser) => {
             if (error) {
-                console.error('Error creating user: ', error);
-                res.status(500).send('Internal Server Error');
+                console.error('Error checking existing user: ', error);
+                return res.status(500).send('Internal Server Error');
+            }
+    
+            // หากผู้ใช้ซ้ำกันและไม่ใช่ผู้ใช้เดิม
+            if (existingUser && existingUser.id !== userId && user.username !== originalUsername) {
+                req.session.errorMessage = 'ชื่อผู้ใช้ถูกใช้งานแล้ว';
+                return res.redirect(`/edit_user/${userId}`);
+            }
+    
+            // Proceed with creating/updating the user
+            UserModel.updateUser(userId, user, (error, results) => {
+                if (error) {
+                    console.error('Error creating user: ', error);
+                    return res.status(500).send('Internal Server Error');
+                } else {
+                    // Assuming the creation is successful, redirect to the user list or a success page
+                    res.redirect('/user');
+                }
+            });
+        });
+    },
+
+    updateUserStatus: function(req, res) {
+        if (!req.session.user) {
+            return res.status(401).json({ success: false, error: 'Unauthorized' });
+        }
+
+        console.log('Updating user status:', req.body);
+        const { userId, status } = req.body;
+
+        UserModel.updateUserStatus(userId, status, (error, results) => {
+            if (error) {
+                console.error('Error updating user status:', error);
+                return res.status(500).json({ success: false, error: 'Internal server error' });
             } else {
-                // Assuming the creation is successful, redirect to the user list or a success page
-                res.redirect('/user');
+                return res.json({ success: true });
             }
         });
     }

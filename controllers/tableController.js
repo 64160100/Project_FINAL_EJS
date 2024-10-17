@@ -187,19 +187,6 @@ module.exports = {
 						return res.status(500).send("An error occurred");
 					}
 
-					console.group('Menu Item');
-					console.log(item);
-					console.groupEnd();
-
-					console.group('Food Recipes');
-					console.log(foodRecipes);
-					console.groupEnd();
-					console.groupEnd();
-
-					console.group('Menu Options');
-					console.log(menuOptions);
-					console.groupEnd();
-
 					res.render('customize', {
 						item: item,
 						menuOptions: menuOptions,

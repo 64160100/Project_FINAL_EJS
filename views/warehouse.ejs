@@ -183,6 +183,9 @@
 
         <div class="topic">
             รายการคลังสินค้า
+            <div class="search-add-container">
+                <input type="text" id="searchBox" placeholder="ค้นหาสิทธิ์ผู้ใช้งาน..." />
+            </div>
         </div>
 
         <!-- ============= Center Dashboard =============== -->
@@ -205,7 +208,7 @@
                     <div class="warehouse-item">
                         <ul class="warehouse-detail">
                             <li><%= item.id_warehouse %></li>
-                            <li><%= item.name_product %></li>
+                            <li class="product-name"><%= item.name_product %></li>
                             <li><%= item.setting_type_id %></li>
                             <li>
                                 <%= item.unit_quantity_all %>
@@ -222,6 +225,11 @@
                         </ul>
                     </div>
                 <% }); %>
+                <div id="pagination">
+                    <button id="prevPage" disabled>ก่อนหน้า</button>
+                    <span id="pageInfo"></span>
+                    <button id="nextPage">ถัดไป</button>
+                </div>
             </div>
         </div>
     </section>
@@ -229,6 +237,82 @@
     <!-- Link JS -->
     <script src="../js/index.js"></script>
     <script src="../js/buying.js"></script>
+    <script>
+        const itemsPerPage = 10;
+        let currentPage = 1;
+        const menuItems = document.querySelectorAll('.menu-item');
+
+        function showPage(page) {
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+
+            menuItems.forEach((item, index) => {
+                if (index >= start && index < end) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            document.getElementById('pageInfo').textContent = `หน้าที่ ${page}`;
+            document.getElementById('prevPage').disabled = page === 1;
+            document.getElementById('nextPage').disabled = end >= menuItems.length;
+        }
+
+        document.getElementById('prevPage').addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                showPage(currentPage);
+            }
+        });
+
+        document.getElementById('nextPage').addEventListener('click', () => {
+            if (currentPage * itemsPerPage < menuItems.length) {
+                currentPage++;
+                showPage(currentPage);
+            }
+        });
+
+        document.getElementById('searchBox').addEventListener('input', function () {
+            const searchValue = this.value.toLowerCase();
+            let filteredCount = 0;
+
+            menuItems.forEach(item => {
+                const menuName = item.querySelector('ul li').textContent.toLowerCase();
+                if (menuName.includes(searchValue)) {
+                    item.style.display = '';
+                    filteredCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Update pagination based on filtered results
+            const totalPages = Math.ceil(filteredCount / itemsPerPage);
+            currentPage = 1;
+            showPage(currentPage);
+            document.getElementById('nextPage').disabled = totalPages <= 1;
+        });
+
+        // Initial display
+        showPage(currentPage);
+    </script>
+
+    <script>
+        document.getElementById('searchBox').addEventListener('input', function () {
+            const searchValue = this.value.toLowerCase();
+            const employeeContents = document.querySelectorAll('.warehouse-item');
+
+            employeeContents.forEach(content => {
+                const employeeName = content.querySelector('.product-name').textContent.toLowerCase();
+                if (employeeName.includes(searchValue)) {
+                    content.style.display = '';
+                } else {
+                    content.style.display = 'none';
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

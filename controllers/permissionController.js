@@ -33,6 +33,7 @@ module.exports = {
         if (!permissions || permissions.employee.employee_read !== 'Y') {
             res.redirect('/404');
         } else {
+            console.log(req.session.user);
             res.render('add_permission', { user: req.session.user, permissions: permissions });
         }
     },
@@ -179,7 +180,8 @@ module.exports = {
             promotion_delete: req.body.promotion_delete ? 'Y' : 'N',
             promotion_view: req.body.promotion_view ? 'Y' : 'N', // Changed from "promotion_edit" to "promotion_view"
         };
-    
+        
+        console.log(Permissions);
         PermissionModel.updatePermission(permissionId, Permissions, (error, message) => {
             if (error) {
                 console.error("Error updating permissions:", error);

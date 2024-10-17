@@ -233,12 +233,14 @@
                             <div class="form-group">
                                 <label for="id_number">เลขบัตรประชาชน</label>
                                 <input type="text" id="id_number" name="id_number" value="<%= employee.id_number %>"
-                                    required aria-label="เลขบัตรประชาชน">
-                                    <% if (error.id_number) { %>
-                                        <p style="color: red;">
-                                            <%= error.id_number %>มีอยู่แล้ว
-                                        </p>
-                                        <% } %>
+                                    required aria-label="เลขบัตรประชาชน" maxlength="13" oninput="validateIdNumber()">
+                                <div id="charCount">0/13</div>
+                                <div id="errorMessage" style="color: red;"></div>
+                                <% if (error.id_number) { %>
+                                    <p style="color: red;">
+                                        <%= error.id_number %>มีอยู่แล้ว
+                                    </p>
+                                <% } %>
                             </div>
                                 
                             <div class="form-group">
@@ -252,13 +254,17 @@
                         <hr class="underline">
 
                         <label for="phone_number">เบอร์โทรศัพท์</label>
-                        <input type="text" id="phone_number" name="phone_number" value="<%= employee.phone_number %>"
-                            required aria-label="เบอร์โทรศัพท์">
-                            <% if (error.phone_number) { %>
-                                <p style="color: red;">
-                                    <%= error.phone_number %>มีอยู่แล้ว
-                                </p>
-                                <% } %>
+                        <input type="text" id="phone_number" name="phone_number" 
+                            value="<%= employee.phone_number %>" 
+                            required aria-label="เบอร์โทรศัพท์" 
+                            maxlength="12" 
+                            oninput="formatPhoneNumber(this)">
+                        <div id="phoneErrorMessage" style="color: red;"></div>
+                        <% if (error && error.phone_number) { %>
+                            <p style="color: red;">
+                                <%= error.phone_number %>มีอยู่แล้ว
+                            </p>
+                        <% } %>
 
                         <label for="email">อีเมล</label>
                         <input type="email" id="email" name="email" value="<%= employee.email %>" required
@@ -280,6 +286,71 @@
 
     <!-- Link JS -->
     <script src="../js/index.js"></script>
+
+    <script>
+        function formatPhoneNumber(input) {
+            // ลบตัวอักษรที่ไม่ใช่ตัวเลขออก
+            let number = input.value.replace(/\D/g, '');
+            
+            // จัดรูปแบบเบอร์โทรศัพท์
+            if (number.length > 3 && number.length <= 6) {
+                number = number.slice(0, 3) + '-' + number.slice(3);
+            } else if (number.length > 6) {
+                number = number.slice(0, 3) + '-' + number.slice(3, 6) + '-' + number.slice(6, 10);
+            }
+            
+            // กำหนดค่าใหม่ให้กับ input
+            input.value = number;
+        
+            // ตรวจสอบความถูกต้องของเบอร์โทรศัพท์
+            validatePhoneNumber();
+        }
+        
+        function validatePhoneNumber() {
+            const phoneNumber = document.getElementById('phone_number').value;
+            const phoneErrorMessage = document.getElementById('phoneErrorMessage');
+            const phonePattern = /^\d{3}-\d{3}-\d{4}$/;
+        
+            if (!phonePattern.test(phoneNumber)) {
+                phoneErrorMessage.textContent = 'กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง (000-000-0000)';
+            } else {
+                phoneErrorMessage.textContent = '';
+            }
+        }
+    </script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dateOfBirthInput = document.getElementById('date_of_birth');
+            const today = new Date().toISOString().split('T')[0];
+            dateOfBirthInput.setAttribute('max', today);
+        });
+    </script>
+    <script>
+        function validateIdNumber() {
+            const idNumberInput = document.getElementById('id_number');
+            const charCount = document.getElementById('charCount');
+            const errorMessage = document.getElementById('errorMessage');
+    
+            // กรองเฉพาะตัวเลข
+            idNumberInput.value = idNumberInput.value.replace(/\D/g, '');
+    
+            // อัปเดตจำนวนตัวอักษร
+            charCount.textContent = `${idNumberInput.value.length}/13`;
+    
+            // ตรวจสอบความยาวของเลขบัตรประชาชน
+            if (idNumberInput.value.length > 13) {
+                errorMessage.textContent = 'เลขบัตรประชาชนต้องไม่เกิน 13 ตัว';
+            } else {
+                errorMessage.textContent = '';
+            }
+        }
+    
+        // เรียกใช้ฟังก์ชันเมื่อโหลดหน้า
+        document.addEventListener('DOMContentLoaded', function() {
+            validateIdNumber();
+        });
+    </script>
 </body>
 
 </html>

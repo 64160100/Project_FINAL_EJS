@@ -214,8 +214,10 @@
                 <% menu.forEach(function(menu) { %>
                     <div class="menu-item">
                         <ul class="menu-detail">
-                            <li class="menu-item-inline" style="background-color: #f0f0f0; padding: 10px; border-radius: 5px;">
-                                <img src="../img/<%= menu.menu_picture %>" title="" alt="" class="small-image">
+                            <li class="menu-item-inline" style="background-color: #f0f0f0; padding: 10px; border-radius: 5px; display: flex; align-items: center;">
+                                <div style="width: 50px; height: 50px; overflow: hidden; border: 2px solid #ddd; border-radius: 5px; margin-right: 10px;">
+                                    <img src="../img/<%= menu.menu_picture %>" title="" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
                                 <span class="product-name"><%= menu.name_product %></span>
                             </li>
                             <li>
@@ -260,12 +262,94 @@
                         </ul>
                     </div>
                 <% }); %>
+                <div id="pagination">
+                    <button id="prevPage" disabled>ก่อนหน้า</button>
+                    <span id="pageInfo"></span>
+                    <button id="nextPage">ถัดไป</button>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Link JS -->
     <script src="../js/index.js"></script>
+
+    <script>
+        const itemsPerPage = 10;
+        let currentPage = 1;
+        const menuItems = document.querySelectorAll('.menu-item');
+    
+        function showPage(page) {
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+    
+            menuItems.forEach((item, index) => {
+                if (index >= start && index < end) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+    
+            document.getElementById('pageInfo').textContent = `หน้าที่ ${page}`;
+            document.getElementById('prevPage').disabled = page === 1;
+            document.getElementById('nextPage').disabled = end >= menuItems.length;
+        }
+    
+        document.getElementById('prevPage').addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                showPage(currentPage);
+            }
+        });
+    
+        document.getElementById('nextPage').addEventListener('click', () => {
+            if (currentPage * itemsPerPage < menuItems.length) {
+                currentPage++;
+                showPage(currentPage);
+            }
+        });
+    
+        document.getElementById('searchBox').addEventListener('input', function () {
+            const searchValue = this.value.toLowerCase();
+            let filteredCount = 0;
+    
+            menuItems.forEach(item => {
+                const menuName = item.querySelector('.product-name').textContent.toLowerCase();
+                if (menuName.includes(searchValue)) {
+                    item.style.display = '';
+                    filteredCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+    
+            // Update pagination based on filtered results
+            const totalPages = Math.ceil(filteredCount / itemsPerPage);
+            currentPage = 1;
+            showPage(currentPage);
+            document.getElementById('nextPage').disabled = totalPages <= 1;
+        });
+    
+        // Initial display
+        showPage(currentPage);
+    </script>
+
+    <script>
+        document.getElementById('searchBox').addEventListener('input', function () {
+            const searchValue = this.value.toLowerCase();
+            const employeeContents = document.querySelectorAll('.menu-item');
+
+            employeeContents.forEach(content => {
+                const employeeName = content.querySelector('.product-name').textContent.toLowerCase();
+                if (employeeName.includes(searchValue)) {
+                    content.style.display = '';
+                } else {
+                    content.style.display = 'none';
+                }
+            });
+        });
+    </script>
 
     <script>
         function updateStatus(id_menu, newStatus) {

@@ -77,20 +77,57 @@ module.exports = {
                 const totalBills = uniqueRecords.length;
                 const averageSalesPerBill = (netSales / totalBills).toFixed(2);
     
-                console.log('uniqueRecords:', totalSales);
-    
-                res.render('dashboard', {
-                    allRecords: uniqueRecords,
-                    dailyTotals: dailyTotals,
-                    monthlyTotals: monthlyTotals,
-                    yearlyTotals: yearlyTotals,
-                    topMenuItems: combinedTopMenuItems,
-                    totalSales: totalSales,
-                    netSales: netSales,
-                    totalBills: totalBills,
-                    averageSalesPerBill: averageSalesPerBill,
-                    user: req.session.user,
-                    permissions: permissions
+                // ดึงข้อมูลจาก tbl_warehouse
+                DashboardModel.getWarehouseData((error, warehouseData) => {
+                    if (error) {
+                        console.error('Error fetching warehouse data:', error);
+                        return res.status(500).send('Error fetching warehouse data');
+                    }
+                
+                    // รวมข้อมูลที่มี id_warehouse เดียวกัน
+                    const combinedWarehouseData = warehouseData.reduce((acc, item) => {
+                        // Ensure unit_quantity_all is treated as a number for summation
+                        item.unit_quantity_all = parseFloat(item.unit_quantity_all) || 0;
+                
+                        // If the id_warehouse already exists, sum up the unit_quantity_all and update unit_quantity_max if necessary
+                        if (acc[item.id_warehouse]) {
+                            acc[item.id_warehouse].unit_quantity_all += item.unit_quantity_all;
+                            if (item.unit_quantity_max !== 'null') {
+                                acc[item.id_warehouse].unit_quantity_max = item.unit_quantity_max;
+                            }
+                        } else {
+                            // Otherwise, add the entry to the accumulator
+                            acc[item.id_warehouse] = { ...item };
+                        }
+                        return acc;
+                    }, {});
+                
+                    // Convert the aggregated results back to an array
+                    const combinedWarehouseDataArray = Object.values(combinedWarehouseData);
+                
+                    // Sort the combined data
+                    combinedWarehouseDataArray.sort((a, b) => {
+                        const idA = parseInt(a.id_warehouse.replace('T', ''), 10);
+                        const idB = parseInt(b.id_warehouse.replace('T', ''), 10);
+                        return idA - idB;
+                    });
+                
+                    console.log('combinedWarehouseData:', combinedWarehouseDataArray);
+                    
+                    res.render('dashboard', {
+                        allRecords: uniqueRecords,
+                        dailyTotals: dailyTotals,
+                        monthlyTotals: monthlyTotals,
+                        yearlyTotals: yearlyTotals,
+                        topMenuItems: combinedTopMenuItems,
+                        totalSales: totalSales,
+                        netSales: netSales,
+                        totalBills: totalBills,
+                        averageSalesPerBill: averageSalesPerBill,
+                        warehouseData: combinedWarehouseDataArray, // เพิ่มข้อมูล warehouse
+                        user: req.session.user,
+                        permissions: permissions
+                    });
                 });
             });
         });

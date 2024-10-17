@@ -215,44 +215,30 @@
                         <% if (permissions.buying.buying_view === 'Y' || permissions.buying.buying_delete === 'Y') { %>
                             <li>จัดการ</li>
                         <% } %>
+                        <% if (permissions.buying.buying_read === 'Y' && 
+                        permissions.buying.buying_create === 'Y' && 
+                        permissions.buying.buying_update === 'Y' && 
+                        permissions.buying.buying_delete === 'Y' && 
+                        permissions.buying.buying_view === 'Y') { %>
+                     <li>สำหรับแอดมิน</li>
+                 <% } %>
                     </ul>
                 </div>
                 <hr class="underline">
                 <% buying.forEach(function(buying) { %>
                     <div class="buying-item">
                         <ul class="buying-detail">
-                            <li>
-                                <%= buying.id_buying_list %>
-                            </li>
-                            <li class="product-name">
-                                <%= buying.name_product %>
-                            </li>
-                            <li>
-                                <%= new Date(buying.date_of_receipt).toLocaleDateString() %>
-                            </li>
-                            <li>
-                                <%= buying.setting_type_id %>
-                            </li>
-                            <li>
-                                <%= buying.unit_quantity %>
-                                <%= buying.setting_unit_id %>
-                            </li>
-                            <li>
-                                <%= buying.price %>
-                            </li>
+                            <li><%= buying.id_buying_list %></li>
+                            <li class="product-name"><%= buying.name_product %></li>
+                            <li><%= new Date(buying.date_of_receipt).toLocaleDateString() %></li>
+                            <li><%= buying.setting_type_id %></li>
+                            <li><%= buying.unit_quantity %> <%= buying.setting_unit_id %></li>
+                            <li><%= buying.price %></li>
                             <li class="timeCounter" data-id="<%= buying.id_buying_list %>">
-                                <span class="day">
-                                    <%= buying.day %>
-                                </span>d
-                                <span class="hour">
-                                    <%= buying.hour %>
-                                </span>h
-                                <span class="minute">
-                                    <%= buying.minute %>
-                                </span>m
-                                <span class="second">
-                                    <%= buying.second %>
-                                </span>s
+                                <span class="day"><%= buying.day %></span>d
+                                <span class="hour"><%= buying.hour %></span>h
+                                <span class="minute"><%= buying.minute %></span>m
+                                <span class="second"><%= buying.second %></span>s
                             </li>
                             <% if (permissions.buying.buying_view === 'Y' || permissions.buying.buying_delete === 'Y') { %>
                                 <li class="buying-action">
@@ -267,11 +253,24 @@
                                     <% } %>
                                 </li>
                             <% } %>
+
+                            <% if (permissions.buying.buying_read === 'Y' && 
+                            permissions.buying.buying_create === 'Y' && 
+                            permissions.buying.buying_update === 'Y' && 
+                            permissions.buying.buying_delete === 'Y' && 
+                            permissions.buying.buying_view === 'Y') { %>
+                         <li class="admin-action">
+                             <form action="/delete_buying/<%= buying.id_buying_list %>" method="post" style="display: inline;">
+                                 <input type="hidden" name="unit_quantity" value="<%= buying.unit_quantity %>">
+                                 <button type="submit" class="delete-button">ลบ</button>
+                             </form>
+                         </li>
+                     <% } %>
+
                         </ul>
                     </div>
                 <% }); %>
-            </div>
-        
+            </div>            
             <% if (totalPages > 1) { %>
                 <div class="pagination">
                     <% if (currentPage > 1) { %>
@@ -285,12 +284,29 @@
                     <% } %>
                 </div>
             <% } %>
-    </div>
+        </div>
     </section>
 
     <!-- Link JS -->
     <script src="../js/index.js"></script>
     <script src="../js/buying.js"></script>
+
+    <script>
+        document.getElementById('searchBox').addEventListener('input', function () {
+            const searchValue = this.value.toLowerCase();
+            const employeeContents = document.querySelectorAll('.buying-item');
+
+            employeeContents.forEach(content => {
+                const employeeName = content.querySelector('.product-name').textContent.toLowerCase();
+                if (employeeName.includes(searchValue)) {
+                    content.style.display = '';
+                } else {
+                    content.style.display = 'none';
+                }
+            });
+        });
+    </script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Count the occurrences of each product name

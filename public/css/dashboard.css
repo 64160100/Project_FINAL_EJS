@@ -90,25 +90,154 @@ th {
   z-index: 1;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .chart-container, .stat-card, .flex-item {
-      max-width: 100%;
-      margin: 10px 0;
-  }
+.outer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
 
-  .chart-row, .stats-container, .flex-container {
-      flex-direction: column;
-      align-items: stretch;
+.flex-container, .chart-row {
+  display: flex;
+  flex-wrap: wrap; /* ทำให้ flex items สามารถย้ายไปแถวถัดไปได้ */
+  justify-content: space-around;
+  width: 100%;
+  margin-bottom: 1rem; /* เพิ่มระยะห่างระหว่างแถว */
+}
+
+.flex-item, .chart-container {
+  flex: 1 1 calc(50% - 2rem); /* กำหนดให้แต่ละตารางมีขนาด 50% ของแถว */
+  margin: 1rem; /* เพิ่มระยะห่างระหว่างตาราง */
+}
+
+.scrollable-table-container {
+  max-height: 400px; /* กำหนดความสูงสูงสุดของตาราง */
+  overflow-y: auto;
+  width: 100%; /* กำหนดความยาวของตารางให้พอดีกับ stats-container */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+/* คลาสใหม่สำหรับตาราง warehouse */
+.warehouse-table {
+  border: 1px solid #ddd; /* เพิ่มขอบให้กับตาราง */
+  width: 100%; /* กำหนดความยาวของตารางให้พอดีกับ stats-container */
+}
+
+.stats-container {
+  width: 100%; /* กำหนดความยาวของ stats-container */
+}
+
+/* สินค้า */
+.warehouse-flex-container {
+  display: flex;
+  flex-wrap: wrap; /* ทำให้ flex items สามารถย้ายไปแถวถัดไปได้ */
+  justify-content: space-around;
+  width: 100%;
+  margin-bottom: 1rem; /* เพิ่มระยะห่างระหว่างแถว */
+  border: 1px solid #ddd; /* ตีกรอบ */
+  background-color: #fff; /* ลงสีพื้นหลังเป็นสีขาว */
+  padding: 1rem; /* เพิ่ม padding ภายใน */
+  border-radius: 8px; /* ทำให้ขอบโค้ง */
+
+}
+
+.warehouse-flex-item {
+  flex: 1 1 calc(50% - 2rem); /* กำหนดให้แต่ละตารางมีขนาด 50% ของแถว */
+  margin: 1rem; /* เพิ่มระยะห่างระหว่างตาราง */
+  background-color: #fff; /* ลงสีพื้นหลังเป็นสีขาว */
+  padding: 1rem; /* เพิ่ม padding ภายใน */
+}
+
+.warehouse-scrollable-table-container {
+  max-height: 400px; /* กำหนดความสูงสูงสุดของตาราง */
+  overflow-y: auto;
+  width: 100%; /* กำหนดความยาวของตารางให้พอดีกับ stats-container */
+}
+
+.warehouse-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.warehouse-table th, .warehouse-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.warehouse-table th {
+  background-color: #f2f2f2;
+}
+
+.status-bar {
+  width: 100%; /* กำหนดความกว้างของหลอดเป็น 100% ของคอลัมน์ */
+  background-color: #f2f2f2;
+  border: 1px solid #ddd;
+  height: 20px;
+  position: relative;
+  border-radius: 8px; /* ทำให้ขอบโค้ง */
+}
+
+.status-fill {
+  height: 100%;
+  transition: width 0.3s ease;
+  position: absolute; /* ทำให้หลอดอยู่ภายใน .status-bar */
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000000; /* สีของข้อความภายในหลอด */
+  font-weight: bold;
+  border-radius: 8px; /* ทำให้ขอบโค้ง */
+}
+
+.status-text {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+}
+
+.alert-container {
+  color: red;
+  font-weight: bold;
+}
+
+.alert-box {
+  border: 2px solid red;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  background-color: #ffe6e6;
+}
+
+/* Media Queries สำหรับหน้าจอขนาด 1440px */
+@media (max-width: 1440px) {
+  .warehouse-flex-item {
+    flex: 1 1 calc(50% - 1rem); /* กำหนดให้แต่ละตารางมีขนาด 50% ของแถว */
+    margin: 0.5rem; /* ลดระยะห่างระหว่างตาราง */
   }
 }
 
-@media (max-width: 480px) {
-  .chart-container, .stat-card, .flex-item {
-      padding: 10px;
-  }
-
-  th, td {
-      padding: 6px;
+/* Media Queries สำหรับหน้าจอขนาด 1024px */
+@media (max-width: 1024px) {
+  .warehouse-flex-item {
+    flex: 1 1 calc(50% - 1rem); /* กำหนดให้แต่ละตารางมีขนาด 50% ของแถว */
+    margin: 0.5rem; /* ลดระยะห่างระหว่างตาราง */
   }
 }

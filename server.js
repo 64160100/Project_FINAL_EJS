@@ -34,7 +34,6 @@ app.get('/404', (req, res) => {
     res.status(404).render('404_not_found'); // Adjust the render target to your 404 page template
 });
 
-
 // ===================== dashboard ===================== //
 app.get('/dashboard', require('./routes/dashboard'));
 
@@ -67,6 +66,7 @@ app.get('/edit_user/:id', require('./routes/user'));
 app.get('/add_user_password/:id', require('./routes/user'));
 app.post('/create_password/:id', require('./routes/user'));
 app.post('/create_user/:id', require('./routes/user'));
+app.post('/update-user-status', require('./routes/user'));
 
 // ===================== Menu ===================== //
 app.get('/menu', require('./routes/menu'));

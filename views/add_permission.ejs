@@ -203,10 +203,12 @@
                     <label for="permission_name">ชื่อสิทธิ์ผู้ใช้งาน</label>
                     <input type="text" name="permission_name" id="permission_name" required>
                 </div>
-                <div class="input-field">
-                    <label for="create_by">สร้างโดย</label>
-                    <input type="text" name="create_by" id="create_by" required>
-                </div>
+                <% if (user) { %>
+                    <div class="input-field">
+                        <label for="create_by">สร้างโดย</label>
+                        <input type="text" name="create_by" id="create_by" value="<%= user.tbl_employees %>" required readonly>
+                    </div>
+                <% } %>
                 <div class="input-field" style="display:none;">
                     <label for="create_time">Creation Datetime</label>
                     <input type="hidden" name="create_time" id="create_time">

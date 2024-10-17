@@ -204,10 +204,10 @@
                     </ul>
                 </div>
                 <hr class="underline">
-                <ul>
                     <% results.forEach(function(unit) { %>
+                    <div class="unit-item">
                         <li class="unit-detail">
-                            <span><%= unit.menu_unit %></span>
+                            <span class="unit-name"><%= unit.menu_unit %></span>
                             <% if (permissions.menu.menu_delete === 'Y') { %>
                             <span>
                                 <form action="/delete_menu_unit/<%= unit.menu_unit %>" method="post" style="display: inline;" onsubmit="return confirmDelete()">
@@ -216,19 +216,102 @@
                             </span>
                             <% } %>
                         </li>
+                    </div>
                     <% }); %>
-                </ul>
+                <div id="pagination">
+                    <button id="prevPage" disabled>ก่อนหน้า</button>
+                    <span id="pageInfo"></span>
+                    <button id="nextPage">ถัดไป</button>
+                </div>
             </div>
         </div>
+
         </section>
 
     <!-- Link JS -->
     <script src="../js/index.js"></script>
+
+    <script>
+        document.getElementById('searchBox').addEventListener('input', function () {
+            const searchValue = this.value.toLowerCase();
+            const unitContents = document.querySelectorAll('.unit-item');
+
+            unitContents.forEach(content => {
+                const unitName = content.querySelector('.unit-name').textContent.toLowerCase();
+                if (unitName.includes(searchValue)) {
+                    content.style.display = '';
+                } else {
+                    content.style.display = 'none';
+                }
+            });
+        });
+    </script>
+
+
     <script>
         function confirmDelete() {
             return confirm('ยืนยันการลบประเภทสินค้า');
         }
-        </script>
+
+        const itemsPerPage = 10;
+        let currentPage = 1;
+        const unitItems = document.querySelectorAll('.unit-detail');
+
+        function showPage(page) {
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+
+            unitItems.forEach((item, index) => {
+                if (index >= start && index < end) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            document.getElementById('pageInfo').textContent = `หน้าที่ ${page}`;
+            document.getElementById('prevPage').disabled = page === 1;
+            document.getElementById('nextPage').disabled = end >= unitItems.length;
+        }
+
+        document.getElementById('prevPage').addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                showPage(currentPage);
+            }
+        });
+
+        document.getElementById('nextPage').addEventListener('click', () => {
+            if (currentPage * itemsPerPage < unitItems.length) {
+                currentPage++;
+                showPage(currentPage);
+            }
+        });
+
+        document.getElementById('searchBox').addEventListener('input', function () {
+            const searchValue = this.value.toLowerCase();
+            let filteredCount = 0;
+
+            unitItems.forEach(item => {
+                const unitName = item.querySelector('span:first-child').textContent.toLowerCase();
+                if (unitName.includes(searchValue)) {
+                    item.style.display = '';
+                    filteredCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Update pagination based on filtered results
+            const totalPages = Math.ceil(filteredCount / itemsPerPage);
+            currentPage = 1;
+            showPage(currentPage);
+            document.getElementById('nextPage').disabled = totalPages <= 1;
+        });
+
+        // Initial display
+        showPage(currentPage);
+    </script>
 </body>
 
 </html>

@@ -129,3 +129,47 @@
 .promotion-item .promotion-detail li:last-child {
     width: 20%;
 }
+
+#pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 20px 0;
+    margin-top: 20px;
+}
+
+#pagination button {
+    background-color: #fff;
+    color: #007bff;
+    border: 1px solid #007bff;
+    padding: 8px 12px;
+    margin: 0 5px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+#pagination button:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+#pagination button:disabled {
+    background-color: #f0f0f0;
+    color: #999;
+    border-color: #ccc;
+    cursor: not-allowed;
+}
+
+#pagination button.active {
+    background-color: #007bff;
+    color: white;
+}
+
+#pagination #pageInfo {
+    margin: 0 15px;
+    font-weight: bold;
+    font-size: 14px;
+}
