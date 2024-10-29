@@ -19,7 +19,7 @@
     <div class="sidebar close">
         <!-- ========== Logo ============  -->
         <a href="#" class="logo-box">
-            <i class='bx bxs-cat'></i>
+            <i class='bx bx-food-menu'></i>
             <div class="logo-name">POS</div>
         </a>
 
@@ -218,7 +218,11 @@
                                     <span>
                                         <form action="/delete_setting_type/<%= type.id_type %>" method="post"
                                             style="display: inline;" onsubmit="return confirmDelete()">
-                                            <button type="submit" class="delete-button">ลบ</button>
+                                            <% if (type.isReferencedInBuying) { %>
+                                                <button type="submit" class="delete-button disabled" disabled>ลบ</button>
+                                            <% } else { %>
+                                                <button type="submit" class="delete-button">ลบ</button>
+                                            <% } %>
                                         </form>
                                     </span>
                                     <% } %>

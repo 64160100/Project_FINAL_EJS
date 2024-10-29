@@ -27,14 +27,21 @@ module.exports = {
         if (!req.session.user) {
             return res.redirect('/login');
         }
-
+    
         const permissions = req.session.permissions;
-
+    
         if (!permissions || permissions.employee.employee_read !== 'Y') {
             res.redirect('/404');
         } else {
-            console.log(req.session.user);
-            res.render('add_permission', { user: req.session.user, permissions: permissions });
+            PermissionModel.getNextPermissionId((error, nextPermissionId) => {
+                if (error) {
+                    console.error('Error fetching next permission ID:', error);
+                    return res.status(500).send('Internal Server Error');
+                }
+                
+                console.log(nextPermissionId);
+                res.render('add_permission', { user: req.session.user, permissions: permissions, nextPermissionId });
+            });
         }
     },
 

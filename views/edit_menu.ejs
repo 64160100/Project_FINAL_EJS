@@ -19,7 +19,7 @@
     <div class="sidebar close">
         <!-- ========== Logo ============  -->
         <a href="#" class="logo-box">
-            <i class='bx bxs-cat'></i>
+            <i class='bx bx-food-menu'></i>
             <div class="logo-name">POS</div>
         </a>
 
@@ -223,28 +223,24 @@
                                     <div class="form-container">
                                         <label for="settingType">ประเภทสินค้า</label>
                                         <select id="settingType" name="settingType">
-                                            <option value="" disabled <%=!menu || !menu.menu_type ? 'selected' : '' %>
-                                                >กรุณาเลือก</option>
-                                            <% settingType.forEach(type=> { %>
-                                                <option value="<%= type.menu_type %>" <%=menu &&
-                                                    type.menu_type===menu.settingType ? 'selected' : '' %>>
+                                            <option value="" disabled <%= !menu || !menu.menu_type ? 'selected' : '' %>>กรุณาเลือก</option>
+                                            <% settingType.forEach(type => { %>
+                                                <option value="<%= type.menu_type %>" <%= menu && type.menu_type === menu.menu_type ? 'selected' : '' %>>
                                                     <%= type.menu_type %>
                                                 </option>
-                                                <% }); %>
+                                            <% }); %>
                                         </select>
                                     </div>
-
+                                    
                                     <div class="form-container">
                                         <label for="settingCategory">หมวดหมู่สินค้า</label>
                                         <select id="settingCategory" name="settingCategory">
-                                            <option value="" disabled <%=!menu || !menu.menu_category ? 'selected' : ''
-                                                %>>กรุณาเลือก</option>
-                                            <% settingCategory.forEach(category=> { %>
-                                                <option value="<%= category.menu_category %>" <%=menu &&
-                                                    category.menu_category===menu.settingCategory ? 'selected' : '' %>>
+                                            <option value="" disabled <%= !menu || !menu.menu_category ? 'selected' : '' %>>กรุณาเลือก</option>
+                                            <% settingCategory.forEach(category => { %>
+                                                <option value="<%= category.menu_category %>" <%= menu && category.menu_category === menu.menu_category ? 'selected' : '' %>>
                                                     <%= category.menu_category %>
                                                 </option>
-                                                <% }); %>
+                                            <% }); %>
                                         </select>
                                     </div>
                                 </div>
@@ -261,7 +257,7 @@
                                         <select id="settingUnit" name="settingUnit">
                                             <option value="" disabled <%= !menu || !menu.menu_unit ? 'selected' : '' %>>กรุณาเลือก</option>
                                             <% settingUnit.forEach(unit => { %>
-                                                <option value="<%= unit.menu_unit %>" <%= menu && unit.menu_unit === menu.settingUnit ? 'selected' : '' %>>
+                                                <option value="<%= unit.menu_unit %>" <%= menu && unit.menu_unit === menu.menu_unit ? 'selected' : '' %>>
                                                     <%= unit.menu_unit %>
                                                 </option>
                                             <% }); %>

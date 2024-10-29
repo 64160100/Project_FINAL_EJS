@@ -7,7 +7,6 @@ router.get('/add_buying', buying.addBuyingView);
 router.get('/view_buying/:id', buying.viewBuyingView);
 router.post('/create_buying', buying.createBuying);
 router.post('/delete_buying/:id', buying.deleteBuying);
-// router.get('/view_buying/:id', buying.viewBuyingView);
 
 router.get('/setting_type', buying.settingTypeView);
 router.get('/setting_add_type', buying.settingAddTypeView);

@@ -355,6 +355,10 @@ module.exports = {
                                                                     // Fetch the existing image path from the menu object
                                                                     const existingImagePath = menu.imagePath || '';
 
+																	console.log(settingType);
+																	console.log(settingUnit);
+																	console.log(settingCategory);
+																	console.log(menu);
                                                                     res.render('edit_menu', {
                                                                         menu: menu,
                                                                         settingType: settingType,
@@ -475,9 +479,6 @@ module.exports = {
 		const id = req.params.id;
 		const foodRecipeId = req.body.id_food_recipes; // Assuming id_food_recipes is passed in the request body
 	
-		console.log('id:', id);
-		console.log('foodRecipeId:', foodRecipeId);
-	
 		// First, delete related rows in tbl_menu_options
 		MenuModel.deleteRelatedMenuOptions(id, (error, result) => {
 			if (error) {
@@ -491,12 +492,17 @@ module.exports = {
 					console.error('Error deleting related recipes: ', error);
 					return res.status(500).send('Internal Server Error');
 				}
-	
+				console.log(id);
 				// Finally, delete the row in tbl_menu
 				MenuModel.deleteMenu(id, (error, result) => {
 					if (error) {
-						console.error('Error deleting menu: ', error);
-						return res.status(500).send('Internal Server Error');
+						if (error.code === 'ER_ROW_IS_REFERENCED_2') {
+							console.error('Error deleting menu: ', error);
+							return res.redirect('/menu?error=ยังมีเมนูค้างอยู่ที่โต๊ะอาหาร');
+						} else {
+							console.error('Error deleting menu: ', error);
+							return res.status(500).send('Internal Server Error');
+						}
 					} else {
 						res.redirect('/menu');
 					}
@@ -694,11 +700,40 @@ module.exports = {
 		if (!permissions || permissions.menu.menu_read !== 'Y') {
 			return res.redirect('/404');
 		}
+	
 		MenuModel.viewSettingCategory((error, results) => {
 			if (error) {
 				console.log(error);
+				return res.status(500).send('Internal Server Error');
 			} else {
-				res.render('setting_menu_category', { results, user: req.session.user, permissions: permissions });
+				// Check if each category is referenced in the tbl_menu table
+				const categoriesWithReferences = results.map(category => {
+					return new Promise((resolve, reject) => {
+						MenuModel.checkCategoryReferenced(category.menu_category, (error, isReferenced) => {
+							if (error) {
+								return reject(error);
+							}
+							console.log('Category:', category);
+							category.isReferenced = isReferenced;
+							resolve(category);
+						});
+					});
+				});
+	
+				Promise.all(categoriesWithReferences)
+					.then(categories => {
+						console.log('Categories:', categories);
+						res.render('setting_menu_category', {
+							results: categories, // Pass results instead of categories
+							user: req.session.user,
+							permissions: permissions,
+							errorMessage: req.query.errorMessage || null // Pass error message if exists
+						});
+					})
+					.catch(error => {
+						console.log(error);
+						return res.status(500).send('Internal Server Error');
+					});
 			}
 		});
 	},
@@ -712,11 +747,39 @@ module.exports = {
 		if (!permissions || permissions.menu.menu_read !== 'Y') {
 			return res.redirect('/404');
 		}
+	
 		MenuModel.viewSettingType((error, results) => {
 			if (error) {
 				console.log(error);
+				return res.status(500).send('Internal Server Error');
 			} else {
-				res.render('setting_menu_type', { results, user: req.session.user, permissions: permissions });
+				// Check if each type is referenced in the tbl_menu table
+				const typesWithReferences = results.map(type => {
+					return new Promise((resolve, reject) => {
+						MenuModel.checkTypeReferenced(type.menu_type, (error, isReferenced) => {
+							if (error) {
+								return reject(error);
+							}
+							type.isReferenced = isReferenced;
+							resolve(type);
+						});
+					});
+				});
+	
+				Promise.all(typesWithReferences)
+					.then(types => {
+						console.log('Types:', types);
+						res.render('setting_menu_type', {
+							results: types, // Pass results instead of types
+							user: req.session.user,
+							permissions: permissions,
+							errorMessage: req.query.errorMessage || null // Pass error message if exists
+						});
+					})
+					.catch(error => {
+						console.log(error);
+						return res.status(500).send('Internal Server Error');
+					});
 			}
 		});
 	},
@@ -730,37 +793,110 @@ module.exports = {
 		if (!permissions || permissions.menu.menu_read !== 'Y') {
 			return res.redirect('/404');
 		}
+	
 		MenuModel.viewSettingUnit((error, results) => {
 			if (error) {
 				console.log(error);
+				return res.status(500).send('Internal Server Error');
 			} else {
-				res.render('setting_menu_unit', { results, user: req.session.user, permissions: permissions });
+				// Check if each unit is referenced in the tbl_menu table
+				const unitsWithReferences = results.map(unit => {
+					return new Promise((resolve, reject) => {
+						MenuModel.checkUnitReferenced(unit.menu_unit, (error, isReferenced) => {
+							if (error) {
+								return reject(error);
+							}
+							unit.isReferenced = isReferenced;
+							resolve(unit);
+						});
+					});
+				});
+	
+				Promise.all(unitsWithReferences)
+					.then(units => {
+						console.log('Units:', units);
+						res.render('setting_menu_unit', {
+							results: units, // Pass results instead of units
+							user: req.session.user,
+							permissions: permissions,
+							errorMessage: req.query.errorMessage || null // Pass error message if exists
+						});
+					})
+					.catch(error => {
+						console.log(error);
+						return res.status(500).send('Internal Server Error');
+					});
+			}
+		});
+	},
+
+	menuCategoryCreate: (req, res) => {
+		const data = {
+			menu_category: req.body.menu_category,
+		};
+	
+		// Check for duplicate entry before inserting
+		MenuModel.checkCategoryExists(data.menu_category, (error, exists) => {
+			if (error) {
+				console.log(error);
+				return res.status(500).send('Internal Server Error');
+			}
+	
+			if (exists) {
+				// If the category already exists, render the page with an error message
+				MenuModel.viewSettingCategory((error, results) => {
+					if (error) {
+						console.log(error);
+						return res.status(500).send('Internal Server Error');
+					} else {
+						return res.render('setting_add_menu_category', {
+							results,
+							user: req.session.user,
+							permissions: req.session.permissions,
+							errorMessage: `มีรายการ '${data.menu_category}' อยู่แล้ว` // Pass error message'`
+						});
+					}
+				});
+			} else {
+				// If the category does not exist, proceed with the insertion
+				MenuModel.createSettingCategory(data, (error, results) => {
+					if (error) {
+						console.log(error);
+						return res.status(500).send('Internal Server Error');
+					} else {
+						return res.redirect('/setting_menu_category');
+					}
+				});
 			}
 		});
 	},
 
 	menuCategoryAdd: (req, res) => {
-
 		if (!req.session.user) {
 			return res.redirect('/login');
 		}
 		const permissions = req.session.permissions;
-		// Check if the user has the required permissions
+	
 		if (!permissions || permissions.menu.menu_read !== 'Y') {
 			return res.redirect('/404');
 		}
-
+	
 		MenuModel.viewSettingCategory((error, results) => {
 			if (error) {
 				console.log(error);
+				return res.status(500).send('Internal Server Error');
 			} else {
-				res.render('setting_add_menu_category', { results, user: req.session.user, permissions: permissions });
+				res.render('setting_add_menu_category', {
+					results,
+					user: req.session.user,
+					permissions: permissions,
+					errorMessage: req.query.errorMessage || null // Pass error message if exists
+				});
 			}
 		});
 	},
 
 	menuTypeAdd: (req, res) => {
-
 		if (!req.session.user) {
 			return res.redirect('/login');
 		}
@@ -769,12 +905,38 @@ module.exports = {
 		if (!permissions || permissions.menu.menu_read !== 'Y') {
 			return res.redirect('/404');
 		}
-
+	
 		MenuModel.viewSettingType((error, results) => {
 			if (error) {
 				console.log(error);
+				return res.status(500).send('Internal Server Error');
 			} else {
-				res.render('setting_add_menu_type', { results, user: req.session.user, permissions: permissions });
+				// Check if each type is referenced in the tbl_menu table
+				const typesWithReferences = results.map(type => {
+					return new Promise((resolve, reject) => {
+						MenuModel.checkTypeReferenced(type.menu_type, (error, isReferenced) => {
+							if (error) {
+								return reject(error);
+							}
+							type.isReferenced = isReferenced;
+							resolve(type);
+						});
+					});
+				});
+	
+				Promise.all(typesWithReferences)
+					.then(types => {
+						res.render('setting_add_menu_type', {
+							results: types, // Pass results instead of types
+							user: req.session.user,
+							permissions: permissions,
+							errorMessage: req.query.errorMessage || null // Pass error message if exists
+						});
+					})
+					.catch(error => {
+						console.log(error);
+						return res.status(500).send('Internal Server Error');
+					});
 			}
 		});
 	},
@@ -788,25 +950,39 @@ module.exports = {
 		if (!permissions || permissions.menu.menu_read !== 'Y') {
 			return res.redirect('/404');
 		}
-
+	
 		MenuModel.viewSettingUnit((error, results) => {
 			if (error) {
 				console.log(error);
+				return res.status(500).send('Internal Server Error');
 			} else {
-				res.render('setting_add_menu_unit', { results, user: req.session.user, permissions: permissions });
-			}
-		});
-	},
-
-	menuCategoryCreate: (req, res) => {
-		const data = {
-			menu_category: req.body.menu_category,
-		};
-		MenuModel.createSettingCategory(data, (error, results) => {
-			if (error) {
-				console.log(error);
-			} else {
-				res.redirect('/setting_menu_category');
+				// Check if each unit is referenced in the tbl_menu table
+				const unitsWithReferences = results.map(unit => {
+					return new Promise((resolve, reject) => {
+						MenuModel.checkUnitReferenced(unit.menu_unit, (error, isReferenced) => {
+							if (error) {
+								return reject(error);
+							}
+							unit.isReferenced = isReferenced;
+							resolve(unit);
+						});
+					});
+				});
+	
+				Promise.all(unitsWithReferences)
+					.then(units => {
+						console.log('Units:', units);
+						res.render('setting_add_menu_unit', {
+							results: units, // Pass results instead of units
+							user: req.session.user,
+							permissions: permissions,
+							errorMessage: req.query.errorMessage || null // Pass error message if exists
+						});
+					})
+					.catch(error => {
+						console.log(error);
+						return res.status(500).send('Internal Server Error');
+					});
 			}
 		});
 	},
@@ -815,25 +991,80 @@ module.exports = {
 		const data = {
 			menu_type: req.body.menu_type,
 		};
-		MenuModel.createSettingType(data, (error, results) => {
+	
+		// Check for duplicate entry before inserting
+		MenuModel.checkTypeExists(data.menu_type, (error, exists) => {
 			if (error) {
 				console.log(error);
+				return res.status(500).send('Internal Server Error');
+			}
+	
+			if (exists) {
+				// If the type already exists, render the page with an error message
+				MenuModel.viewSettingType((error, results) => {
+					if (error) {
+						console.log(error);
+						return res.status(500).send('Internal Server Error');
+					} else {
+						return res.render('setting_add_menu_type', {
+							results,
+							user: req.session.user,
+							permissions: req.session.permissions,
+							errorMessage: `มีรายการ '${data.menu_type}' อยู่แล้ว'`
+						});
+					}
+				});
 			} else {
-				res.redirect('/setting_menu_type');
+				// If the type does not exist, proceed with the insertion
+				MenuModel.createSettingType(data, (error, results) => {
+					if (error) {
+						console.log(error);
+						return res.status(500).send('Internal Server Error');
+					} else {
+						return res.redirect('/setting_menu_type');
+					}
+				});
 			}
 		});
 	},
-
 
 	menuUnitCreate: (req, res) => {
 		const data = {
 			menu_unit: req.body.menu_unit,
 		};
-		MenuModel.createSettingUnit(data, (error, results) => {
+	
+		// Check for duplicate entry before inserting
+		MenuModel.checkUnitExists(data.menu_unit, (error, exists) => {
 			if (error) {
 				console.log(error);
+				return res.status(500).send('Internal Server Error');
+			}
+	
+			if (exists) {
+				// If the unit already exists, render the page with an error message
+				MenuModel.viewSettingUnit((error, results) => {
+					if (error) {
+						console.log(error);
+						return res.status(500).send('Internal Server Error');
+					} else {
+						return res.render('setting_add_menu_unit', {
+							results,
+							user: req.session.user,
+							permissions: req.session.permissions,
+							errorMessage: `มีรายการ '${data.menu_unit}' อยู่แล้ว'`
+						});
+					}
+				});
 			} else {
-				res.redirect('/setting_menu_unit');
+				// If the unit does not exist, proceed with the insertion
+				MenuModel.createSettingUnit(data, (error, results) => {
+					if (error) {
+						console.log(error);
+						return res.status(500).send('Internal Server Error');
+					} else {
+						return res.redirect('/setting_menu_unit');
+					}
+				});
 			}
 		});
 	},

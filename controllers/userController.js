@@ -1,4 +1,5 @@
 const UserModel = require('../models/UserModel.js');
+const bcrypt = require('bcrypt');
 
 module.exports = {
 
@@ -16,6 +17,7 @@ module.exports = {
                 console.error('Error fetching employees: ', error);
                 res.status(500).send('Internal Server Error');
             } else {
+                console.log('User:', User);
                 res.render('user', { User: User, user: req.session.user, permissions: permissions });
             }
         });
@@ -26,11 +28,11 @@ module.exports = {
             return res.redirect('/login');
         }
         const permissions = req.session.permissions;
-    
+
         if (!permissions || permissions.employee.employee_read !== 'Y') {
             return res.redirect('/404');
         }
-    
+
         const userId = req.params.id;
         UserModel.getUserById(userId, (error, userResults) => {
             if (error) {
@@ -45,6 +47,8 @@ module.exports = {
                     } else {
                         const errorMessage = req.session.errorMessage;
                         delete req.session.errorMessage;
+                        console.log('User:', User);
+                        console.log('Permissions:', Permissions);
                         res.render('edit_user', { User: User, Permissions: Permissions, user: req.session.user, permissions: permissions, errorMessage: errorMessage });
                     }
                 });
@@ -98,13 +102,21 @@ module.exports = {
             return res.status(400).send('Bad Request: Missing User ID');
         }
 
-        UserModel.updateUserPassword(userId, password, (error, results) => {
-            if (error) {
-                console.error('Error updating password: ', error);
-                res.status(500).send('Internal Server Error');
-            } else {
-                res.redirect('/user');
+        // Hash the password before saving it to the database
+        bcrypt.hash(password, 10, (err, hashedPassword) => {
+            if (err) {
+                console.error('Error hashing password: ', err);
+                return res.status(500).send('Internal Server Error');
             }
+
+            UserModel.updateUserPassword(userId, hashedPassword, (error, results) => {
+                if (error) {
+                    console.error('Error updating password: ', error);
+                    res.status(500).send('Internal Server Error');
+                } else {
+                    res.redirect('/user');
+                }
+            });
         });
     },
 

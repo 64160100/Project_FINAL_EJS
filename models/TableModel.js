@@ -139,7 +139,7 @@ module.exports = {
                     status: item.status,
                     category: item.menu_category,
                     type: item.menu_type,
-                    menu_unit: item.menu_type
+                    unit: item.menu_unit
                 }));
                 return callback(null, menu);
             }
@@ -244,7 +244,7 @@ module.exports = {
                 status: item.status,
                 category: item.menu_category,
                 type: item.menu_type,
-                menu_unit: item.menu_type,
+                unit: item.menu_unit,
             }));
 
             return callback(null, menu[0]); // Assuming you want to return a single item
@@ -1480,6 +1480,17 @@ module.exports = {
                 return callback(error, null);
             }
             return callback(null, results);
+        });
+    },
+
+    cancelMenuByNumList: (numList, callback) => {
+        const query = 'UPDATE list_menu SET status_bill = "N" WHERE num_list = ?';
+        connection.query(query, [numList], (error, results) => {
+            if (error) {
+                return callback(error);
+            }
+            console.log('Canceled menu with num_list:', numList);
+            callback(null, results);
         });
     },
 };

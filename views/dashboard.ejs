@@ -20,7 +20,7 @@
   <div class="sidebar close">
     <!-- ========== Logo ============  -->
     <a href="#" class="logo-box">
-      <i class='bx bxs-cat'></i>
+      <i class='bx bx-food-menu'></i>
       <div class="logo-name">POS</div>
     </a>
 
@@ -244,7 +244,7 @@
             </div>
           </div>
           <div class="chart-container">
-            <h2>ยอดจ่ายรายวัน</h2>
+            <h2>ยอดขายรายวัน</h2>
             <canvas id="dailyTotalsChart"></canvas>
             <input type="hidden" id="dailyTotalsData" value='<%= JSON.stringify(dailyTotals) %>' />
           </div>
@@ -252,13 +252,13 @@
     
         <div class="chart-row">
           <div class="chart-container">
-            <h2>ยอดจ่ายรายเดือน</h2>
+            <h2>ยอดขายรายเดือน</h2>
             <canvas id="monthlyTotalsChart"></canvas>
             <input type="hidden" id="monthlyTotalsData" value='<%= JSON.stringify(monthlyTotals) %>' />
           </div>
     
           <div class="chart-container">
-            <h2>ยอดจ่ายรายปี</h2>
+            <h2>ยอดขายรายปี</h2>
             <canvas id="yearlyTotalsChart"></canvas>
             <input type="hidden" id="yearlyTotalsData" value='<%= JSON.stringify(yearlyTotals) %>' />
           </div>

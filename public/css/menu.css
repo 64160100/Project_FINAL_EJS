@@ -211,3 +211,72 @@
     font-weight: bold;
     font-size: 14px;
 }
+
+/* Popup container - can be anything you want */
+.popup {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.6); /* Black w/ opacity */
+    backdrop-filter: blur(5px); /* Blur the background */
+}
+
+/* Popup content */
+.popup-content {
+    background-color: #fff;
+    margin: 10% auto; /* 10% from the top and centered */
+    padding: 30px;
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    width: 50%; /* Could be more or less, depending on screen size */
+    max-width: 600px; /* Maximum width */
+    text-align: center; /* Center the text */
+    animation: fadeIn 0.3s ease-in-out; /* Fade-in animation */
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Close button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+}
+
+/* OK button */
+.ok-button {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+.ok-button:hover {
+    background-color: #45a049;
+}

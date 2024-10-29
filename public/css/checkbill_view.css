@@ -453,33 +453,6 @@
     flex: 1;
 }
 
-/* ส่วนลด */
-.print-qr-button {
-    background-color: #ffc107;
-    /* Yellow background color */
-    color: #000;
-    /* Black text color for better contrast */
-    border: none;
-    padding: 20px;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 14px;
-    align-items: center;
-    gap: 8px;
-    /* Space between icon and text */
-    transition: background-color 0.3s ease;
-}
-
-.print-qr-button:hover {
-    background-color: #e0a800;
-    /* Darker yellow background color on hover */
-}
-
-.print-qr-button i {
-    font-size: 18px;
-    /* Adjust icon size as needed */
-}
-
 /* หน่วย */
 .header-titles {
     display: flex;
@@ -608,8 +581,6 @@
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     animation: fadeIn 0.3s ease-in-out;
-    text-align: center;
-
 }
 
 /* Close button */
@@ -811,111 +782,177 @@ button:hover {
 .disabled-link {
     pointer-events: none;
     cursor: default;
-    opacity: 0.5; /* Make the link appear faded */
+    opacity: 0.5;
+    /* Make the link appear faded */
 }
 
 .grayscale {
-    filter: brightness(0.7); /* Adjust brightness instead of grayscale */
+    filter: brightness(0.7);
+    /* Adjust brightness instead of grayscale */
 }
 
 .text-muted {
-    color: rgba(108, 117, 125, 0.7); /* Use rgba to make the text color faded */
+    color: rgba(108, 117, 125, 0.7);
+    /* Use rgba to make the text color faded */
 }
 
 /* ส่วนลด */
-  .total-price-container {
+.total-price-container {
     padding: 10px;
     background-color: #f9f9f9;
     border-radius: 1px;
     margin-bottom: 20px;
-  }
+}
 
-
-  .discount-section {
-    background-color: #f9f9f9;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 100%;
-  }
-
-  .discount-section label {
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-
-  .discount-code-input {
-    width: 100%;
-    padding: 10px;
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 10px;
+}
+
+.discount-code-input {
+    width: 80px;
+    /* ปรับขนาดให้เล็กลง */
+    padding: 3px;
+    /* ปรับ padding ให้เล็กลง */
+    margin-left: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-  }
+}
 
-  .apply-discount-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-
-  .apply-discount-button:hover {
-    background-color: #45a049;
-  }
-
-  .error-message {
-    color: red;
-    font-weight: bold;
-    margin-top: 5px;
-  }
-
-  .toggle-discount-button {
-    padding: 10px 20px; /* ปรับขนาดให้เท่ากัน */
+.apply-discount-button {
+    padding: 3px 8px;
+    /* ปรับขนาดให้เล็กลง */
+    margin-left: 10px;
     background-color: #007bff;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    width: 100%; /* กำหนดความกว้างของปุ่มให้เท่ากัน */
-    margin-bottom: 10px; /* เพิ่มระยะห่างระหว่างปุ่ม */
-  }
+}
 
-  .toggle-discount-button:hover {
+.apply-discount-button:hover {
     background-color: #0056b3;
-  }
+}
 
-  .print-qr-button {
-    padding: 10px 20px; /* ปรับขนาดให้เท่ากัน */
+.toggle-discount-button {
+    padding: 10px 20px;
+    background-color: #FF7F50;
+    /* สีส้มอ่อน (Coral) */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 5px;
+    transition: background-color 0.3s ease;
+    /* เพิ่ม transition เพื่อให้การเปลี่ยนสีดูนุ่มนวลขึ้น */
+}
+
+.toggle-discount-button:hover {
+    background-color: #FF6347;
+    /* สีส้มแดง (Tomato) เมื่อ hover */
+}
+
+
+.sidebar-footer button:hover {
+    background-color: #0056b3;
+}
+
+
+.cancel-menu-button {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 13px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.cancel-menu-button:hover {
+    background-color: #ff0000;
+}
+
+.header-titles {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    padding: 10px;
+    font-weight: bold;
+    background-color: #f0f0f0;
+}
+
+.menu-list li {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.cancel-menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.delete-button {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.delete-button:hover {
+    background-color: #ff3333;
+}
+
+.header-titles:not(:has(.cancel-column:not([style*="display: none"]))),
+.swipe-item:not(:has(.cancel-column:not([style*="display: none"]))) {
+    grid-template-columns: 3fr 1fr 1fr;
+}
+
+/* ส่วนลด */
+.error-message {
+    color: red;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.print-qr-button {
+    padding: 10px 20px;
+    /* ปรับขนาดให้เท่ากัน */
     background-color: #007bff;
     color: white;
     border: none;
     border-radius: 3px;
     cursor: pointer;
-    width: 100%; /* กำหนดความกว้างของปุ่มให้เท่ากัน */
-    margin-bottom: 10px; /* เพิ่มระยะห่างระหว่างปุ่ม */
-  }
+    width: 100%;
+    /* กำหนดความกว้างของปุ่มให้เท่ากัน */
+    margin-bottom: 10px;
+    /* เพิ่มระยะห่างระหว่างปุ่ม */
+}
 
-  .print-qr-button:hover {
+.print-qr-button:hover {
     background-color: #0056b3;
-  }
+}
 
-  .print-qr-button i {
+.print-qr-button i {
     margin-right: 1px;
-  }
+}
 
-  .sidebar-footer button:hover {
+.sidebar-footer button:hover {
     background-color: #0056b3;
-  }
+}
 
-  .button-column {
-    display: flex;
-    flex-direction: column;
-    width: 50%;
-  }
 
-  .top-left-container {
+.top-left-container {
     position: absolute;
     top: 10px;
     left: 10px;
@@ -923,27 +960,35 @@ button:hover {
 }
 
 .payment-methods {
-    margin-top: 80px; /* Adjusted to make space for the top-left heading */
+    margin-top: 80px;
+    /* Adjusted to make space for the top-left heading */
     display: flex;
-    gap: 20px; /* Add some space between the buttons */
+    gap: 20px;
+    /* Add some space between the buttons */
     justify-content: center;
 }
 
 .payment-button {
     background-color: #4CAF50;
     color: white;
-    width: 250px; /* Fixed width */
-    height: 250px; /* Fixed height */
+    width: 250px;
+    /* Fixed width */
+    height: 250px;
+    /* Fixed height */
     border: none;
-    border-radius: 10px; /* Slightly rounded corners */
+    border-radius: 10px;
+    /* Slightly rounded corners */
     cursor: pointer;
-    font-size: 24px; /* Increased font size */
-    font-weight: bold; /* Added bold font weight */
+    font-size: 24px;
+    /* Increased font size */
+    font-weight: bold;
+    /* Added bold font weight */
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    text-transform: uppercase; /* Make text uppercase */
+    text-transform: uppercase;
+    /* Make text uppercase */
 }
 
 .payment-button:hover {
@@ -959,8 +1004,8 @@ button:hover {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgb(0,0,0);
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
     padding-top: 60px;
 }
 
@@ -972,6 +1017,7 @@ button:hover {
     width: 80%;
     max-width: 500px;
     border-radius: 10px;
+    text-align: center;
 
 }
 
@@ -992,13 +1038,17 @@ button:hover {
 .confirm-button {
     background-color: #4CAF50;
     color: white;
-    padding: 15px 25px; /* Increased padding for larger button */
+    padding: 15px 25px;
+    /* Increased padding for larger button */
     margin-top: 20px;
     border: none;
-    border-radius: 10px; /* Increased border radius for a more rounded look */
+    border-radius: 10px;
+    /* Increased border radius for a more rounded look */
     cursor: pointer;
-    font-size: 18px; /* Increased font size */
-    font-weight: bold; /* Added bold font weight */
+    font-size: 18px;
+    /* Increased font size */
+    font-weight: bold;
+    /* Added bold font weight */
 }
 
 .confirm-button:hover {
@@ -1026,14 +1076,8 @@ button:hover {
     border: none;
     padding: 10px 20px;
     cursor: pointer;
-  }
+}
 
-  .payment-button:hover {
+.payment-button:hover {
     background-color: #0056b3;
-  }
-
-  .disabled-button {
-    background-color: #ccc;
-    color: #666;
-    cursor: not-allowed;
-  }
+}

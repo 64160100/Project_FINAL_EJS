@@ -16,11 +16,11 @@ module.exports = {
 	
 		UserModel.validateUsername(inputData, (error, userResult) => {
 			if (error) {
-				console.error('Error validating username:', error);
+				console.error('เกิดข้อผิดพลาดในการตรวจสอบชื่อผู้ใช้', error);
 				return res.status(500).json({ message: 'Internal Server Error' });
 			}
 			if (!userResult) {
-				req.flash('error', 'Username does not exist');
+				req.flash('error', 'ไม่มีชื่อผู้ใช้');
 				return res.render('login', { messages: req.flash('error') });
 			}
 	
@@ -31,7 +31,7 @@ module.exports = {
 					return res.status(500).json({ message: 'Internal Server Error' });
 				}
 				if (!result) {
-					req.flash('error', 'Invalid password');
+					req.flash('error', 'รหัสผ่านไม่ถูกต้อง');
 					return res.render('login', { messages: req.flash('error') });
 				}
 				if (bcrypt.compare(inputData.password, result.password)) {

@@ -453,33 +453,6 @@
     flex: 1;
 }
 
-/* ส่วนลด */
-.print-qr-button {
-    background-color: #ffc107;
-    /* Yellow background color */
-    color: #000;
-    /* Black text color for better contrast */
-    border: none;
-    padding: 20px;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 14px;
-    align-items: center;
-    gap: 8px;
-    /* Space between icon and text */
-    transition: background-color 0.3s ease;
-}
-
-.print-qr-button:hover {
-    background-color: #e0a800;
-    /* Darker yellow background color on hover */
-}
-
-.print-qr-button i {
-    font-size: 18px;
-    /* Adjust icon size as needed */
-}
-
 /* หน่วย */
 .header-titles {
     display: flex;
@@ -858,45 +831,132 @@ button:hover {
   }
 
   .toggle-discount-button {
-    padding: 10px 20px; /* ปรับขนาดให้เท่ากัน */
-    background-color: #007bff;
+    padding: 10px 20px;
+    background-color: #FF7F50; /* สีส้มอ่อน (Coral) */
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    width: 100%; /* กำหนดความกว้างของปุ่มให้เท่ากัน */
-    margin-bottom: 10px; /* เพิ่มระยะห่างระหว่างปุ่ม */
+    width: 100%;
+    margin-bottom: 5px;
+    transition: background-color 0.3s ease; /* เพิ่ม transition เพื่อให้การเปลี่ยนสีดูนุ่มนวลขึ้น */
   }
-
+  
   .toggle-discount-button:hover {
-    background-color: #0056b3;
+  background-color: #FF6347; /* สีส้มแดง (Tomato) เมื่อ hover */
   }
 
-  .print-qr-button {
-    padding: 10px 20px; /* ปรับขนาดให้เท่ากัน */
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    width: 100%; /* กำหนดความกว้างของปุ่มให้เท่ากัน */
-    margin-bottom: 10px; /* เพิ่มระยะห่างระหว่างปุ่ม */
-  }
-
-  .print-qr-button:hover {
-    background-color: #0056b3;
-  }
-
-  .print-qr-button i {
-    margin-right: 1px;
-  }
 
   .sidebar-footer button:hover {
     background-color: #0056b3;
   }
 
-  .button-column {
-    display: flex;
-    flex-direction: column;
-    width: 50%;
+
+  .cancel-menu-button {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 13px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
   }
+  
+  .cancel-menu-button:hover {
+    background-color: #ff0000;
+  }
+
+.header-titles {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  padding: 10px;
+  font-weight: bold;
+  background-color: #f0f0f0;
+}
+
+.menu-list li {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.cancel-menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.delete-button {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background-color: #ff3333;
+}
+
+.header-titles:not(:has(.cancel-column:not([style*="display: none"]))),
+.swipe-item:not(:has(.cancel-column:not([style*="display: none"]))) {
+  grid-template-columns: 3fr 1fr 1fr;
+}
+
+/* Sidebar styles */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 260px;
+    background-color: var(--color_Dark1);
+    transition: all .5s ease;
+    z-index: 100; /* Ensure sidebar has a lower z-index */
+}
+
+.sidebar.close {
+    width: 78px;
+}
+
+/* Modal styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 200; /* Sit on top of the sidebar */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}

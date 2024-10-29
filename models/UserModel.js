@@ -1,6 +1,8 @@
 const connection = require('./ConMysql');
+const bcrypt = require('bcrypt');
 
 module.exports = {
+    
     getAllUser: function (callback) {
         connection.query(`
             SELECT 
@@ -8,13 +10,18 @@ module.exports = {
                 e.first_name, 
                 e.last_name, 
                 u.tbl_user_permission, 
-                u.status 
+                u.status,
+                p.permission_name
             FROM 
                 tbl_employees e
             LEFT JOIN 
                 tbl_user u 
             ON 
                 e.employee_id = u.tbl_employees
+            LEFT JOIN
+                tbl_user_permission p
+            ON
+                u.tbl_user_permission = p.permission_id
             ORDER BY 
                 e.employee_id ASC
         `, (error, results) => {
@@ -27,6 +34,7 @@ module.exports = {
                     id: employee.employee_id,
                     name: `${employee.first_name} ${employee.last_name}`,
                     userPermission: employee.tbl_user_permission || '--', // Handle NULL values
+                    permissionName: employee.permission_name || '--', // Handle NULL values
                     status: employee.status || 'ไม่พร้อมใช้งาน' // Handle NULL values
                 }));
                 return callback(null, employees);
@@ -43,13 +51,18 @@ module.exports = {
                 u.tbl_user_permission,
                 u.username,
                 u.password, 
-                u.status 
+                u.status,
+                p.permission_name
             FROM 
                 tbl_employees e
             LEFT JOIN 
                 tbl_user u 
             ON 
                 e.employee_id = u.tbl_employees
+            LEFT JOIN
+                tbl_user_permission p
+            ON
+                u.tbl_user_permission = p.permission_id
             WHERE 
                 e.employee_id = ?
             ORDER BY 
@@ -62,6 +75,7 @@ module.exports = {
                     id: employee.employee_id,
                     name: `${employee.first_name} ${employee.last_name}`,
                     userPermission: employee.tbl_user_permission, 
+                    permissionName: employee.permission_name || '--', // Handle NULL values
                     password: employee.password || '',
                     username: employee.username || '',
                     status: employee.status || 'ไม่พร้อมใช้งาน' 
@@ -72,8 +86,7 @@ module.exports = {
     },
     
     getAllPermissions: function(callback) {
-        // Assuming `tbl_user_permission` is a table and you want to select all rows from it
-        const query = "SELECT permission_id FROM `tbl_user_permission`"; // Corrected query
+        const query = "SELECT permission_id, permission_name FROM `tbl_user_permission`";
         connection.query(query, (error, results) => {
             if (error) {
                 return callback(error, null);

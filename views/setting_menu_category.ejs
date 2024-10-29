@@ -19,7 +19,7 @@
     <div class="sidebar close">
         <!-- ========== Logo ============  -->
         <a href="#" class="logo-box">
-            <i class='bx bxs-cat'></i>
+            <i class='bx bx-food-menu'></i>
             <div class="logo-name">POS</div>
         </a>
 
@@ -210,11 +210,15 @@
                         <li class="category-detail">
                             <span class="category-name"><%= category.menu_category %></span>
                             <% if (permissions.menu.menu_delete === 'Y') { %>
-                            <span>
-                                <form action="/delete_menu_category/<%= category.menu_category %>" method="post" style="display: inline;" onsubmit="return confirmDelete()">
-                                    <button type="submit" class="delete-button">ลบ</button>
-                                </form>
-                            </span>
+                                    <span>
+                                        <form action="/delete_menu_category/<%= category.menu_category %>" method="post" style="display: inline;" onsubmit="return confirmDelete()">
+                                            <% if (category.isReferenced) { %>
+                                                <button type="submit" class="delete-button disabled" disabled>ลบ</button>
+                                            <% } else { %>
+                                                <button type="submit" class="delete-button">ลบ</button>
+                                            <% } %>
+                                        </form>
+                                    </span>
                             <% } %>
                         </li>
                     </div>

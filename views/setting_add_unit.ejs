@@ -19,7 +19,7 @@
     <div class="sidebar close">
         <!-- ========== Logo ============  -->
         <a href="#" class="logo-box">
-            <i class='bx bxs-cat'></i>
+            <i class='bx bx-food-menu'></i>
             <div class="logo-name">POS</div>
         </a>
 
@@ -182,7 +182,7 @@
         <!-- ============= Top Dashboard =============== -->
 
         <div class="topic">
-            ตั้งค่าหน่วยปริมาณ
+            ตั้งค่าหน่วยสินค้า
             <div class="search-add-container">
                 <input type="text" id="searchBox" placeholder="ค้นหาข้อมูล..." />
                 <% if (permissions.buying.buying_create === 'Y') { %>
@@ -229,6 +229,11 @@
                 <h2>เพิ่มหน่วยปริมาณสินค้า</h2>
                 <form action="/create_setting_unit" method="post">
                     <input type="text" name="id_unit" placeholder="หน่วยปริมาณสินค้า" required>
+                    <% if (typeof errorMessage !== 'undefined') { %>
+                        <div class="error-message" style="color: red;">
+                            <p><%= errorMessage %></p>
+                        </div>
+                    <% } %>
                     <div>
                         <% if (permissions.buying.buying_update === 'Y') { %>
                         <button type="submit">เพิ่ม</button>

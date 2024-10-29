@@ -1,5 +1,5 @@
 const connection = require('./ConMysql');
-const bcypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 
 module.exports = {
 
@@ -7,24 +7,32 @@ module.exports = {
         const { username, password } = inputData;
         const query = `SELECT * FROM tbl_user WHERE username = ?`;
         const values = [username];
-
+    
         connection.query(query, values, (error, results) => {
             if (error) {
-            console.error('Error fetching user:', error);
-            return callback(error, null);
+                console.error('Error fetching user:', error);
+                return callback(error, null);
             }
-
+    
             if (results.length > 0) {
-            const user = results[0];
-
-            const hash1 = bcypt.hashSync(user.password, 10)
-            const isPasswordMatch = bcypt.compareSync(password, hash1);
-            if (isPasswordMatch) {
-                return callback(null, user);
+                const user = results[0];
+    
+                // Compare the provided password with the stored hashed password
+                bcrypt.compare(password, user.password, (err, isPasswordMatch) => {
+                    if (err) {
+                        console.error('Error comparing passwords:', err);
+                        return callback(err, null);
+                    }
+    
+                    if (isPasswordMatch) {
+                        return callback(null, user);
+                    } else {
+                        return callback(null, null); // Password does not match
+                    }
+                });
+            } else {
+                return callback(null, null); // User not found
             }
-            }
-
-            return callback(null, null);
         });
     },
 

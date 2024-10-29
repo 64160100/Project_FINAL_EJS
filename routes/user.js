@@ -9,5 +9,4 @@ router.post('/create_password/:id', user.createPassword);
 router.post('/create_user/:id', user.createUser);
 router.post('/update-user-status', user.updateUserStatus);
 
-
 module.exports = router;

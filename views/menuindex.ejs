@@ -11,7 +11,6 @@
     <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
     <!-- Styles  -->
     <link rel="shortcut icon" href="img/kxp_fav.png" type="image/x-icon">
-    <link rel="stylesheet" href="/css/index.css">
     <link rel="stylesheet" href="/css/menuindex.css">
 </head>
 
@@ -19,7 +18,7 @@
     <div class="sidebar close">
         <!-- ========== Logo ============  -->
         <a href="#" class="logo-box">
-            <i class='bx bxs-cat'></i>
+            <i class='bx bx-food-menu'></i>
             <div class="logo-name">POS</div>
         </a>
 
@@ -30,29 +29,30 @@
             <!-- -------- Non Dropdown List Item ------- -->
             <li>
                 <div class="title">
-                  <% if (permissions.table.table_view === 'Y') { %>
-                    <a href="/" class="link">
-                      <i class='bx bx-home'></i>
-                      <span class="name">หน้าหลัก</span>
-                    </a>
-                  <% } else { %>
-                    <a href="/zone/<%= zone_name %>/table/<%= table_id %>/menuindex" class="link">
-                      <i class='bx bx-home'></i>
-                      <span class="name">หน้าหลัก</span>
-                    </a>
-                  <% } %>
-                  <!-- <i class='bx bxs-chevron-down'></i> -->
+                    <% if (permissions.table.table_view==='Y' ) { %>
+                        <a href="/" class="link">
+                            <i class='bx bx-home'></i>
+                            <span class="name">หน้าหลัก</span>
+                        </a>
+                        <% } else { %>
+                            <a href="/zone/<%= zone_name %>/table/<%= table_id %>/menuindex" class="link">
+                                <i class='bx bx-home'></i>
+                                <span class="name">หน้าหลัก</span>
+                            </a>
+                            <% } %>
+                                <!-- <i class='bx bxs-chevron-down'></i> -->
                 </div>
                 <div class="submenu">
-                  <% if (permissions.table.table_view === 'Y') { %>
-                    <a href="/" class="link submenu-title">หน้าหลัก</a>
-                  <% } else { %>
-                    <a href="/zone/<%= zone_name %>/table/<%= table_id %>/menuindex" class="link submenu-title">หน้าหลัก</a>
-                  <% } %>
-                  <!-- submenu links here  -->
+                    <% if (permissions.table.table_view==='Y' ) { %>
+                        <a href="/" class="link submenu-title">หน้าหลัก</a>
+                        <% } else { %>
+                            <a href="/zone/<%= zone_name %>/table/<%= table_id %>/menuindex"
+                                class="link submenu-title">หน้าหลัก</a>
+                            <% } %>
+                                <!-- submenu links here  -->
                 </div>
-              </li>
-              
+            </li>
+
 
             <!-- -------- Non Dropdown List Item ------- -->
             <% if (permissions && permissions.dashboard.dashboard_read==='Y' ) { %>
@@ -72,241 +72,245 @@
                 <% } %>
 
 
-            <!-- -------- Dropdown List Item ------- -->
-            <% if (permissions && permissions.employee.employee_read==='Y' ) { %>
-                <li class="dropdown">
-                    <div class="title">
-                        <a href="/employee" class="link">
-                            <i class='bx bx-collection'></i>
-                            <span class="name">ข้อมูลพนักงาน</span>
-                        </a>
-                        <i class='bx bxs-chevron-down'></i>
-                    </div>
-                    <div class="submenu">
-                        <a href="/employee" class="link submenu-title">ข้อมูลพนักงาน</a>
-                        <a href="/employee" class="link">พนักงาน</a>
-                        <a href="/user" class="link">ผู้ใช้งาน</a>
-                        <a href="/permission" class="link">สิทธิ์ผู้ใช้งาน</a>
-                    </div>
-                </li>
-                <% } %>
+                    <!-- -------- Dropdown List Item ------- -->
+                    <% if (permissions && permissions.employee.employee_read==='Y' ) { %>
+                        <li class="dropdown">
+                            <div class="title">
+                                <a href="/employee" class="link">
+                                    <i class='bx bx-collection'></i>
+                                    <span class="name">ข้อมูลพนักงาน</span>
+                                </a>
+                                <i class='bx bxs-chevron-down'></i>
+                            </div>
+                            <div class="submenu">
+                                <a href="/employee" class="link submenu-title">ข้อมูลพนักงาน</a>
+                                <a href="/employee" class="link">พนักงาน</a>
+                                <a href="/user" class="link">ผู้ใช้งาน</a>
+                                <a href="/permission" class="link">สิทธิ์ผู้ใช้งาน</a>
+                            </div>
+                        </li>
+                        <% } %>
 
-            <!-- -------- Dropdown List Item ------- -->
-            <% if (permissions && permissions.menu.menu_read==='Y' ) { %>
-                <li class="dropdown">
-                    <div class="title">
-                        <a href="/menu" class="link">
-                            <i class='bx bxs-food-menu'></i>
-                            <span class="name">เมนูอาหารและบริการ</span>
-                        </a>
-                        <i class='bx bxs-chevron-down'></i>
-                    </div>
-                    <div class="submenu">
-                        <a href="/menu" class="link submenu-title">เมนูอาหารและบริการ</a>
-                        <a href="/menu" class="link">เมนูอาหาร</a>
-                        <a href="/setting_menu_category" class="link">ตั้งค่าหมวดหมู่</a>
-                        <a href="/setting_menu_type" class="link">ตั้งค่าประเภท</a>
-                        <a href="/setting_menu_unit" class="link">ตั้งค่าหน่วยสินค้า</a>
-                    </div>
-                </li>
-                <% } %>
+                            <!-- -------- Dropdown List Item ------- -->
+                            <% if (permissions && permissions.menu.menu_read==='Y' ) { %>
+                                <li class="dropdown">
+                                    <div class="title">
+                                        <a href="/menu" class="link">
+                                            <i class='bx bxs-food-menu'></i>
+                                            <span class="name">เมนูอาหารและบริการ</span>
+                                        </a>
+                                        <i class='bx bxs-chevron-down'></i>
+                                    </div>
+                                    <div class="submenu">
+                                        <a href="/menu" class="link submenu-title">เมนูอาหารและบริการ</a>
+                                        <a href="/menu" class="link">เมนูอาหาร</a>
+                                        <a href="/setting_menu_category" class="link">ตั้งค่าหมวดหมู่</a>
+                                        <a href="/setting_menu_type" class="link">ตั้งค่าประเภท</a>
+                                        <a href="/setting_menu_unit" class="link">ตั้งค่าหน่วยสินค้า</a>
+                                    </div>
+                                </li>
+                                <% } %>
 
-            <!-- -------- Non Dropdown List Item ------- -->
-            <% if (permissions && permissions.table.table_read === 'Y') { %>
-                <li class="dropdown">
-                  <div class="title">
-                    <% if (permissions.table.table_view === 'Y') { %>
-                      <a href="table" class="link">
-                        <i class='bx bx-table'></i>
-                        <span class="name">โต๊ะอาหาร</span>
-                      </a>
-                    <% } else { %>
-                      <a href="/zone/<%= zone_name %>/table/<%= table_id %>/order_food" class="link">
-                        <i class='bx bx-table'></i>
-                        <span class="name">โต๊ะอาหาร</span>
-                      </a>
-                    <% } %>
-                    <i class='bx bxs-chevron-down'></i>
-                  </div>
-                  <div class="submenu">
-                    <% if (permissions.table.table_view === 'Y') { %>
-                      <a href="/table" class="link submenu-title">โต๊ะอาหาร</a>
-                      <a href="/table" class="link">จัดโต๊ะอาหาร</a>
-                      <a href="/view_bill" class="link">บิลอาหาร</a>
-                    <% } else { %>
-                      <a href="/zone/<%= zone_name %>/table/<%= table_id %>/order_food" class="link submenu-title">สั่งอาหาร</a>
-                    <% } %>
-                  </div>
-                </li>
-              <% } %>
+                                    <!-- -------- Non Dropdown List Item ------- -->
+                                    <% if (permissions && permissions.table.table_read==='Y' ) { %>
+                                        <li class="dropdown">
+                                            <div class="title">
+                                                <% if (permissions.table.table_view==='Y' ) { %>
+                                                    <a href="table" class="link">
+                                                        <i class='bx bx-table'></i>
+                                                        <span class="name">โต๊ะอาหาร</span>
+                                                    </a>
+                                                    <% } else { %>
+                                                        <a href="/zone/<%= zone_name %>/table/<%= table_id %>/order_food"
+                                                            class="link">
+                                                            <i class='bx bx-table'></i>
+                                                            <span class="name">โต๊ะอาหาร</span>
+                                                        </a>
+                                                        <% } %>
+                                                            <i class='bx bxs-chevron-down'></i>
+                                            </div>
+                                            <div class="submenu">
+                                                <% if (permissions.table.table_view==='Y' ) { %>
+                                                    <a href="/table" class="link submenu-title">โต๊ะอาหาร</a>
+                                                    <a href="/table" class="link">จัดโต๊ะอาหาร</a>
+                                                    <a href="/view_bill" class="link">บิลอาหาร</a>
+                                                    <% } else { %>
+                                                        <a href="/zone/<%= zone_name %>/table/<%= table_id %>/order_food"
+                                                            class="link submenu-title">สั่งอาหาร</a>
+                                                        <% } %>
+                                            </div>
+                                        </li>
+                                        <% } %>
 
-            <!-- -------- Non Dropdown List Item ------- -->
-            <% if (permissions && permissions.buying.buying_read==='Y' ) { %>
-                <li class="dropdown">
-                    <div class="title">
-                        <a href="/buying" class="link">
-                            <i class='bx bx-cart-download'></i>
-                            <span class="name">รายการจัดซื้อและคงคลัง</span>
-                        </a>
-                        <i class='bx bxs-chevron-down'></i>
-                    </div>
-                    <div class="submenu">
-                        <a href="/buying" class="link submenu-title">รายการจัดซื้อและคงคลัง</a>
-                        <a href="/buying" class="link">รายการจัดซื้อ</a>
-                        <a href="/warehouse" class="link">คงคลัง</a>
-                        <a href="/setting_type" class="link">ตั้งค่าประเภท</a>
-                        <a href="/setting_unit" class="link">ตั้งค่าปริมาณ</a>
-                    </div>
-                </li>    
-                <% } %>
+                                            <!-- -------- Non Dropdown List Item ------- -->
+                                            <% if (permissions && permissions.buying.buying_read==='Y' ) { %>
+                                                <li class="dropdown">
+                                                    <div class="title">
+                                                        <a href="/buying" class="link">
+                                                            <i class='bx bx-cart-download'></i>
+                                                            <span class="name">รายการจัดซื้อและคงคลัง</span>
+                                                        </a>
+                                                        <i class='bx bxs-chevron-down'></i>
+                                                    </div>
+                                                    <div class="submenu">
+                                                        <a href="/buying"
+                                                            class="link submenu-title">รายการจัดซื้อและคงคลัง</a>
+                                                        <a href="/buying" class="link">รายการจัดซื้อ</a>
+                                                        <a href="/warehouse" class="link">คงคลัง</a>
+                                                        <a href="/setting_type" class="link">ตั้งค่าประเภท</a>
+                                                        <a href="/setting_unit" class="link">ตั้งค่าปริมาณ</a>
+                                                    </div>
+                                                </li>
+                                                <% } %>
 
-            <!-- -------- Non Dropdown List Item ------- -->
-            <% if (permissions && permissions.promotion.promotion_read==='Y' ) {
-                %>
-                <li>
-                    <div class="title">
-                        <a href="/promotion" class="link">
-                            <i class='bx bxs-dollar-circle'></i>
-                            <span class="name">โปรโมชั่น</span>
-                        </a>
-                        <!-- <i class='bx bxs-chevron-down'></i> -->
-                    </div>
-                    <div class="submenu">
-                        <a href="/promotion" class="link submenu-title">โปรโมชั่น</a>
-                        <!-- submenu links here  -->
-                    </div>
-                </li>
-            </ul>
-                <% } %>
+                                                    <!-- -------- Non Dropdown List Item ------- -->
+                                                    <% if (permissions && permissions.promotion.promotion_read==='Y' ) {
+                                                        %>
+                                                        <li>
+                                                            <div class="title">
+                                                                <a href="/promotion" class="link">
+                                                                    <i class='bx bxs-dollar-circle'></i>
+                                                                    <span class="name">โปรโมชั่น</span>
+                                                                </a>
+                                                                <!-- <i class='bx bxs-chevron-down'></i> -->
+                                                            </div>
+                                                            <div class="submenu">
+                                                                <a href="/promotion"
+                                                                    class="link submenu-title">โปรโมชั่น</a>
+                                                                <!-- submenu links here  -->
+                                                            </div>
+                                                        </li>
         </ul>
+        <% } %>
+            </ul>
     </div>
 
     <!-- ============= Home Section =============== -->
     <section class="home">
         <div class="nav">
-            <% if (permissions.table.table_view === 'Y') { %>
-              <div class="toggle-sidebar">
-                  <i class='bx bx-menu'></i>
-              </div>
-            <% } %>
-            <nav>
-              <div class="nav-content">
-                <div class="profile-details">
-                    <% if (user) { %>
-                        <img src="/img/chef.png" alt="" class="profile-image">
-                        <% if (user.tbl_employees) { %>
-                            <span class="user-id">ID: <%= user.tbl_employees %></span>
-                        <% } else if (user.username) { %>
-                            <span class="username">Username: <%= user.username %></span>
-                        <% } %>
-                    </div>
-                    <a href="/logout" class="auth-link">Logout</a>
-                    <% } else { %>
-                        <a href="/login" class="auth-link">เข้าสู่ระบบ</a>
-                    <% } %>
+            <% if (permissions.table.table_view==='Y' ) { %>
+                <div class="toggle-sidebar">
+                    <i class='bx bx-menu'></i>
                 </div>
-            </nav>
-          </div>
+                <% } %>
+                    <nav>
+                        <div class="nav-content">
+                            <div class="profile-details">
+                                <% if (user) { %>
+                                    <img src="/img/chef.png" alt="" class="profile-image">
+                                    <% if (user.tbl_employees) { %>
+                                        <span class="user-id">ID: <%= user.tbl_employees %></span>
+                                        <% } else if (user.username) { %>
+                                            <span class="username">Username: <%= user.username %></span>
+                                            <% } %>
+                            </div>
+                            <a href="/logout" class="auth-link">Logout</a>
+                            <% } else { %>
+                                <a href="/login" class="auth-link">เข้าสู่ระบบ</a>
+                                <% } %>
+                        </div>
+                    </nav>
+        </div>
 
 
         <!-- ============= Center Dashboard =============== -->
-
         <header>
-          <nav>
-              <a href=""></a>
-          </nav>
-      </header>
+            <nav>
+                <a href=""></a>
+            </nav>
+        </header>
 
-      <!-- carousel -->
-      <div class="carousel">
-          <!-- list item -->
-          <div class="list">
-              <div class="item">
-                  <img src="/img/Food_Menu1.png">
-              </div>
-              <div class="item">
-                  <img src="/img/Food_Menu2.png">
-              </div>
-              <div class="item">
-                  <img src="/img/Food_Menu3.png">
-              </div>
-              <div class="item">
-                  <img src="/img/Food_Menu4.png">
-              </div>
-          </div>
-          <!-- list thumnail -->
-          <div class="thumbnail">
-              <div class="item">
-                  <img src="/img/Food_Menu1.png">
-              </div>
-              <div class="item">
-                  <img src="/img/Food_Menu2.png">
-              </div>
-              <div class="item">
-                  <img src="/img/Food_Menu3.png">
-              </div>
-              <div class="item">
-                  <img src="/img/Food_Menu4.png">
-              </div>
-          </div>
-          <!-- next prev -->
+        <!-- carousel -->
+        <div class="carousel">
+            <!-- list item -->
+            <div class="list">
+                <div class="item">
+                    <img src="/img/Food_Menu1.png">
+                </div>
+                <div class="item">
+                    <img src="/img/Food_Menu2.png">
+                </div>
+                <div class="item">
+                    <img src="/img/Food_Menu3.png">
+                </div>
+                <div class="item">
+                    <img src="/img/Food_Menu4.png">
+                </div>
+            </div>
+            <!-- list thumnail -->
+            <div class="thumbnail">
+                <div class="item">
+                    <img src="/img/Food_Menu1.png">
+                </div>
+                <div class="item">
+                    <img src="/img/Food_Menu2.png">
+                </div>
+                <div class="item">
+                    <img src="/img/Food_Menu3.png">
+                </div>
+                <div class="item">
+                    <img src="/img/Food_Menu4.png">
+                </div>
+            </div>
+            <!-- next prev -->
 
-          <div class="arrows">
-              <button id="prev">&lt;</button>
-              <button id="next">&gt;</button>
-          </div>
-          <!-- time running -->
-          <div class="time"></div>
-      </div>
+            <div class="arrows">
+                <button id="prev">&lt;</button>
+                <button id="next">&gt;</button>
+            </div>
+            <!-- time running -->
+            <div class="time"></div>
+        </div>
 
     </section>
 
     <!-- Link JS -->
     <script src="/js/index.js"></script>
+
     <script>
-      //step 1: get DOM
-      let nextDom = document.getElementById('next');
-      let prevDom = document.getElementById('prev');
-  
-      let carouselDom = document.querySelector('.carousel');
-      let SliderDom = carouselDom.querySelector('.carousel .list');
-      let thumbnailBorderDom = document.querySelector('.carousel .thumbnail');
-      let thumbnailItemsDom = thumbnailBorderDom.querySelectorAll('.item');
-      let timeDom = document.querySelector('.carousel .time');
-  
-      thumbnailBorderDom.appendChild(thumbnailItemsDom[0]);
-      let timeRunning = 1000;
-  
-      nextDom.onclick = function () {
-          showSlider('next');
-      }
-  
-      prevDom.onclick = function () {
-          showSlider('prev');
-      }
-  
-      let runTimeOut;
-  
-      function showSlider(type) {
-          let SliderItemsDom = SliderDom.querySelectorAll('.carousel .list .item');
-          let thumbnailItemsDom = document.querySelectorAll('.carousel .thumbnail .item');
-  
-          if (type === 'next') {
-              SliderDom.appendChild(SliderItemsDom[0]);
-              thumbnailBorderDom.appendChild(thumbnailItemsDom[0]);
-              carouselDom.classList.add('next');
-          } else {
-              SliderDom.prepend(SliderItemsDom[SliderItemsDom.length - 1]);
-              thumbnailBorderDom.prepend(thumbnailItemsDom[thumbnailItemsDom.length - 1]);
-              carouselDom.classList.add('prev');
-          }
-          clearTimeout(runTimeOut);
-          runTimeOut = setTimeout(() => {
-              carouselDom.classList.remove('next');
-              carouselDom.classList.remove('prev');
-          }, timeRunning);
-      }
-  </script>
+        //step 1: get DOM
+        let nextDom = document.getElementById('next');
+        let prevDom = document.getElementById('prev');
+    
+        let carouselDom = document.querySelector('.carousel');
+        let SliderDom = carouselDom.querySelector('.carousel .list');
+        let thumbnailBorderDom = document.querySelector('.carousel .thumbnail');
+        let thumbnailItemsDom = thumbnailBorderDom.querySelectorAll('.item');
+        let timeDom = document.querySelector('.carousel .time');
+    
+        thumbnailBorderDom.appendChild(thumbnailItemsDom[0]);
+        let timeRunning = 1000;
+    
+        nextDom.onclick = function () {
+            showSlider('next');
+        }
+    
+        prevDom.onclick = function () {
+            showSlider('prev');
+        }
+    
+        let runTimeOut;
+    
+        function showSlider(type) {
+            let SliderItemsDom = SliderDom.querySelectorAll('.carousel .list .item');
+            let thumbnailItemsDom = document.querySelectorAll('.carousel .thumbnail .item');
+    
+            if (type === 'next') {
+                SliderDom.appendChild(SliderItemsDom[0]);
+                thumbnailBorderDom.appendChild(thumbnailItemsDom[0]);
+                carouselDom.classList.add('next');
+            } else {
+                SliderDom.prepend(SliderItemsDom[SliderItemsDom.length - 1]);
+                thumbnailBorderDom.prepend(thumbnailItemsDom[thumbnailItemsDom.length - 1]);
+                carouselDom.classList.add('prev');
+            }
+            clearTimeout(runTimeOut);
+            runTimeOut = setTimeout(() => {
+                carouselDom.classList.remove('next');
+                carouselDom.classList.remove('prev');
+            }, timeRunning);
+        }
+    </script>
 </body>
 
 </html>

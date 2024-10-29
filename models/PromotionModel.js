@@ -12,6 +12,16 @@ module.exports = {
         });
     },
 
+    updatePromotionStatus: (id, status, callback) => {
+        const query = 'UPDATE tbl_promotion SET status_promotion = ? WHERE id_promotion = ?';
+        connection.query(query, [status, id], (error, results) => {
+            if (error) {
+                return callback(error);
+            }
+            callback(null, results);
+        });
+    },
+
     getPromotionsBySumIdWithPagination: (sumPromotionId, limit, offset, callback) => {
         const query = 'SELECT * FROM tbl_promotion WHERE sum_promotion_id = ? LIMIT ? OFFSET ?';
         connection.query(query, [sumPromotionId, limit, offset], (err, results) => {

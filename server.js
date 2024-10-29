@@ -128,6 +128,8 @@ app.get('/zone/:zone/table/:table/menuindex', require('./routes/table'));
 
 app.get('/zone/:zone/table/:table/order_food/auto_login', require('./routes/table'));
 
+app.post('/zone/:zone/table/:table/cancel_menu', require('./routes/table'));
+
 // ===================== Buying ===================== // 
 app.get('/buying', require('./routes/buying'));
 app.get('/add_buying', require('./routes/buying'));
@@ -174,5 +176,4 @@ app.listen(3000, () => {
 function startPythonScript() {
     const pythonProcess = spawn('python', ['server.py']);
     console.log('Python script started');
-
 }

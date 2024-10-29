@@ -249,3 +249,8 @@
     font-weight: bold;
     font-size: 14px;
 }
+
+.delete-button.disabled {
+    background-color: #ccc; /* Gray color */
+    cursor: not-allowed; /* Change cursor to indicate the button is not clickable */
+}

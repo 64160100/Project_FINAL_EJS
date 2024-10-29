@@ -276,12 +276,37 @@ module.exports = {
 		BuyingModel.viewSettingType((error, results) => {
 			if (error) {
 				console.log(error);
+				return res.status(500).send('Internal Server Error');
 			} else {
-				res.render('setting_type', {
-					results,
-					user: req.session.user,
-					permissions: permissions
+				// Check if each type is referenced in the tbl_buying and setting_type tables
+				const typesWithReferences = results.map(type => {
+					return new Promise((resolve, reject) => {
+						// Check if the type is referenced in tbl_buying
+						BuyingModel.checkTypeReferencedInBuying(type.id_type, (error, isReferencedInBuying) => {
+							if (error) {
+								return reject(error);
+							}
+									
+								type.isReferencedInBuying = isReferencedInBuying;
+								resolve(type);
+						});
+					});
 				});
+	
+				Promise.all(typesWithReferences)
+					.then(types => {
+						console.log(types);
+						res.render('setting_type', {
+							results: types, // Pass results instead of types
+							user: req.session.user,
+							permissions: permissions,
+							errorMessage: req.query.errorMessage || null // Pass error message if exists
+						});
+					})
+					.catch(error => {
+						console.log(error);
+						return res.status(500).send('Internal Server Error');
+					});
 			}
 		});
 	},
@@ -311,11 +336,39 @@ module.exports = {
 
 	createSettingType: (req, res) => {
 		const id_type = req.body.id_type;
-		BuyingModel.createSettingType(id_type, (error, results) => {
+	
+		// Check for duplicate entry before inserting
+		BuyingModel.checkTypeExists(id_type, (error, exists) => {
 			if (error) {
 				console.log(error);
+				return res.status(500).send('Internal Server Error');
+			}
+	
+			if (exists) {
+				// If the type already exists, render the page with an error message
+				BuyingModel.viewSettingType((error, results) => {
+					if (error) {
+						console.log(error);
+						return res.status(500).send('Internal Server Error');
+					} else {
+						return res.render('setting_add_type', {
+							results,
+							user: req.session.user,
+							permissions: req.session.permissions,
+							errorMessage: `มีรายการ '${id_type}' อยู่'`
+						});
+					}
+				});
 			} else {
-				res.redirect('/setting_type');
+				// If the type does not exist, proceed with the insertion
+				BuyingModel.createSettingType(id_type, (error, results) => {
+					if (error) {
+						console.log(error);
+						return res.status(500).send('Internal Server Error');
+					} else {
+						return res.redirect('/setting_type');
+					}
+				});
 			}
 		});
 	},
@@ -344,12 +397,36 @@ module.exports = {
 		BuyingModel.viewSettingUnit((error, results) => {
 			if (error) {
 				console.log(error);
+				return res.status(500).send('Internal Server Error');
 			} else {
-				res.render('setting_unit', {
-					results,
-					user: req.session.user,
-					permissions: permissions
+				// Check if each unit is referenced in the tbl_buying table
+				const unitsWithReferences = results.map(unit => {
+					return new Promise((resolve, reject) => {
+						BuyingModel.checkUnitReferencedInBuying(unit.id_unit, (error, isReferencedInBuying) => {
+							if (error) {
+								return reject(error);
+							}
+	
+							unit.isReferencedInBuying = isReferencedInBuying;
+							resolve(unit);
+						});
+					});
 				});
+	
+				Promise.all(unitsWithReferences)
+					.then(units => {
+						console.log(units);
+						res.render('setting_unit', {
+							results: units, // Pass results instead of units
+							user: req.session.user,
+							permissions: permissions,
+							errorMessage: req.query.errorMessage || null // Pass error message if exists
+						});
+					})
+					.catch(error => {
+						console.log(error);
+						return res.status(500).send('Internal Server Error');
+					});
 			}
 		});
 	},
@@ -379,11 +456,39 @@ module.exports = {
 
 	createSettingUnit: (req, res) => {
 		const id_unit = req.body.id_unit;
-		BuyingModel.createSettingUnit(id_unit, (error, results) => {
+	
+		// Check for duplicate entry before inserting
+		BuyingModel.checkUnitExists(id_unit, (error, exists) => {
 			if (error) {
 				console.log(error);
+				return res.status(500).send('Internal Server Error');
+			}
+	
+			if (exists) {
+				// If the unit already exists, render the page with an error message
+				BuyingModel.viewSettingUnit((error, results) => {
+					if (error) {
+						console.log(error);
+						return res.status(500).send('Internal Server Error');
+					} else {
+						return res.render('setting_add_unit', {
+							results,
+							user: req.session.user,
+							permissions: req.session.permissions,
+							errorMessage: `มีรายการ '${id_unit}' อยู่แล้ว`
+						});
+					}
+				});
 			} else {
-				res.redirect('/setting_unit');
+				// If the unit does not exist, proceed with the insertion
+				BuyingModel.createSettingUnit(id_unit, (error, results) => {
+					if (error) {
+						console.log(error);
+						return res.status(500).send('Internal Server Error');
+					} else {
+						return res.redirect('/setting_unit');
+					}
+				});
 			}
 		});
 	},
@@ -458,7 +563,8 @@ module.exports = {
 	
 				// Convert the aggregated results back to an array
 				const aggregatedArray = Object.values(aggregatedResults);
-				console.log(aggregatedArray);
+
+
 				res.render('warehouse', {
 					results: aggregatedArray,
 					user: req.session.user,

@@ -303,12 +303,46 @@ module.exports = {
         });
     },
 
-    viewSettingType: function (callback) {
-        connection.query('SELECT menu_type FROM menu_type', (error, results) => {
+    checkTypeExists: (type, callback) => {
+        const query = 'SELECT COUNT(*) AS count FROM menu_type WHERE menu_type = ?';
+        connection.query(query, [type], (error, results) => {
             if (error) {
-                return callback(error, null);
+                return callback(error);
             }
-            return callback(null, results);
+            const exists = results[0].count > 0;
+            callback(null, exists);
+        });
+    },
+
+    viewSettingType: (callback) => {
+        const query = 'SELECT * FROM menu_type';
+        connection.query(query, (error, results) => {
+            if (error) {
+                return callback(error);
+            }
+            callback(null, results);
+        });
+    },
+
+    checkTypeReferenced: (type, callback) => {
+        const query = 'SELECT COUNT(*) AS count FROM tbl_menu WHERE menu_type = ?';
+        connection.query(query, [type], (error, results) => {
+            if (error) {
+                return callback(error);
+            }
+            const isReferenced = results[0].count > 0;
+            callback(null, isReferenced);
+        });
+    },
+
+    checkUnitReferenced: (unit, callback) => {
+        const query = 'SELECT COUNT(*) AS count FROM tbl_menu WHERE menu_unit = ?';
+        connection.query(query, [unit], (error, results) => {
+            if (error) {
+                return callback(error);
+            }
+            const isReferenced = results[0].count > 0;
+            callback(null, isReferenced);
         });
     },
 
@@ -321,12 +355,34 @@ module.exports = {
         });
     },
 
+    checkCategoryExists: (category, callback) => {
+        const query = 'SELECT COUNT(*) AS count FROM menu_category WHERE menu_category = ?';
+        connection.query(query, [category], (error, results) => {
+            if (error) {
+                return callback(error);
+            }
+            const exists = results[0].count > 0;
+            callback(null, exists);
+        });
+    },
+
     viewSettingCategory: function (callback) {
         connection.query('SELECT menu_category FROM menu_category', (error, results) => {
             if (error) {
                 return callback(error, null);
             }
             return callback(null, results);
+        });
+    },
+
+    checkCategoryReferenced: (category, callback) => {
+        const query = 'SELECT COUNT(*) AS count FROM tbl_menu WHERE menu_category = ?';
+        connection.query(query, [category], (error, results) => {
+            if (error) {
+                return callback(error);
+            }
+            const isReferenced = results[0].count > 0;
+            callback(null, isReferenced);
         });
     },
 

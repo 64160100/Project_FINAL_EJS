@@ -19,7 +19,7 @@
     <div class="sidebar close">
         <!-- ========== Logo ============  -->
         <a href="#" class="logo-box">
-            <i class='bx bxs-cat'></i>
+            <i class='bx bx-food-menu'></i>
             <div class="logo-name">POS</div>
         </a>
 
@@ -232,6 +232,9 @@
                 <h1>
                     <%= item.name %>
                 </h1>
+                <p>
+                    ประเภท: <%= item.type %>
+                </p>
                 <div class="item-details">
                     <div class="image-container">
                         <img id="preview" src="/img/<%= item.picture %>" alt="<%= item.name %>">
@@ -241,13 +244,7 @@
                             <%= item.price %>
                         </span> บาท</p>
                 </div>
-                <% if (typeof errorMessage !=='undefined' ) { %>
-                    <div class="error-message">
-                        <p>
-                            <%= errorMessage %>
-                        </p>
-                    </div>
-                <% } %>
+
                 <form id="menuForm" action="/zone/<%= zone_name %>/table/<%= table_id %>/create_order" method="POST">
                     <input type="hidden" name="id" value="<%= item.id %>">
                     <input type="hidden" name="name" value="<%= item.name %>">
@@ -319,6 +316,7 @@
                                 <button type="button" id="decrement-btn">-</button>
                                 <input type="number" id="quantity" name="quantity" value="1" min="1" max="<%= item.remain %>">
                                 <button type="button" id="increment-btn">+</button>
+                                <span class="unit-label"><%= item.unit %></span>
                             </div>
                         </div>
                         <button type="submit" id="order-btn">ยืนยัน</button>
@@ -328,6 +326,29 @@
         </div>
     </section>
     <script src="/js/index.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const restaurantRadio = document.getElementById('restaurant');
+            const homeRadio = document.getElementById('home');
+            const unitLabel = document.querySelector('.unit-label');
+    
+            function updateUnitLabel() {
+                if (homeRadio.checked) {
+                    unitLabel.textContent = 'กล่อง';
+                } else {
+                    unitLabel.textContent = '<%= item.unit %>';
+                }
+            }
+    
+            // Add event listeners to the radio buttons
+            restaurantRadio.addEventListener('change', updateUnitLabel);
+            homeRadio.addEventListener('change', updateUnitLabel);
+    
+            // Initial call to set the correct unit label on page load
+            updateUnitLabel();
+        });
+    </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {

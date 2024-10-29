@@ -259,7 +259,7 @@ module.exports = {
 									acc[item.name_product] += item.unit_quantity_all;
 									return acc;
 								}, {});
-								// Calculate the number of menus that can be created
+								
 								const menuCounts = menu.map(menuItem => {
 									const ingredients = foodRecipes.filter(recipe => recipe.tbl_menu_id === menuItem.id);
 									const minMenus = ingredients.reduce((min, ingredient) => {
@@ -267,7 +267,7 @@ module.exports = {
 										const possibleMenus = Math.floor(totalQuantity / ingredient.unit_quantity);
 										return Math.min(min, possibleMenus);
 									}, Infinity);
-									// If minMenus is Infinity, set it to 0
+									
 									const remainMenus = minMenus === Infinity ? 0 : minMenus;
 									return {
 										...menuItem,
@@ -275,7 +275,7 @@ module.exports = {
 										status: remainMenus === 0 ? 'OFF' : 'ON'
 									};
 								});
-								// Update remain and status in the database
+								
 								const updatePromises = menuCounts.map(menuItem => {
 									return new Promise((resolve, reject) => {
 										TableModel.updateMenuRemainAndStatus(menuItem.id, menuItem.remain, menuItem.status, (error, results) => {
@@ -360,6 +360,7 @@ module.exports = {
 														req.session.totalPrice = totalPrice;
 														
 														const basket = req.session.basket || [];
+														console.log('Basket:', groupedMenu);
 														res.render('order_food', {
 															groupedMenu: groupedMenu,
 															basket: basket,
@@ -488,7 +489,7 @@ module.exports = {
 				console.error('Error fetching item:', error);
 				return res.status(500).send("An error occurred");
 			}
-	
+			
 			if (!item) {
 				return res.status(404).send("Item not found");
 			}
@@ -517,7 +518,7 @@ module.exports = {
 						option.num_unit = numUnit;
 						option.price_options_all = option.price * numUnit;
 					});
-	
+					console.log(item);
 					res.render('customize', {
 						item: item,
 						menuOptions: menuOptions,
@@ -537,23 +538,23 @@ module.exports = {
 		const zoneName = req.params.zone;
 		const tableId = req.params.table;
 		let selectedOptions = req.body.special_options || [];
-
+	
 		// Ensure selectedOptions is an array
 		if (!Array.isArray(selectedOptions)) {
 			selectedOptions = [selectedOptions];
 		}
-
+	
 		const nameOptions = selectedOptions.map(id => req.body[`name_options_${id}`]);
-
+	
 		TableModel.getMaxNumList((error, maxNumList) => {
 			if (error) {
 				console.error('Error fetching max num_list:', error);
 				return res.status(500).send('Error fetching max num_list');
 			}
-
+	
 			// Calculate the new num_list value
 			const newNumList = maxNumList + 1;
-
+	
 			const orderData = {
 				num_list: newNumList,
 				menu_id: req.body.id,
@@ -568,7 +569,7 @@ module.exports = {
 				name_options: nameOptions,
 				status_bill: 'N'
 			};
-
+	
 			// Check for specific error message before proceeding
 			if (req.body.errorMessage && req.body.errorMessage.includes('Insufficient quantity for product')) {
 				return res.render('customize', {
@@ -580,32 +581,34 @@ module.exports = {
 					groupedOptions: {},
 					errorMessage: req.body.errorMessage,
 					item: req.body, // Ensure item is passed to the view
-					menuOptions: [] // Ensure menuOptions is passed to the view
+					menuOptions: [], // Ensure menuOptions is passed to the view
+					permissions: req.session.permissions, // Pass permissions to the view
+					user: req.session.user // Pass user to the view
 				});
 			}
-
+	
 			TableModel.createOrder(orderData, (error, result) => {
 				if (error) {
 					console.error('Error creating order:', error);
 					return res.status(500).send('Error creating order');
 				}
-
+	
 				// Fetch the max list_menu_id from list_menu_options table
 				TableModel.getListMenuId((error, maxListMenuId) => {
 					if (error) {
 						console.error('Error fetching max list_menu_id:', error);
 						return res.status(500).send('Error fetching max list_menu_id');
 					}
-
+	
 					// Increment maxListMenuId for each option
 					let list_menu_id = maxListMenuId;
-
+	
 					const optionsData = selectedOptions.map((optionId, index) => {
 						list_menu_id++; // Increment maxListMenuId by 1
 						const numUnit = req.body.quantity; // Use num_unit from req.body.quantity
 						const optionPrice = parseFloat(req.body[`options_price_${optionId}`]); // Get the option price from the request body
 						const priceOptionsAll = optionPrice * numUnit; // Calculate price_options_all by multiplying options_price with num_unit
-
+	
 						return {
 							list_menu_id: list_menu_id,
 							option_id: optionId,
@@ -619,7 +622,7 @@ module.exports = {
 							zone_name: zoneName,
 						};
 					});
-
+	
 					// Create special options if there are any
 					if (optionsData.length > 0) {
 						TableModel.createSpecialOption(optionsData, (optionsError, optionsResult) => {
@@ -638,7 +641,7 @@ module.exports = {
 				});
 			});
 		});
-
+	
 		function createFoodComparisonOptions(optionsData, orderData) {
 			// Fetch the max id_food_comparison_options
 			TableModel.getMaxFoodComparisonOptionsId((error, maxId) => {
@@ -647,14 +650,14 @@ module.exports = {
 					deleteOrder(orderData.num_list, orderData.id_table, orderData.zone_name); // Delete the created order
 					return res.status(500).send('Error fetching max id_food_comparison_options');
 				}
-
+	
 				// Iterate over each option and create entries for tbl_food_comparison_options
 				const foodComparisonOptionsData = optionsData.flatMap((option, index) => {
 					const ingredients = req.body[`ingredient_${option.option_id}`] || [];
 					const quantities = req.body[`quantity_${option.option_id}`] || [];
 					const units = req.body[`unit_${option.option_id}`] || [];
 					const numUnit = req.body.quantity; // Get the num_unit from the request body
-
+	
 					return ingredients.map((ingredient, idx) => ({
 						id_food_comparison_options: maxId + 1 + idx + index * ingredients.length,
 						list_menu_options: option.list_menu_id,
@@ -666,11 +669,11 @@ module.exports = {
 						zone_name: orderData.zone_name
 					}));
 				});
-
+	
 				// Ensure unique id_food_comparison_options within the same num_list
 				const uniqueFoodComparisonOptionsData = [];
 				const idMap = new Map();
-
+	
 				foodComparisonOptionsData.forEach((item, index) => {
 					const key = `${item.list_menu_options}-${item.id_table}-${item.zone_name}-${item.name_ingredient_options}`;
 					if (!idMap.has(key)) {
@@ -681,24 +684,23 @@ module.exports = {
 						id_food_comparison_options: idMap.get(key)
 					});
 				});
-
+	
 				TableModel.createFoodComparisonOptions(uniqueFoodComparisonOptionsData, (error, result) => {
 					if (error) {
 						console.error('Error creating food comparison options:', error);
 						deleteOrder(orderData.num_list, orderData.id_table, orderData.zone_name); // Delete the created order
 						return res.status(500).send('Error creating food comparison options');
 					}
-
+	
 					// Proceed to update the recipe data in tbl_warehouse
 					const ingredientsToUpdate = uniqueFoodComparisonOptionsData.map(optionData => ({
 						name_ingredient: optionData.name_ingredient_options,
 						unit_quantity: optionData.unit_quantity_options
 					}));
-
+	
 					if (ingredientsToUpdate.length > 0) {
 						TableModel.updateWarehouseProducts(ingredientsToUpdate, (updateError, updateResult) => {
 							if (updateError) {
-								console.error('Error updating warehouse products:', updateError);
 								// Send error to the view
 								deleteOrder(orderData.num_list, orderData.id_table, orderData.zone_name); // Delete the created order
 								return res.render('customize', {
@@ -708,9 +710,11 @@ module.exports = {
 									table_id: orderData.id_table,
 									menuItems: [],
 									groupedOptions: {},
-									errorMessage: `Error updating warehouse products: ${updateError.message}`,
+									errorMessage: `วัตถุดิบในการทำอาหารไม่พอกรุณาสั่งใหม่`,
 									item: orderData, // Ensure item is passed to the view
-									menuOptions: [] // Ensure menuOptions is passed to the view
+									menuOptions: [], // Ensure menuOptions is passed to the view
+									permissions: req.session.permissions, // Pass permissions to the view
+									user: req.session.user // Pass user to the view
 								});
 							}
 							// Proceed with the new code after updating warehouse products
@@ -723,18 +727,18 @@ module.exports = {
 				});
 			});
 		}
-
+	
 		function proceedWithUpdate(orderData) {
 			const updatedData = req.body;
 			let fetchError = false;
 			let saveError = false;
 			let menuDataByNumList = {};
 			let fetchCount = 0;
-
+	
 			// Arrays to store the separated data
 			let tblMenuIdArray = [];
 			let numUnitArray = [];
-
+	
 			TableModel.getData(orderData.num_list, (error, results) => {
 				if (error) {
 					console.error('Error fetching data from database:', error);
@@ -742,11 +746,11 @@ module.exports = {
 					deleteOrder(orderData.num_list, orderData.id_table, orderData.zone_name); // Delete the created order
 					return;
 				}
-
+	
 				// If results is an array, push it into the object
 				if (Array.isArray(results)) {
 					menuDataByNumList[orderData.num_list] = results;
-
+	
 					// Separate the data into different arrays
 					results.forEach(result => {
 						tblMenuIdArray.push(result.tbl_menu_id);
@@ -755,18 +759,18 @@ module.exports = {
 				} else {
 					console.warn('Unexpected data format in results:', results);
 				}
-
+	
 				fetchCount++;
 				if (fetchCount === 1) {
 					proceedWithUpdateInner();
 				}
 			});
-
+	
 			function proceedWithUpdateInner() {
 				if (fetchError) {
 					return res.status(500).send('Error fetching data');
 				}
-
+	
 				// Iterate over each tbl_menu_id and fetch recipes
 				tblMenuIdArray.forEach((tbl_menu_id, index) => {
 					TableModel.getFoodRecipes(tbl_menu_id, (error, recipeResults) => {
@@ -776,12 +780,12 @@ module.exports = {
 							deleteOrder(orderData.num_list, orderData.id_table, orderData.zone_name); // Delete the created order
 							return;
 						}
-
+	
 						// Filter recipeResults to only include those that match tbl_menu_id
 						const filteredRecipeResults = recipeResults.filter(recipeData => {
 							return recipeData.tbl_menu_id === tbl_menu_id;
 						});
-
+	
 						// Fetch the current max id_food_comparison and increment it by 1
 						TableModel.getMaxFoodComparisonId((error, maxId) => {
 							if (error) {
@@ -790,7 +794,7 @@ module.exports = {
 								deleteOrder(orderData.num_list, orderData.id_table, orderData.zone_name); // Delete the created order
 								return;
 							}
-
+	
 							// Iterate over the recipe data and create multiple entries
 							const foodComparisonDataArray = filteredRecipeResults.map((recipeData, idx) => ({
 								id_food_comparison: maxId + 1 + idx + index * filteredRecipeResults.length,
@@ -804,7 +808,7 @@ module.exports = {
 								id_table: orderData.id_table,
 							}));
 							TableModel.saveFoodComparison(foodComparisonDataArray, (error, result) => {
-
+	
 								if (error) {
 									console.error('Error saving food comparison:', error);
 									saveError = true;
@@ -818,9 +822,11 @@ module.exports = {
 											table_id: orderData.id_table,
 											menuItems: [],
 											groupedOptions: {},
-											errorMessage: `Error updating warehouse products: ${error.message}`,
+											errorMessage: `วัตถุดิบในการทำอาหารไม่พอกรุณาสั่งใหม่`,
 											item: orderData, // Ensure item is passed to the view
-											menuOptions: [] // Ensure menuOptions is passed to the view
+											menuOptions: [], // Ensure menuOptions is passed to the view
+											permissions: req.session.permissions, // Pass permissions to the view
+											user: req.session.user // Pass user to the view
 										});
 									}
 								} else {
@@ -832,8 +838,7 @@ module.exports = {
 									if (ingredientsToUpdate.length > 0) {
 										TableModel.updateWarehouseProducts(ingredientsToUpdate, (updateError, updateResult) => {
 											if (updateError) {
-												console.error('Error updating warehouse products:', updateError);
-												// Send error to the view
+												console.log(orderData);
 												deleteOrder(orderData.num_list, orderData.id_table, orderData.zone_name); // Delete the created order
 												return res.render('customize', {
 													groupedMenu: {},
@@ -842,9 +847,11 @@ module.exports = {
 													table_id: orderData.id_table,
 													menuItems: [],
 													groupedOptions: {},
-													errorMessage: `Error updating warehouse products: ${updateError.message}`,
+													errorMessage: `วัตถุดิบในการทำอาหารไม่พอกรุณาสั่งใหม่`,
 													item: orderData, // Ensure item is passed to the view
-													menuOptions: [] // Ensure menuOptions is passed to the view
+													menuOptions: [], // Ensure menuOptions is passed to the view
+													permissions: req.session.permissions, // Pass permissions to the view
+													user: req.session.user // Pass user to the view
 												});
 											}
 											// Redirect after the update process is completed
@@ -861,7 +868,7 @@ module.exports = {
 				});
 			}
 		}
-
+	
 		function deleteOrder(num_list, id_table, zone_name) {
 			TableModel.deleteOrder(num_list, id_table, zone_name, (deleteError, deleteResult) => {
 				if (deleteError) {
@@ -966,7 +973,7 @@ module.exports = {
 					if (ingredientsToUpdate.length > 0) {
 						TableModel.returnWarehouseProducts(ingredientsToUpdate, (updateError, updateResult) => {
 							if (updateError) {
-								console.error('Error updating warehouse products:', updateError);
+								console.error('Q Error updating warehouse products:', updateError);
 								return res.status(500).send('Error updating warehouse products');
 							}
 
@@ -1060,7 +1067,9 @@ module.exports = {
 						console.error('Error fetching lock zone from database:', error);
 						return res.status(500).send('Error fetching lock zone from database');
 					}
-	
+					
+					console.log('Tables:', deleteTableError);
+
 					res.render('edit_table', {
 						title: `Tables in Zone ${zoneId}`,
 						zoneId: zoneId,
@@ -1314,6 +1323,11 @@ module.exports = {
 					// Handle error (e.g., render an error page or send an error response)
 					console.error('Error fetching data from database:', error);
 					return res.status(500).send('Error fetching data from database');
+				}
+	
+				if (!results || results.length === 0) {
+					// If results are empty, redirect to 404 page
+					return res.redirect('/404');
 				}
 	
 				const firstZoneName = results[0].zone_name;
@@ -1659,4 +1673,26 @@ module.exports = {
 			table_id: tableId // ส่ง table_id ไปยัง EJS
 		});		
 	},
+
+	cancelMenu: (req, res) => {
+		const zoneName = req.params.zone;
+		const tableId = req.params.table;
+		const numList = req.body.num_list;
+	
+		// ตรวจสอบว่ามีข้อมูลที่จำเป็นครบถ้วนหรือไม่
+		if (!zoneName || !tableId || !numList) {
+			return res.status(400).send('Missing required parameters');
+		}
+	
+		// เรียกใช้ฟังก์ชันใน Model เพื่อยกเลิกเมนู
+		TableModel.cancelMenuByNumList(numList, (error, result) => {
+			if (error) {
+				console.error('Error canceling menu:', error);
+				return res.status(500).send('Error canceling menu');
+			}
+	
+			res.redirect(`/zone/${zoneName}/table/${tableId}/view_checkbill`);
+		});
+	},
+
 };

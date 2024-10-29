@@ -225,6 +225,16 @@ module.exports = {
         });
     },
 
+    checkTypeExists: (type, callback) => {
+        const query = 'SELECT COUNT(*) AS count FROM tbl_buying WHERE setting_type_id = ?';
+        connection.query(query, [type], (error, results) => {
+            if (error) {
+                return callback(error);
+            }
+            const exists = results[0].count > 0;
+            callback(null, exists);
+        });
+    },
 
     viewSettingType: function (callback) {
         connection.query('SELECT id_type FROM setting_type', (error, results) => {
@@ -232,6 +242,31 @@ module.exports = {
                 return callback(error);
             }
             return callback(null, results);
+        });
+    },
+
+    checkTypeReferencedInBuying: (type, callback) => {
+        const query = 'SELECT COUNT(*) AS count FROM tbl_buying WHERE setting_type_id = ?';
+        connection.query(query, [type], (error, results) => {
+            if (error) {
+                return callback(error);
+            }
+
+            console.log(results);
+            const isReferenced = results[0].count > 0;
+            callback(null, isReferenced);
+        });
+    },
+
+    // Method to check if a type is referenced in the setting_type table
+    checkTypeReferencedInSetting: (type, callback) => {
+        const query = 'SELECT COUNT(*) AS count FROM setting_type WHERE id_type = ?';
+        connection.query(query, [type], (error, results) => {
+            if (error) {
+                return callback(error);
+            }
+            const isReferenced = results[0].count > 0;
+            callback(null, isReferenced);
         });
     },
 
@@ -255,12 +290,34 @@ module.exports = {
         });
     },
 
+    checkUnitExists: (unit, callback) => {
+        const query = 'SELECT COUNT(*) AS count FROM setting_unit WHERE id_unit = ?';
+        connection.query(query, [unit], (error, results) => {
+            if (error) {
+                return callback(error);
+            }
+            const exists = results[0].count > 0;
+            callback(null, exists);
+        });
+    },
+
     viewSettingUnit: function (callback) {
         connection.query('SELECT id_unit FROM setting_unit', (error, results) => {
             if (error) {
                 return callback(error);
             }
             return callback(null, results);
+        });
+    },
+
+    checkUnitReferencedInBuying: (unit, callback) => {
+        const query = 'SELECT COUNT(*) AS count FROM tbl_buying WHERE setting_unit_id = ?';
+        connection.query(query, [unit], (error, results) => {
+            if (error) {
+                return callback(error);
+            }
+            const isReferenced = results[0].count > 0;
+            callback(null, isReferenced);
         });
     },
 

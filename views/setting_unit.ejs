@@ -19,7 +19,7 @@
     <div class="sidebar close">
         <!-- ========== Logo ============  -->
         <a href="#" class="logo-box">
-            <i class='bx bxs-cat'></i>
+            <i class='bx bx-food-menu'></i>
             <div class="logo-name">POS</div>
         </a>
 
@@ -182,7 +182,7 @@
         <!-- ============= Top Dashboard =============== -->
 
         <div class="topic">
-            ตั้งค่าหน่วยปริมาณ
+            ตั้งค่าหน่วยสินค้า
             <div class="search-add-container">
                 <input type="text" id="searchBox" placeholder="ค้นหาข้อมูล..." />
                 <% if (permissions.buying.buying_create === 'Y') { %>
@@ -212,7 +212,11 @@
                             <% if (permissions.buying.buying_delete === 'Y') { %>
                             <span>
                                 <form action="/delete_setting_unit/<%= unit.id_unit %>" method="post" style="display: inline;" onsubmit="return confirmDelete()">
-                                    <button type="submit" class="delete-button">ลบ</button>
+                                    <% if (unit.isReferencedInBuying) { %>
+                                        <button type="submit" class="delete-button disabled" disabled>ลบ</button>
+                                    <% } else { %>
+                                        <button type="submit" class="delete-button">ลบ</button>
+                                    <% } %>
                                 </form>
                             </span>
                             <% } %>

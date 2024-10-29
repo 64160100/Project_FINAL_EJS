@@ -38,6 +38,24 @@ module.exports = {
         });
     },
 
+    getNextPermissionId: function (callback) {
+        const query = `SELECT permission_id FROM tbl_user_permission ORDER BY permission_id DESC LIMIT 1`;
+
+        connection.query(query, (error, results) => {
+            if (error) {
+                return callback(error, null);
+            }
+
+            let nextId = 'P001';
+            if (results.length > 0) {
+                const lastId = results[0].permission_id;
+                const numericPart = parseInt(lastId.substring(1)) + 1;
+                nextId = 'P' + numericPart.toString().padStart(3, '0');
+            }
+            console.log(nextId);
+            callback(null, nextId);
+        });
+    },
 
     createPermission: function (permissionData, callback) {
         const query = `

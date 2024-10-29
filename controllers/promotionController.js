@@ -29,8 +29,21 @@ module.exports = {
 				});
 			}
 	
-			// Format the dates to only include the date part
+			const currentDate = new Date();
+	
+			// Format the dates to only include the date part and check for status update
 			promotions = promotions.map(promotion => {
+				const lastDay = new Date(promotion.last_day);
+				if (currentDate > lastDay && promotion.status_promotion !== 'Y') {
+					// Update the status_promotion to 'Y'
+					console.log(`Promotion ID ${promotion.id_promotion} has ended. Updating status...`);
+					PromotionModel.updatePromotionStatus(promotion.id_promotion, 'Y', (err) => {
+						if (err) {
+							console.log(`Failed to update status for promotion ID ${promotion.id_promotion}:`, err);
+						}
+					});
+					promotion.status_promotion = 'Y';
+				}
 				return {
 					...promotion,
 					start_date: new Date(promotion.start_date).toISOString().split('T')[0],
@@ -48,6 +61,7 @@ module.exports = {
 					seenSumPromotionIds.add(promotion.sum_promotion_id);
 				}
 			});
+			
 			res.render('promotion', {
 				promotions: uniquePromotions,
 				user: req.session.user,

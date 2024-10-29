@@ -19,7 +19,7 @@
     <div class="sidebar close">
         <!-- ========== Logo ============  -->
         <a href="#" class="logo-box">
-            <i class='bx bxs-cat'></i>
+            <i class='bx bx-food-menu'></i>
             <div class="logo-name">POS</div>
         </a>
 
@@ -262,11 +262,19 @@
                         </ul>
                     </div>
                 <% }); %>
-                <div id="pagination">
-                    <button id="prevPage" disabled>ก่อนหน้า</button>
-                    <span id="pageInfo"></span>
-                    <button id="nextPage">ถัดไป</button>
-                </div>
+            </div>
+            <div id="pagination">
+                <button id="prevPage" disabled>ก่อนหน้า</button>
+                <span id="pageInfo"></span>
+                <button id="nextPage">ถัดไป</button>
+            </div>
+        </div>
+    
+        <div id="popup" class="popup">
+            <div class="popup-content">
+                <span class="close" onclick="closePopup()">&times;</span>
+                <p id="popup-message"></p>
+                <button class="ok-button" onclick="closePopup()">OK</button>
             </div>
         </div>
     </section>
@@ -274,6 +282,21 @@
     <!-- Link JS -->
     <script src="../js/index.js"></script>
 
+    <script>
+        // Function to close the popup
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+
+        // Check if there is an error message in the query parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const errorMessage = urlParams.get('error');
+        if (errorMessage) {
+            document.getElementById('popup-message').innerText = errorMessage;
+            document.getElementById('popup').style.display = 'block';
+        }
+    </script>
+    
     <script>
         const itemsPerPage = 10;
         let currentPage = 1;

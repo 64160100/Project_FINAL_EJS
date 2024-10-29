@@ -19,7 +19,7 @@
     <div class="sidebar close">
         <!-- ========== Logo ============  -->
         <a href="#" class="logo-box">
-            <i class='bx bxs-cat'></i>
+            <i class='bx bx-food-menu'></i>
             <div class="logo-name">POS</div>
         </a>
 
@@ -225,13 +225,18 @@
         <!-- Popup -->
         <div id="myModal" class="modal">
             <div class="modal-content">
-                <span class="close" onclick="togglePopup()" >&times;</span>
+                <span class="close" onclick="togglePopup()">&times;</span>
                 <h2>เพิ่มประเภทสินค้า</h2>
                 <form action="/create_setting_type" method="post">
                     <input type="text" name="id_type" placeholder="ชื่อประเภทสินค้า" required>
+                    <% if (typeof errorMessage !== 'undefined') { %>
+                        <div class="error-message" style="color: red;">
+                            <p><%= errorMessage %></p>
+                        </div>
+                    <% } %>
                     <div>
-                        <% if (permissions.buying.buying_update === 'Y') { %>
-                        <button type="submit">เพิ่ม</button>
+                        <% if (permissions.menu.menu_create === 'Y') { %>
+                            <button type="submit">เพิ่ม</button>
                         <% } %>
                         <button type="button" onclick="togglePopup()" style="background-color: white; color: black; border: 1px solid #ccc;">ปิดหน้านี้</button>
                     </div>

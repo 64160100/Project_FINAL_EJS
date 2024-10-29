@@ -20,7 +20,7 @@
     <div class="sidebar close">
         <!-- ========== Logo ============  -->
         <a href="#" class="logo-box">
-            <i class='bx bxs-cat'></i>
+            <i class='bx bx-food-menu'></i>
             <div class="logo-name">POS</div>
         </a>
 
@@ -197,7 +197,7 @@
             <form action="/create_permission" method="POST" id="myForm">
                 <div class="input-field">
                     <label for="permission_id">รหัสสิทธิ์ผู้ใช้งาน</label>
-                    <input type="text" name="permission_id" id="permission_id" required>
+                    <input type="text" name="permission_id" id="permission_id" value="<%= nextPermissionId %>" readonly required>
                 </div>
                 <div class="input-field">
                     <label for="permission_name">ชื่อสิทธิ์ผู้ใช้งาน</label>

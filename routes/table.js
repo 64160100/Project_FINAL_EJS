@@ -3,7 +3,6 @@ const table = require('../controllers/tableController.js');
 const router = express.Router();
 const crypto = require('crypto');
 
-// เก็บบัญชีชั่วคราวในหน่วยความจำ (หรือคุณสามารถใช้ฐานข้อมูล)
 const temporaryAccounts = {};
 
 const createTemporaryAccount = (zoneId, tableId) => {
@@ -50,14 +49,14 @@ const createTemporaryAccount = (zoneId, tableId) => {
                 promotion_create: 'N',
                 promotion_update: 'N',
                 promotion_delete: 'N',
-                promotion_view: 'Y'
+                promotion_view: 'N'
             },
             table: {
                 type: 'table',
                 table_read: 'Y',
-                table_create: 'Y',
-                table_update: 'Y',
-                table_delete: 'Y',
+                table_create: 'N',
+                table_update: 'N',
+                table_delete: 'N',
                 table_view: 'N'
             }
         },
@@ -113,6 +112,8 @@ router.get('/zone/:zone/table/:table/view_checkbill', checkZoneAndTable, table.z
 router.post('/zone/:zone/table/:table/create_checkbill', checkZoneAndTable, table.createCheckBill);
 
 router.get('/zone/:zone/table/:table/menuindex', checkZoneAndTable, table.getIndex);
+
+router.post('/zone/:zone/table/:table/cancel_menu', checkZoneAndTable, table.cancelMenu);
 
 router.get('/zone/:zone/table/:table/order_food/auto_login', (req, res) => {
     const token = req.query.token;

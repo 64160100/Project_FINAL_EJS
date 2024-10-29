@@ -19,7 +19,7 @@
     <div class="sidebar close">
         <!-- ========== Logo ============  -->
         <a href="#" class="logo-box">
-            <i class='bx bxs-cat'></i>
+            <i class='bx bx-food-menu'></i>
             <div class="logo-name">POS</div>
         </a>
 
@@ -233,9 +233,9 @@
                                 <label for="user_role">ชื่อสิทธิ์ผู้ใช้งาน</label>
                                 <select id="permission" name="permission" required aria-label="ชื่อสิทธิ์ผู้ใช้งาน">
                                     <option value="" disabled <%= !User.userPermission ? 'selected' : '' %>>กรุณาเลือกสิทธิ์ผู้ใช้งาน</option>
-                                    <% Permissions.forEach(function(Permissions) { %>
-                                        <option value="<%= Permissions.permission_id %>" <%= User.userPermission === Permissions.permission_id ? 'selected' : '' %>>
-                                            <%= Permissions.permission_id %> 
+                                    <% Permissions.forEach(function(permission) { %>
+                                        <option value="<%= permission.permission_id %>" <%= User.userPermission === permission.permission_id ? 'selected' : '' %>>
+                                            <%= permission.permission_name %> 
                                         </option>
                                     <% }); %>
                                 </select>
